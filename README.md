@@ -6,3 +6,8 @@ Frontend:
 Backend:
 - Anthony Mei
 - Joshua Perez
+
+> Changing name from master to main:
+```powershell
+git branch -m master main
+```
