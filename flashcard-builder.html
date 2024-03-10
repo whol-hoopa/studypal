@@ -56,7 +56,11 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <!-- Pre-modification: <li><a class="dropdown-item" href="#">Action</a></li> -->
-                                        <li><a class="dropdown-item" data-bs-toggle="tab" data-bs-target="#answer-tab-pane" aria-controls="answer-tab-pane"><label for="input-answer">Text</label></a></li>
+                                        <li class="dropdown-item" id="text-answer-tab"  data-bs-toggle="tab" data-bs-target="#answer-tab-pane" aria-controls="answer-tab-pane">
+                                            <a>
+                                                <label for="input-answer">Text</label>
+                                            </a>
+                                        </li>
                                         <li><a class="dropdown-item" data-bs-toggle="tab" data-bs-target="#answer-image-tab" aria-controls="answer-image-tab-pane"><label for="input-image">Image</label></a></li>
                                         <li><a class="dropdown-item" data-bs-toggle="tab" data-bs-target="#answer-audio-tab" aria-controls="answer-audio-tab-pane"><label for="input-audio">Audio</label></a></li>
                                         <li class="dropdown-item">
@@ -74,13 +78,19 @@
                                 <!-- Query body: front -->
                                 <!-- <div class="tab-pane fade show active" id="question-tab-pane" role="tabpanel" aria-labelledby="question-tab" tabindex="0"> -->
                                 <div class="tab-pane fade show active" id="question-tab-pane" role="tabpanel" aria-labelledby="question-tab" tabindex="0">
-                                    <textarea class="w-100 form-control" name="input-question" id="input-question" cols="33" rows="10"></textarea>
+                                    <textarea class="w-100 form-control" name="input-question" id="input-question" cols="33" rows="10">What is the formula for the Pythagorean theorem?</textarea>
+                                    <div id="latex-question-output"></div>
                                 </div>
 
                                 <!-- Answer body: back -->
                                 <!-- input: text -->
-                                <div class="tab-pane fade" id="answer-tab-pane" role="tabpanel" aria-labelledby="answer-tab" tabindex="0">
-                                    <textarea class="w-100 form-control" name="input-answer" id="input-answer" cols="33" rows="10"></textarea>
+                                <div class="tab-pane fade" id="answer-tab-pane" role="tabpanel" aria-labelledby="text-answer-tab" tabindex="0">
+                                    <!-- <div class="input-floating"> -->
+                                        <!-- <label for="input-answer">Enter closing )</label> -->
+                                        <!-- \(a^2 + b^2 = c^2\) -->
+                                        <textarea class="w-100 form-control" name="input-answer" id="input-answer" cols="33" rows="10"></textarea>
+                                    <!-- </div> -->
+                                    <div id="latex-answer-output"></div>
                                 </div>
 
                                 <!-- input: image -->
@@ -465,6 +475,18 @@
         </script>
         <script async src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script defer src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
+        <script defer>
+            document.getElementById('input-question').addEventListener('input', function(e) {
+                document.getElementById('latex-question-output').textContent = this.value;
+                MathJax.typesetPromise();
+            });
+        </script>
+        <script defer>
+            document.getElementById('input-answer').addEventListener('input', function(e) {
+                document.getElementById('latex-answer-output').textContent = this.value;
+                MathJax.typesetPromise();
+            });
+        </script>
         <script>
             /*
                 : PouchDB API Documentation 
