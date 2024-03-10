@@ -85,11 +85,12 @@
                                 <!-- Answer body: back -->
                                 <!-- input: text -->
                                 <div class="tab-pane fade" id="answer-tab-pane" role="tabpanel" aria-labelledby="text-answer-tab" tabindex="0">
-                                    <!-- <div class="input-floating"> -->
-                                        <!-- <label for="input-answer">Enter closing )</label> -->
-                                        <!-- \(a^2 + b^2 = c^2\) -->
-                                        <textarea class="w-100 form-control" name="input-answer" id="input-answer" cols="33" rows="10"></textarea>
-                                    <!-- </div> -->
+                                    <!-- .form-floating: used to float label inside textarea. -->
+                                    <div class="form-floating">
+                                        <textarea class="w-100 h-100 form-control" name="input-answer" id="input-answer" cols="33" rows="10">\(a^2 + b^2 = c^2\</textarea>
+                                        <!-- label must come After textarea! for inserting/floating label INSIDE textarea. -->
+                                        <label for="input-answer">Enter closing ) for LaTex...</label>
+                                    </div>
                                     <div id="latex-answer-output"></div>
                                 </div>
 
