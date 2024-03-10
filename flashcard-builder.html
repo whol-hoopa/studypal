@@ -18,6 +18,9 @@
 
         </style>
 
+        <!-- LaTex: feature -->
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     </head>
     <body class="">
         <div class="container d-flex flex-column justify-content-between vh-100 overflow-x-wrap">
@@ -185,6 +188,20 @@
                         <!-- align-self-stretch is for mobile; d-sm-flex enables mx-sm-auto for >=tablet -->
                         <button id="create-btn" type="submit" class="btn btn-md btn-success mt-4   align-self-stretch   d-sm-flex px-sm-5 mx-sm-auto">Create</button>
                     </form>
+                </section>
+
+                <section>
+                    <h2>LaTex</h2>
+                    <div>
+                        <p>
+                            Here is an inline equation: 
+                            \(a^2 + b^2 = c^2\)
+                        </p>
+                        <p>
+                            Here is a block equation:
+                            \[E = mc^2\]
+                        </p>
+                    </div>
                 </section>
 
             </main>
