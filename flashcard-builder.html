@@ -56,7 +56,13 @@
                                         <li><a class="dropdown-item" data-bs-toggle="tab" data-bs-target="#answer-tab-pane" aria-controls="answer-tab-pane"><label for="input-answer">Text</label></a></li>
                                         <li><a class="dropdown-item" data-bs-toggle="tab" data-bs-target="#answer-image-tab" aria-controls="answer-image-tab-pane"><label for="input-image">Image</label></a></li>
                                         <li><a class="dropdown-item" data-bs-toggle="tab" data-bs-target="#answer-audio-tab" aria-controls="answer-audio-tab-pane"><label for="input-audio">Audio</label></a></li>
-                                        <li><a class="dropdown-item" data-bs-toggle="tab" data-bs-target="#answer-video-tab" aria-controls="answer-video-tab-pane"><label for="input-video">Video</label></a></li>
+                                        <li class="dropdown-item">
+                                            Video
+                                            <ul class="drop-menu">
+                                                <li><a class="dropdown-item ps-1" data-bs-toggle="tab" data-bs-target="#answer-video-tab" aria-controls="answer-video-tab-pane"><label for="input-video">Local</label></a></li>
+                                                <li><a class="dropdown-item ps-1" data-bs-toggle="tab" data-bs-target="#answer-video-youtube-tab" aria-controls="answer-video-youtube-tab-pane"><label for="input-video-youtube">YouTube</label></a></li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                   </li>
                             </ul>
@@ -104,7 +110,7 @@
                                 </div>
 
                                 <!-- input: video -->
-                                <div class="tab-pane fade mt-2 show active" id="answer-video-tab" role="tabpanel" aria-labelledby="answer-video-tab" tabindex="0">
+                                <div class="tab-pane fade mt-2" id="answer-video-tab" role="tabpanel" aria-labelledby="answer-video-tab" tabindex="0">
                                     <div class="d-flex justify-content-between">
                                         <button class="btn btn-secondary py-0 px-2 py-sm-1 px-sm-5" id="upload-video-btn" type="button">Choose Video</button>
                                         <button class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5" id="cancel-upload-video-btn" type="button">Cancel</button>
@@ -112,24 +118,55 @@
                                     <span class="d-block text-wrap" id="file-name-video">No file selected</span>
                                     <div class="d-flex justify-content-center mt-3">
                                         <input type="file" class="d-none" name="input-video" id="input-video" accept="video/mp4,video/webm,video/ogg" >
-                                        
-                                            <!-- <video controls>
-                                                <source src="video_20230429_222932.mp4" type="video/mp4">
-                                                You may need to use a different browser that supports video.
-                                            </video> -->
-                                       
-                                        <!-- <video controls>
-                                            <source src="c:/Users/amigo/Desktop/cnit 133i/projects/arduino/homework5/video_20230429_222932.mp4" type="video/mp4">
-                                            c:\\Users\\amigo\\Desktop\\cnit 133i\\projects\\arduino\\homework5\\video_20230429_222932.mp4
-                                        </video> -->
+                                        <!-- firefox: didn't support mp4!; chromium: supports mp4. -->
                                         <video id="video-element" controls>
                                             <source id="uploaded-video" src="" type="video/mp4" />
                                             Your browser does not support the video element. Upgrade to a modern browser.
                                         </video>
-                                        <!-- <video id="video-element" controls>
-                                            <source id="uploaded-video" src="" type="video/mp4" />
-                                            Your browser does not support the video element. Upgrade to a modern browser.
-                                        </video> -->
+                                    </div>
+                                </div>
+                                <!-- YouTube -->
+                                <div class="tab-pane fade mt-2 show active" id="answer-video-youtube-tab" role="tabpanel" aria-labelledby="answer-video-youtube-tab" tabindex="0">
+                                    <div class="d-flex justify-content-between">
+                                        <button class="btn btn-success py-0 px-2 py-sm-1 px-sm-5" id="set-youtube-url" role="button">Set Link</button>
+
+                                        <div>
+                                            <button class="btn btn-warning py-0 px-2 py-sm-1 px-sm-5" id="youtube-clear-input-btn" type="button">Clear</button>
+                                            <button class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5" id="cancel-upload-video-youtube-btn" type="button">Cancel</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="input-group pt-2">
+                                        <span class="input-group-text" id="input-youtube-label" title='Paste iframe code here.&#10; Then Set link.'>
+                                            <label for="input-youtube" id="youtube-input-group-text">iframe</label>
+                                        </span>
+                                        <input class="form-control" type="text" name="input-youtube" id="input-youtube" aria-label="YouTube URL" aria-describedby="input-youtube-label" placeholder='share>embed>copy>start:checked[optional]'>
+                                        <!-- <label for="input-youtube">URL</label> -->
+                                        <!-- <input type="text" name="input-youtube" id="input-youtube"> -->
+                                    </div>
+                                    
+
+                                    <!-- <span class="d-block text-wrap" id="file-name-video-youtube">No file selected</span> -->
+                                    <div class="d-flex justify-content-center mt-3">
+                                        <!-- width="560" height="315" -->
+                                        <iframe
+                                            id="iframe-youtube"
+                                            title="YouTube embedded src link."
+                                            loading="lazy"
+                                            src=""
+                                            allowfullscreen>
+                                        </iframe>
+                                        <!-- 
+                                            Forbidden url src: (You can't use the vanilla youtube link! Must use an embedded link.)
+                                                src="https://youtu.be/omWmWu1XO8U?si=RDFRzbfTf48IaCV_&t=96"
+
+                                            Allowed url src: ( Must use "share">"embed">"copy"> start:checked[optional] )
+                                                with start:
+                                                    src="https://www.youtube.com/embed/omWmWu1XO8U?si=gLK6nzBirmX0DvlH&amp;start=96"
+                                                    src="https://www.youtube.com/embed/omWmWu1XO8U?si=gLK6nzBirmX0DvlH&start=96"
+                                                without start:
+                                                    src="https://www.youtube.com/embed/omWmWu1XO8U?si=XVdvDSc1zFNN4qvx"
+                                        -->
                                     </div>
                                 </div>
                             </div>
@@ -264,7 +301,7 @@
                 revokeAudioURL();
             }
 
-            // Video selection options:
+            // Local Video selection options:
             const fileNameConfirmationText_video = document.getElementById('file-name-video');
             const inputElement_video=document.getElementById('input-video');
             const sourceElement_video=document.getElementById('uploaded-video');
@@ -358,6 +395,56 @@
                 revokeVideoURL();
             });
 
+        </script>
+        <script>
+            /* YouTube Video setting. */
+            const labelYouTubeUrlElem=document.getElementById('youtube-input-group-text');
+            const inputYouTubeElem=document.getElementById('input-youtube');
+            const inputYouTubeClearBtn=document.getElementById('youtube-clear-input-btn');
+            const youTubeCancelBtn=document.getElementById('cancel-upload-video-youtube-btn');
+            const setYouTubeUrlBtn=document.getElementById('set-youtube-url');
+            const iframeYouTube=document.getElementById('iframe-youtube');
+            setYouTubeUrlBtn.onclick=function(e){
+                e.preventDefault();
+                const src=getSrc(inputYouTubeElem.value);
+                if(src){
+                    labelYouTubeUrlElem.innerText='URL';
+                    inputYouTubeElem.value=src;
+                    iframeYouTube.src=src;
+                    iframeYouTube.load();
+                    return;
+                }
+                labelYouTubeUrlElem.innerText='iframe';
+                console.log('Paste the YouTube iframe code into the input box.');
+            }
+            inputYouTubeClearBtn.onclick=function(e){
+                e.preventDefault();
+                inputYouTubeElem.value='';
+                labelYouTubeUrlElem.innerText='iframe';
+            }
+            youTubeCancelBtn.onclick=function(e){
+                e.preventDefault();
+                inputYouTubeElem.value='';
+                iframeYouTube.src='';
+                labelYouTubeUrlElem.innerText='iframe';
+            }
+
+            function getSrc(iframeYouTube){
+                const regex_src=/https:\/\/www.youtube.com\/embed\/.{11,}?"/;
+                src=iframeYouTube.match(regex_src);
+                if(src){
+                    src = src[0].slice(0,-1);
+                    return src;
+                }
+            }
+        </script>
+        <script>
+            const mainElement = document.querySelector('main');
+                    let width = mainElement.offsetWidth;
+                    if(width>575){
+                        width *=.3;
+                    }
+                    iframeYouTube.setAttribute('width', width);
         </script>
         <script async src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script defer src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
