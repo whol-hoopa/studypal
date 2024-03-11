@@ -26,6 +26,10 @@
         <!-- https://showdownjs.com/docs/xss/ -->
         <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
 
+        <!-- mermaid feature -->
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.min.js"></script>
+
+
     </head>
     <body class="">
         <div class="container d-flex flex-column justify-content-between vh-100 overflow-x-wrap">
@@ -106,10 +110,17 @@
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="markdownText">
                                             <label class="form-check-label" for="inlineRadio2" title="Danger: open to XSS attacks!&#10; Use at your own risk!!">Markdown</label>
+                                            <script> // # Hello StudyPal </script>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="latexText">
                                             <label class="form-check-label" for="inlineRadio3">LaTex</label>
+                                            <script> // \(a^2 + b^2 = c^2\); \(\int_a^b f(\mu) \, d\mu\) </script>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="mermaidText">
+                                            <label class="form-check-label" for="inlineRadio4">Mermaid</label>
+                                            <script> // graph TD;A-->B;A-->C;B-->D;C-->D; </script>
                                         </div>
                                     </div>
                                       
@@ -222,21 +233,6 @@
                         <button id="create-btn" type="submit" class="btn btn-md btn-success mt-4   align-self-stretch   d-sm-flex px-sm-5 mx-sm-auto">Create</button>
                     </form>
                 </section>
-
-                <section>
-                    <h2>LaTex</h2>
-                    <div>
-                        <p>
-                            Here is an inline equation: 
-                            \(a^2 + b^2 = c^2\)
-                        </p>
-                        <p>
-                            Here is a block equation:
-                            \[E = mc^2\]
-                        </p>
-                    </div>
-                </section>
-
             </main>
             <footer class="text-center">
                 <h3 class="mb-3 mt-md-3 text-secondary fs-6">
@@ -520,6 +516,15 @@
                 }else if(checkedRadioSelection.value==='latexText'){
                     document.getElementById('latex-answer-output').textContent = textAreaContent;
                     MathJax.typesetPromise();
+                }else if(checkedRadioSelection.value==='mermaidText'){
+                    const output=document.getElementById('latex-answer-output');
+                    output.innerHTML='';
+                    // create new div to ensure mermaid rerenders else no image shown just from inserting text.
+                    const mermaidElem=document.createElement('div');
+                    mermaidElem.className='mermaid';
+                    mermaidElem.textContent=this.value;
+                    output.appendChild(mermaidElem);
+                    mermaid.init(undefined, mermaidElem);
                 }
             });
         </script>
