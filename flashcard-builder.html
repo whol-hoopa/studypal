@@ -21,6 +21,11 @@
         <!-- LaTex: feature -->
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
         <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+        <!-- markdown feature: open to XSS attacks!! -->
+        <!-- https://showdownjs.com/docs/xss/ -->
+        <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
+
     </head>
     <body class="">
         <div class="container d-flex flex-column justify-content-between vh-100 overflow-x-wrap">
@@ -87,10 +92,27 @@
                                 <div class="tab-pane fade" id="answer-tab-pane" role="tabpanel" aria-labelledby="text-answer-tab" tabindex="0">
                                     <!-- .form-floating: used to float label inside textarea. -->
                                     <div class="form-floating">
-                                        <textarea class="w-100 h-100 form-control" name="input-answer" id="input-answer" cols="33" rows="10">\(a^2 + b^2 = c^2\); \(\int_a^b f(x) \, dx\</textarea>
+                                        <textarea class="w-100 h-100 form-control" name="input-answer" id="input-answer" cols="33" rows="10">\(a^2 + b^2 = c^2\); \(\int_a^b f(\mu) \, d\mu\</textarea>
                                         <!-- label must come After textarea! for inserting/floating label INSIDE textarea. -->
                                         <label for="input-answer">Enter closing ")" for LaTex...</label>
                                     </div>
+
+                                    <!-- radio selector for LaTex | markdown -->
+                                    <div class="radio-text-format mb-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" id="regular-text-answer" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="regularText">
+                                            <label class="form-check-label" for="inlineRadio1">Regular</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="markdownText">
+                                            <label class="form-check-label" for="inlineRadio2" title="Danger: open to XSS attacks!&#10; Use at your own risk!!">Markdown</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="latexText">
+                                            <label class="form-check-label" for="inlineRadio3">LaTex</label>
+                                        </div>
+                                    </div>
+                                      
                                     <div id="latex-answer-output"></div>
                                 </div>
 
@@ -476,16 +498,29 @@
         </script>
         <script async src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script defer src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
-        <script defer>
-            document.getElementById('input-question').addEventListener('input', function(e) {
-                document.getElementById('latex-question-output').textContent = this.value;
-                MathJax.typesetPromise();
+        <script>
+
+            // clear output text on regular text radio btn selection
+            const radios=document.querySelectorAll('input[type=radio]');
+            radios.forEach(function(radio){
+                radio.addEventListener('change',function(){
+                    if(this.checked && this.value==="regularText"){
+                        document.getElementById('latex-answer-output').textContent = '';
+                    }
+                })
             });
-        </script>
-        <script defer>
-            document.getElementById('input-answer').addEventListener('input', function(e) {
-                document.getElementById('latex-answer-output').textContent = this.value;
-                MathJax.typesetPromise();
+
+            // markdown & LaTex radio btn selection based preview output
+            const converter = new showdown.Converter()
+            document.getElementById('input-answer').addEventListener('input', function() {
+                const textAreaContent=this.value;
+                const checkedRadioSelection=document.querySelector('input[type=radio]:checked');
+                if(checkedRadioSelection.value==='markdownText'){
+                    document.getElementById('latex-answer-output').innerHTML = converter.makeHtml(textAreaContent);
+                }else if(checkedRadioSelection.value==='latexText'){
+                    document.getElementById('latex-answer-output').textContent = textAreaContent;
+                    MathJax.typesetPromise();
+                }
             });
         </script>
         <script>
