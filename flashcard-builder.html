@@ -34,9 +34,50 @@
     <body class="">
         <div class="container d-flex flex-column justify-content-between vh-100 overflow-x-wrap">
             <header class="">
-                <h1 class="text-center text-primary mt-5 mt-sm-3">
+                <h1 class="text-center text-primary mt-5 pt-3">
                     Flashcard Builder
                 </h1>
+                <nav class="navbar bg-body-tertiary fixed-top">
+                    <div class="container-fluid">
+                      <a class="navbar-brand" href="#">StudyPal</a>
+                      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                        <div class="offcanvas-header">
+                          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">StudyPal</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                            <li class="nav-item">
+                              <a class="nav-link active" aria-current="page" href="#">Home</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="#">Link</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                              </a>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li>
+                                  <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                              </ul>
+                            </li>
+                          </ul>
+                          <form class="d-flex mt-3" role="search">
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </nav>
             </header>
             <main>
                 <section class="">
@@ -104,28 +145,32 @@
                                     <!-- radio selector for LaTex | markdown -->
                                     <div class="radio-text-format mb-2">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" id="regular-text-answer" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="regularText">
-                                            <label class="form-check-label" for="inlineRadio1">Regular</label>
+                                            <input checked class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio-regular" value="regularText">
+                                            <label class="form-check-label" for="inlineRadio-regular">Regular</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="markdownText">
-                                            <label class="form-check-label" for="inlineRadio2" title="Danger: open to XSS attacks!&#10; Use at your own risk!!">Markdown</label>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio-markdown" value="markdownText">
+                                            <label class="form-check-label" for="inlineRadio-markdown" title="Danger: open to XSS attacks!&#10; Use at your own risk!!">Markdown</label>
                                             <!-- # Hello StudyPal -->
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="latexText">
-                                            <label class="form-check-label" for="inlineRadio3">LaTex</label>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio-latex" value="latexText">
+                                            <label class="form-check-label" for="inlineRadio-latex">LaTex</label>
                                             <!-- \(a^2 + b^2 = c^2\); \(\int_a^b f(\mu) \, d\mu\) -->
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="mermaidText">
-                                            <label class="form-check-label" for="inlineRadio4">Mermaid</label>
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio-mermaid" value="mermaidText">
+                                            <label class="form-check-label" for="inlineRadio-mermaid">Mermaid</label>
+                                            <!-- test examples to copy&paste into textarea: don't copy comment tag obviously. -->
+                                            <script> // sequenceDiagram; participant dotcom;participant iframe; participant viewscreen;dotcom->>iframe: loads html w/ iframe url; iframe->>viewscreen: request template; viewscreen->>iframe: html & javascript; iframe->>dotcom: iframe ready;dotcom->>iframe: set mermaid data on iframe; iframe->>iframe: render mermaid; </script>
                                             <script> // graph TD;A-->B;A-->C;B-->D;C-->D; </script>
+                                            <!-- https://mermaid.js.org/ -->
+                                            <!-- https://gist.github.com/martinwoodward/8ad6296118c975510766d80310db71fd -->
                                             <!-- ArjanCodes: https://www.youtube.com/watch?v=JiQmpA474BY -->
                                         </div>
                                     </div>
                                       
-                                    <div id="latex-answer-output"></div>
+                                    <div id="latex-answer-output" class="text-bg-info rounded p-2"></div>
                                 </div>
 
                                 <!-- input: image -->
