@@ -1,255 +1,586 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        
-        
-        <title>StudyPal</title>
-        <meta name="description" content="StudyPal flashcard builder page.">
+    <title>StudyPal</title>
+    <meta name="description" content="StudyPal flashcard builder page." />
 
+    <!-- https://getbootstrap.com/docs/5.3/getting-started/introduction/ -->
+    <link
+      async
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <style>
+      /* .bg-dark === --bs-dark */
+      .bg-theme {
+        background-color: var(--bs-dark);
+      }
+    </style>
 
-        <!-- https://getbootstrap.com/docs/5.3/getting-started/introduction/ -->
-        <link async href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <style>
-            /* .bg-dark === --bs-dark */
-            .bg-theme {background-color: var(--bs-dark)};
+    <!-- LaTex: feature -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
 
-        </style>
+    <!-- markdown feature: open to XSS attacks!! -->
+    <!-- https://showdownjs.com/docs/xss/ -->
+    <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
 
-        <!-- LaTex: feature -->
-        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- mermaid feature -->
+    <script async src="https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.min.js"></script>
+  </head>
+  <body class="">
+    <div
+      class="container d-flex flex-column justify-content-between vh-100 overflow-x-wrap"
+    >
+      <header class="">
+        <h1 class="text-center text-primary mt-5 pt-3">Flashcard Builder</h1>
 
-        <!-- markdown feature: open to XSS attacks!! -->
-        <!-- https://showdownjs.com/docs/xss/ -->
-        <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
+        <!-- https://getbootstrap.com/docs/5.3/components/navbar/#offcanvas -->
+        <nav class="navbar bg-body-tertiary fixed-top">
+          <div class="container">
+            <!-- container-fluid -->
+            <!-- Fluid => brand-logo|hamburger => space-between vw vs. space-between container -->
 
-        <!-- mermaid feature -->
-        <script src="https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.min.js"></script>
+            <!-- Brand logo: left -->
+            <a class="navbar-brand" href="#">StudyPal</a>
 
+            <!-- hamburger menu button -->
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasNavbar"
+              aria-controls="offcanvasNavbar"
+              aria-label="Toggle navigation"
+            >
+              <!-- hamburger icon -->
+              <span class="navbar-toggler-icon"></span>
+            </button>
 
-    </head>
-    <body class="">
-        <div class="container d-flex flex-column justify-content-between vh-100 overflow-x-wrap">
-            <header class="">
-                <h1 class="text-center text-primary mt-5 pt-3">
-                    Flashcard Builder
-                </h1>
-                <nav class="navbar bg-body-tertiary fixed-top">
-                    <div class="container-fluid">
-                      <a class="navbar-brand" href="#">StudyPal</a>
-                      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                      </button>
-                      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                        <div class="offcanvas-header">
-                          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">StudyPal</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                            <li class="nav-item">
-                              <a class="nav-link active" aria-current="page" href="#">Home</a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="#">Link</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Dropdown
-                              </a>
-                              <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                  <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                              </ul>
-                            </li>
-                          </ul>
-                          <form class="d-flex mt-3" role="search">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
-                          </form>
-                        </div>
-                      </div>
+            <!-- offcanvas container -->
+            <div
+              class="offcanvas offcanvas-end"
+              tabindex="-1"
+              id="offcanvasNavbar"
+              aria-labelledby="offcanvasNavbarLabel"
+            >
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">
+                  StudyPal
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="offcanvas"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <!-- end offcanvas header -->
+
+              <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                  <li class="nav-item">
+
+                    <!-- Set href for webpages! -->
+                    <a class="nav-link active" aria-current="page" href="#"
+                      >Home</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"
+                      >Study Flashcards</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"
+                      >Build Flashcards</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"
+                      >Category Tags</a
+                    >
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a
+                      class="nav-link dropdown-toggle"
+                      href="#"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      More...
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a class="dropdown-item" href="#"
+                         >Flashcard Statistics</a
+                        >
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="#"
+                          >Developer</a
+                        >
+                      </li>
+                      <li>
+                        <hr class="dropdown-divider" />
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="#"
+                          >Settings</a
+                        >
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+                <form class="d-flex mt-3" role="search">
+                  <input
+                    class="form-control me-2"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                  />
+                  <button class="btn btn-outline-success" type="submit">
+                    Search
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <main>
+        <section class="">
+          <h2 class="text-center">Data Entry</h2>
+
+          <!-- <form name="builder" class="d-flex flex-column" enctype="multipart/form-data" method="post"> -->
+          <form name="builder" class="d-flex flex-column">
+            <div>
+              <!-- Tabs for front||back of flashcard -->
+              <!-- https://getbootstrap.com/docs/5.3/components/navs-tabs/#javascript-behavior -->
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <!-- Tab head -->
+                <!-- Query: front -->
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active"
+                    id="question-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#question-tab-pane"
+                    type="button"
+                    role="tab"
+                    aria-controls="question-tab-pane"
+                    aria-selected="true"
+                  >
+                    <label for="input-question">Question</label>
+                  </button>
+                </li>
+                <!-- Answer: back -->
+                <!-- dropdown: https://getbootstrap.com/docs/5.3/components/navs-tabs/#tabs-with-dropdowns -->
+                <!-- Pre-modification: <li class="nav-item dropdown"></li> -->
+                <li class="nav-item dropdown" role="presentation">
+                  <!-- Pre-modification: <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a> -->
+                  <button
+                    class="nav-link dropdown-toggle"
+                    id="answer-tab"
+                    data-bs-toggle="dropdown"
+                    href="#"
+                    type="button"
+                    role="tab"
+                    aria-controls=""
+                    aria-expanded="false"
+                    aria-selected="false"
+                  >
+                    Answer
+                  </button>
+                  <ul class="dropdown-menu">
+                    <!-- Pre-modification: <li><a class="dropdown-item" href="#">Action</a></li> -->
+                    <li
+                      class="dropdown-item"
+                      id="text-answer-tab"
+                      data-bs-toggle="tab"
+                      data-bs-target="#answer-tab-pane"
+                      aria-controls="answer-tab-pane"
+                    >
+                      <a>
+                        <label for="input-answer">Text</label>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        data-bs-toggle="tab"
+                        data-bs-target="#answer-image-tab"
+                        aria-controls="answer-image-tab-pane"
+                        ><label for="input-image">Image</label></a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        data-bs-toggle="tab"
+                        data-bs-target="#answer-audio-tab"
+                        aria-controls="answer-audio-tab-pane"
+                        ><label for="input-audio">Audio</label></a
+                      >
+                    </li>
+                    <li class="dropdown-item">
+                      Video
+                      <ul class="drop-menu">
+                        <li>
+                          <a
+                            class="dropdown-item ps-1"
+                            data-bs-toggle="tab"
+                            data-bs-target="#answer-video-tab"
+                            aria-controls="answer-video-tab-pane"
+                            ><label for="input-video">Local</label></a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            class="dropdown-item ps-1"
+                            data-bs-toggle="tab"
+                            data-bs-target="#answer-video-youtube-tab"
+                            aria-controls="answer-video-youtube-tab-pane"
+                            ><label for="input-video-youtube">YouTube</label></a
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <!-- Tab body -->
+              <div class="tab-content" id="myTabContent">
+                <!-- Query body: front -->
+                <!-- <div class="tab-pane fade show active" id="question-tab-pane" role="tabpanel" aria-labelledby="question-tab" tabindex="0"> -->
+                <div
+                  class="tab-pane fade show active"
+                  id="question-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="question-tab"
+                  tabindex="0"
+                >
+                  <textarea
+                    class="w-100 form-control"
+                    name="input-question"
+                    id="input-question"
+                    cols="33"
+                    rows="10"
+                  >
+What is the formula for the Pythagorean theorem?</textarea
+                  >
+                  <div id="latex-question-output"></div>
+                </div>
+
+                <!-- Answer body: back -->
+                <!-- input: text -->
+                <div
+                  class="tab-pane fade"
+                  id="answer-tab-pane"
+                  role="tabpanel"
+                  aria-labelledby="text-answer-tab"
+                  tabindex="0"
+                >
+                  <!-- .form-floating: used to float label inside textarea. -->
+                  <div class="form-floating">
+                    <textarea
+                      class="w-100 h-100 form-control"
+                      name="input-answer"
+                      id="input-answer"
+                      cols="33"
+                      rows="10"
+                    >
+\(a^2 + b^2 = c^2\); \(\int_a^b f(\mu) \, d\mu\</textarea
+                    >
+                    <!-- label must come After textarea! for inserting/floating label INSIDE textarea. -->
+                    <label for="input-answer"
+                      >Enter closing ")" for LaTex...</label
+                    >
+                  </div>
+
+                  <!-- radio selector for LaTex | markdown -->
+                  <div class="radio-text-format mb-2">
+                    <div class="form-check form-check-inline">
+                      <input
+                        checked
+                        class="form-check-input"
+                        type="radio"
+                        name="inlineRadioOptions"
+                        id="inlineRadio-regular"
+                        value="regularText"
+                      />
+                      <label class="form-check-label" for="inlineRadio-regular"
+                        >Regular</label
+                      >
                     </div>
-                  </nav>
-            </header>
-            <main>
-                <section class="">
-                    <h2 class="text-center">Data Entry</h2>
-                    
-                    <!-- <form name="builder" class="d-flex flex-column" enctype="multipart/form-data" method="post"> -->
-                    <form name="builder" class="d-flex flex-column">
-                        <div>
-                            <!-- Tabs for front||back of flashcard -->
-                            <!-- https://getbootstrap.com/docs/5.3/components/navs-tabs/#javascript-behavior -->
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <!-- Tab head -->
-                                <!-- Query: front -->
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="question-tab" data-bs-toggle="tab" data-bs-target="#question-tab-pane" type="button" role="tab" aria-controls="question-tab-pane" aria-selected="true">
-                                        <label for="input-question">Question</label>
-                                    </button>
-                                </li>
-                                <!-- Answer: back -->
-                                <!-- dropdown: https://getbootstrap.com/docs/5.3/components/navs-tabs/#tabs-with-dropdowns -->
-                                <!-- Pre-modification: <li class="nav-item dropdown"></li> -->
-                                <li class="nav-item dropdown" role="presentation">
-                                    <!-- Pre-modification: <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a> -->
-                                    <button class="nav-link dropdown-toggle" id="answer-tab" data-bs-toggle="dropdown" href="#" type="button" role="tab" aria-controls="" aria-expanded="false" aria-selected="false">
-                                        Answer
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <!-- Pre-modification: <li><a class="dropdown-item" href="#">Action</a></li> -->
-                                        <li class="dropdown-item" id="text-answer-tab"  data-bs-toggle="tab" data-bs-target="#answer-tab-pane" aria-controls="answer-tab-pane">
-                                            <a>
-                                                <label for="input-answer">Text</label>
-                                            </a>
-                                        </li>
-                                        <li><a class="dropdown-item" data-bs-toggle="tab" data-bs-target="#answer-image-tab" aria-controls="answer-image-tab-pane"><label for="input-image">Image</label></a></li>
-                                        <li><a class="dropdown-item" data-bs-toggle="tab" data-bs-target="#answer-audio-tab" aria-controls="answer-audio-tab-pane"><label for="input-audio">Audio</label></a></li>
-                                        <li class="dropdown-item">
-                                            Video
-                                            <ul class="drop-menu">
-                                                <li><a class="dropdown-item ps-1" data-bs-toggle="tab" data-bs-target="#answer-video-tab" aria-controls="answer-video-tab-pane"><label for="input-video">Local</label></a></li>
-                                                <li><a class="dropdown-item ps-1" data-bs-toggle="tab" data-bs-target="#answer-video-youtube-tab" aria-controls="answer-video-youtube-tab-pane"><label for="input-video-youtube">YouTube</label></a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                  </li>
-                            </ul>
-                            <!-- Tab body -->
-                            <div class="tab-content" id="myTabContent">
-                                <!-- Query body: front -->
-                                <!-- <div class="tab-pane fade show active" id="question-tab-pane" role="tabpanel" aria-labelledby="question-tab" tabindex="0"> -->
-                                <div class="tab-pane fade show active" id="question-tab-pane" role="tabpanel" aria-labelledby="question-tab" tabindex="0">
-                                    <textarea class="w-100 form-control" name="input-question" id="input-question" cols="33" rows="10">What is the formula for the Pythagorean theorem?</textarea>
-                                    <div id="latex-question-output"></div>
-                                </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="inlineRadioOptions"
+                        id="inlineRadio-markdown"
+                        value="markdownText"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="inlineRadio-markdown"
+                        title="Danger: open to XSS attacks!&#10; Use at your own risk!!"
+                        >Markdown</label
+                      >
+                      <!-- # Hello StudyPal -->
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="inlineRadioOptions"
+                        id="inlineRadio-latex"
+                        value="latexText"
+                      />
+                      <label class="form-check-label" for="inlineRadio-latex"
+                        >LaTex</label
+                      >
+                      <!-- \(a^2 + b^2 = c^2\); \(\int_a^b f(\mu) \, d\mu\) -->
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="inlineRadioOptions"
+                        id="inlineRadio-mermaid"
+                        value="mermaidText"
+                      />
+                      <label class="form-check-label" for="inlineRadio-mermaid"
+                        >Mermaid</label
+                      >
+                      <!-- test examples to copy&paste into textarea: don't copy comment tag obviously. -->
+                      <script>
+                        // sequenceDiagram; participant dotcom;participant iframe; participant viewscreen;dotcom->>iframe: loads html w/ iframe url; iframe->>viewscreen: request template; viewscreen->>iframe: html & javascript; iframe->>dotcom: iframe ready;dotcom->>iframe: set mermaid data on iframe; iframe->>iframe: render mermaid;
+                      </script>
+                      <script>
+                        // graph TD;A-->B;A-->C;B-->D;C-->D;
+                      </script>
+                      <!-- https://mermaid.js.org/ -->
+                      <!-- https://gist.github.com/martinwoodward/8ad6296118c975510766d80310db71fd -->
+                      <!-- ArjanCodes: https://www.youtube.com/watch?v=JiQmpA474BY -->
+                    </div>
+                  </div>
 
-                                <!-- Answer body: back -->
-                                <!-- input: text -->
-                                <div class="tab-pane fade" id="answer-tab-pane" role="tabpanel" aria-labelledby="text-answer-tab" tabindex="0">
-                                    <!-- .form-floating: used to float label inside textarea. -->
-                                    <div class="form-floating">
-                                        <textarea class="w-100 h-100 form-control" name="input-answer" id="input-answer" cols="33" rows="10">\(a^2 + b^2 = c^2\); \(\int_a^b f(\mu) \, d\mu\</textarea>
-                                        <!-- label must come After textarea! for inserting/floating label INSIDE textarea. -->
-                                        <label for="input-answer">Enter closing ")" for LaTex...</label>
-                                    </div>
+                  <div
+                    id="latex-answer-output"
+                    class="text-bg-info rounded p-2"
+                  ></div>
+                </div>
 
-                                    <!-- radio selector for LaTex | markdown -->
-                                    <div class="radio-text-format mb-2">
-                                        <div class="form-check form-check-inline">
-                                            <input checked class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio-regular" value="regularText">
-                                            <label class="form-check-label" for="inlineRadio-regular">Regular</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio-markdown" value="markdownText">
-                                            <label class="form-check-label" for="inlineRadio-markdown" title="Danger: open to XSS attacks!&#10; Use at your own risk!!">Markdown</label>
-                                            <!-- # Hello StudyPal -->
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio-latex" value="latexText">
-                                            <label class="form-check-label" for="inlineRadio-latex">LaTex</label>
-                                            <!-- \(a^2 + b^2 = c^2\); \(\int_a^b f(\mu) \, d\mu\) -->
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio-mermaid" value="mermaidText">
-                                            <label class="form-check-label" for="inlineRadio-mermaid">Mermaid</label>
-                                            <!-- test examples to copy&paste into textarea: don't copy comment tag obviously. -->
-                                            <script> // sequenceDiagram; participant dotcom;participant iframe; participant viewscreen;dotcom->>iframe: loads html w/ iframe url; iframe->>viewscreen: request template; viewscreen->>iframe: html & javascript; iframe->>dotcom: iframe ready;dotcom->>iframe: set mermaid data on iframe; iframe->>iframe: render mermaid; </script>
-                                            <script> // graph TD;A-->B;A-->C;B-->D;C-->D; </script>
-                                            <!-- https://mermaid.js.org/ -->
-                                            <!-- https://gist.github.com/martinwoodward/8ad6296118c975510766d80310db71fd -->
-                                            <!-- ArjanCodes: https://www.youtube.com/watch?v=JiQmpA474BY -->
-                                        </div>
-                                    </div>
-                                      
-                                    <div id="latex-answer-output" class="text-bg-info rounded p-2"></div>
-                                </div>
+                <!-- input: image -->
+                <div
+                  class="tab-pane fade mt-2"
+                  id="answer-image-tab"
+                  role="tabpanel"
+                  aria-labelledby="answer-image-tab"
+                  tabindex="0"
+                >
+                  <div class="d-flex justify-content-between">
+                    <button
+                      class="btn btn-secondary py-0 px-2 py-sm-1 px-sm-5"
+                      id="upload-image-btn"
+                      type="button"
+                    >
+                      Choose Image
+                    </button>
+                    <button
+                      class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5"
+                      id="cancel-upload-image-btn"
+                      type="button"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <span class="d-block text-wrap" id="file-name-image"
+                    >No file selected</span
+                  >
+                  <div class="d-flex justify-content-center mt-3 form-control">
+                    <input
+                      class="d-none"
+                      type="file"
+                      name="input-image"
+                      id="input-image"
+                      accept="image/*"
+                    />
+                    <img
+                      alt="Uploaded image"
+                      id="uploaded-image"
+                      class="text-center w-100 h-100"
+                    />
+                  </div>
+                </div>
 
-                                <!-- input: image -->
-                                <div class="tab-pane fade mt-2" id="answer-image-tab" role="tabpanel" aria-labelledby="answer-image-tab" tabindex="0">
-                                    <div class="d-flex justify-content-between">
-                                        <button class="btn btn-secondary py-0 px-2 py-sm-1 px-sm-5" id="upload-image-btn" type="button">Choose Image</button>
-                                        <button class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5" id="cancel-upload-image-btn" type="button">Cancel</button>
-                                    </div>
-                                    <span class="d-block text-wrap" id="file-name-image">No file selected</span>
-                                    <div class="d-flex justify-content-center mt-3 form-control">
-                                        <input class="d-none" type="file" name="input-image" id="input-image" accept="image/*" />
-                                        <img alt="Uploaded image" id="uploaded-image" class="text-center w-100 h-100">
-                                    </div>
-                                </div>
+                <!-- input: audio -->
+                <div
+                  class="tab-pane fade mt-2"
+                  id="answer-audio-tab"
+                  role="tabpanel"
+                  aria-labelledby="answer-audio-tab"
+                  tabindex="0"
+                >
+                  <div class="d-flex justify-content-between">
+                    <button
+                      class="btn btn-secondary py-0 px-2 py-sm-1 px-sm-5"
+                      id="upload-audio-btn"
+                      type="button"
+                    >
+                      Choose Audio
+                    </button>
+                    <button
+                      class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5"
+                      id="cancel-upload-audio-btn"
+                      type="button"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <span class="d-block text-wrap" id="file-name-audio"
+                    >No file selected</span
+                  >
+                  <div class="d-flex justify-content-center mt-3 form-control">
+                    <input
+                      type="file"
+                      class="d-none"
+                      name="input-audio"
+                      id="input-audio"
+                      accept="audio/*"
+                    />
+                    <audio id="audio-element" controls>
+                      <source id="uploaded-audio" src="" type="audio/mpeg" />
+                      Your browser does not support the audio element. Upgrade
+                      to a modern browser.
+                    </audio>
+                  </div>
+                </div>
 
-                                <!-- input: audio -->
-                                <div class="tab-pane fade mt-2" id="answer-audio-tab" role="tabpanel" aria-labelledby="answer-audio-tab" tabindex="0">
-                                    <div class="d-flex justify-content-between">
-                                        <button class="btn btn-secondary py-0 px-2 py-sm-1 px-sm-5" id="upload-audio-btn" type="button">Choose Audio</button>
-                                        <button class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5" id="cancel-upload-audio-btn" type="button">Cancel</button>
-                                    </div>
-                                    <span class="d-block text-wrap" id="file-name-audio">No file selected</span>
-                                    <div class="d-flex justify-content-center mt-3 form-control">
-                                        <input type="file" class="d-none" name="input-audio" id="input-audio" accept="audio/*" >
-                                        <audio id="audio-element" controls>
-                                            <source id="uploaded-audio" src="" type="audio/mpeg" />
-                                            Your browser does not support the audio element. Upgrade to a modern browser.
-                                        </audio>
-                                    </div>
-                                </div>
+                <!-- input: video -->
+                <div
+                  class="tab-pane fade mt-2"
+                  id="answer-video-tab"
+                  role="tabpanel"
+                  aria-labelledby="answer-video-tab"
+                  tabindex="0"
+                >
+                  <div class="d-flex justify-content-between">
+                    <button
+                      class="btn btn-secondary py-0 px-2 py-sm-1 px-sm-5"
+                      id="upload-video-btn"
+                      type="button"
+                    >
+                      Choose Video
+                    </button>
+                    <button
+                      class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5"
+                      id="cancel-upload-video-btn"
+                      type="button"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <span class="d-block text-wrap" id="file-name-video"
+                    >No file selected</span
+                  >
+                  <div class="d-flex justify-content-center mt-3">
+                    <input
+                      type="file"
+                      class="d-none"
+                      name="input-video"
+                      id="input-video"
+                      accept="video/mp4,video/webm,video/ogg"
+                    />
+                    <!-- firefox: didn't support mp4!; chromium: supports mp4. -->
+                    <video id="video-element" controls>
+                      <source id="uploaded-video" src="" type="video/mp4" />
+                      Your browser does not support the video element. Upgrade
+                      to a modern browser.
+                    </video>
+                  </div>
+                </div>
+                <!-- YouTube -->
+                <div
+                  class="tab-pane fade mt-2"
+                  id="answer-video-youtube-tab"
+                  role="tabpanel"
+                  aria-labelledby="answer-video-youtube-tab"
+                  tabindex="0"
+                >
+                  <div class="d-flex justify-content-between">
+                    <button
+                      class="btn btn-success py-0 px-2 py-sm-1 px-sm-5"
+                      id="set-youtube-url"
+                      role="button"
+                    >
+                      Set Link
+                    </button>
 
-                                <!-- input: video -->
-                                <div class="tab-pane fade mt-2" id="answer-video-tab" role="tabpanel" aria-labelledby="answer-video-tab" tabindex="0">
-                                    <div class="d-flex justify-content-between">
-                                        <button class="btn btn-secondary py-0 px-2 py-sm-1 px-sm-5" id="upload-video-btn" type="button">Choose Video</button>
-                                        <button class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5" id="cancel-upload-video-btn" type="button">Cancel</button>
-                                    </div>
-                                    <span class="d-block text-wrap" id="file-name-video">No file selected</span>
-                                    <div class="d-flex justify-content-center mt-3">
-                                        <input type="file" class="d-none" name="input-video" id="input-video" accept="video/mp4,video/webm,video/ogg" >
-                                        <!-- firefox: didn't support mp4!; chromium: supports mp4. -->
-                                        <video id="video-element" controls>
-                                            <source id="uploaded-video" src="" type="video/mp4" />
-                                            Your browser does not support the video element. Upgrade to a modern browser.
-                                        </video>
-                                    </div>
-                                </div>
-                                <!-- YouTube -->
-                                <div class="tab-pane fade mt-2" id="answer-video-youtube-tab" role="tabpanel" aria-labelledby="answer-video-youtube-tab" tabindex="0">
-                                    <div class="d-flex justify-content-between">
-                                        <button class="btn btn-success py-0 px-2 py-sm-1 px-sm-5" id="set-youtube-url" role="button">Set Link</button>
+                    <div>
+                      <button
+                        class="btn btn-warning py-0 px-2 py-sm-1 px-sm-5"
+                        id="youtube-clear-input-btn"
+                        type="button"
+                      >
+                        Clear
+                      </button>
+                      <button
+                        class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5"
+                        id="cancel-upload-video-youtube-btn"
+                        type="button"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
 
-                                        <div>
-                                            <button class="btn btn-warning py-0 px-2 py-sm-1 px-sm-5" id="youtube-clear-input-btn" type="button">Clear</button>
-                                            <button class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5" id="cancel-upload-video-youtube-btn" type="button">Cancel</button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="input-group pt-2">
-                                        <span class="input-group-text" id="input-youtube-label" title='Paste iframe code here.&#10; Then Set link.'>
-                                            <label for="input-youtube" id="youtube-input-group-text">iframe</label>
-                                        </span>
-                                        <input class="form-control" type="text" name="input-youtube" id="input-youtube" aria-label="YouTube URL" aria-describedby="input-youtube-label" placeholder='share>embed>copy>start:checked[optional]'>
-                                        <!-- <label for="input-youtube">URL</label> -->
-                                        <!-- <input type="text" name="input-youtube" id="input-youtube"> -->
-                                    </div>
-                                    
+                  <div class="input-group pt-2">
+                    <span
+                      class="input-group-text"
+                      id="input-youtube-label"
+                      title="Paste iframe code here.&#10; Then Set link."
+                    >
+                      <label for="input-youtube" id="youtube-input-group-text"
+                        >iframe</label
+                      >
+                    </span>
+                    <input
+                      class="form-control"
+                      type="text"
+                      name="input-youtube"
+                      id="input-youtube"
+                      aria-label="YouTube URL"
+                      aria-describedby="input-youtube-label"
+                      placeholder="share>embed>copy>start:checked[optional]"
+                    />
+                    <!-- <label for="input-youtube">URL</label> -->
+                    <!-- <input type="text" name="input-youtube" id="input-youtube"> -->
+                  </div>
 
-                                    <!-- <span class="d-block text-wrap" id="file-name-video-youtube">No file selected</span> -->
-                                    <div class="d-flex justify-content-center mt-3">
-                                        <!-- width="560" height="315" -->
-                                        <iframe
-                                            id="iframe-youtube"
-                                            title="YouTube embedded src link."
-                                            loading="lazy"
-                                            src=""
-                                            allowfullscreen>
-                                        </iframe>
-                                        <!-- 
+                  <!-- <span class="d-block text-wrap" id="file-name-video-youtube">No file selected</span> -->
+                  <div class="d-flex justify-content-center mt-3">
+                    <!-- width="560" height="315" -->
+                    <iframe
+                      id="iframe-youtube"
+                      title="YouTube embedded src link."
+                      loading="lazy"
+                      src=""
+                      allowfullscreen
+                    >
+                    </iframe>
+                    <!-- 
                                             Forbidden url src: (You can't use the vanilla youtube link! Must use an embedded link.)
                                                 src="https://youtu.be/omWmWu1XO8U?si=RDFRzbfTf48IaCV_&t=96"
 
@@ -260,322 +591,354 @@
                                                 without start:
                                                     src="https://www.youtube.com/embed/omWmWu1XO8U?si=XVdvDSc1zFNN4qvx"
                                         -->
-                                    </div>
-                                </div>
-                            </div>
+                  </div>
+                </div>
+              </div>
 
-                            <!-- Tags -->
-                            <label for="tags" class="d-flex flex-column mt-3 form-label">
-                                Flashcard category tags
-                                <input name="tags" id="tags"
-                                    class="form-control"
-                                    type="text"
-                                    placeholder="Ex: math,multiplication"
-                                >
-                            </label>
-                        </div>
-                        
-                        <!-- align-self-stretch is for mobile; d-sm-flex enables mx-sm-auto for >=tablet -->
-                        <button id="create-btn" type="submit" class="btn btn-md btn-success mt-4   align-self-stretch   d-sm-flex px-sm-5 mx-sm-auto">Create</button>
-                    </form>
-                </section>
-            </main>
-            <footer class="text-center">
-                <h3 class="mb-3 mt-md-3 text-secondary fs-6">
-                    StudyPal &copy;2024
-                </h3>
-            </footer>
-        </div>
-        <script>
-            // const formData = new FormData(document.forms['builder']);
-            // console.log(formData)
+              <!-- Tags -->
+              <label for="tags" class="d-flex flex-column mt-3 form-label">
+                Flashcard category tags
+                <input
+                  name="tags"
+                  id="tags"
+                  class="form-control"
+                  type="text"
+                  placeholder="Ex: math,multiplication"
+                />
+              </label>
+            </div>
 
-            // image file buttons: long file names on mobile causes overflow-x-scroll, so re-implement.
-            // in addition, choose--re-choose leads to no-change thus no event, hence toggle message.
-            const fileNameConfirmationText_image = document.getElementById('file-name-image');
-            const inputElement_image=document.getElementById('input-image');
-            const imageElement_upload=document.getElementById('uploaded-image');
-            const chooseBtn_image=document.getElementById('upload-image-btn');
-            chooseBtn_image.onclick=function(){
-                fileNameConfirmationText_image.textContent='You may need to toggle a different file first.';
-                fileNameConfirmationText_image.classList.add('text-warning');
-                fileNameConfirmationText_image.classList.remove('text-success');
+            <!-- align-self-stretch is for mobile; d-sm-flex enables mx-sm-auto for >=tablet -->
+            <button
+              id="create-btn"
+              type="submit"
+              class="btn btn-md btn-success mt-4 align-self-stretch d-sm-flex px-sm-5 mx-sm-auto"
+            >
+              Create
+            </button>
+          </form>
+        </section>
+      </main>
+      <footer class="text-center">
+        <h3 class="mb-3 mt-md-3 text-secondary fs-6">StudyPal &copy;2024</h3>
+      </footer>
+    </div>
+    <script>
+      // const formData = new FormData(document.forms['builder']);
+      // console.log(formData)
 
-                // wrapper for click pass-thru
-                inputElement_image.click();
-            };
+      // image file buttons: long file names on mobile causes overflow-x-scroll, so re-implement.
+      // in addition, choose--re-choose leads to no-change thus no event, hence toggle message.
+      const fileNameConfirmationText_image =
+        document.getElementById("file-name-image");
+      const inputElement_image = document.getElementById("input-image");
+      const imageElement_upload = document.getElementById("uploaded-image");
+      const chooseBtn_image = document.getElementById("upload-image-btn");
+      chooseBtn_image.onclick = function () {
+        fileNameConfirmationText_image.textContent =
+          "You may need to toggle a different file first.";
+        fileNameConfirmationText_image.classList.add("text-warning");
+        fileNameConfirmationText_image.classList.remove("text-success");
 
-            let IMAGE_URL=null;
-            function revokeImageURL(){
-                if(IMAGE_URL){
-                    /* IMAGE_URL MUST be the same URL instance to be successfully revoked, hence the global variable.
+        // wrapper for click pass-thru
+        inputElement_image.click();
+      };
+
+      let IMAGE_URL = null;
+      function revokeImageURL() {
+        if (IMAGE_URL) {
+          /* IMAGE_URL MUST be the same URL instance to be successfully revoked, hence the global variable.
                         Creating a new IMAGE_URL=URL.createObjectURL(file[0]); will be a different instance and will not
                         revoke/delete the Blob-url. This will lead to its persistance and thus a memory leak.
                     */
-                    URL.revokeObjectURL(IMAGE_URL);
-                    IMAGE_URL=null;
-                    imageElement_upload.src='';
-                }
-            }
-            inputElement_image.addEventListener('change', function(e){
-                revokeImageURL();
+          URL.revokeObjectURL(IMAGE_URL);
+          IMAGE_URL = null;
+          imageElement_upload.src = "";
+        }
+      }
+      inputElement_image.addEventListener("change", function (e) {
+        revokeImageURL();
 
-                const file=e.target.files;
-                if(file&&file[0]){
-                    // adds file name below 'Choose file' btn
-                    fileNameConfirmationText_image.textContent = file[0].name;
-                    fileNameConfirmationText_image.classList.add('text-success');
-                    fileNameConfirmationText_image.classList.remove('text-warning');
-                    // image preview
-                    IMAGE_URL=URL.createObjectURL(file[0]);
-                    imageElement_upload.src = IMAGE_URL;
-                }
-            });
+        const file = e.target.files;
+        if (file && file[0]) {
+          // adds file name below 'Choose file' btn
+          fileNameConfirmationText_image.textContent = file[0].name;
+          fileNameConfirmationText_image.classList.add("text-success");
+          fileNameConfirmationText_image.classList.remove("text-warning");
+          // image preview
+          IMAGE_URL = URL.createObjectURL(file[0]);
+          imageElement_upload.src = IMAGE_URL;
+        }
+      });
 
-            const cancelBtn_image=document.getElementById('cancel-upload-image-btn');
-            cancelBtn_image.addEventListener('click', function(e){
-                fileNameConfirmationText_image.textContent='No file selected';
-                fileNameConfirmationText_image.classList.remove('text-success');
-                fileNameConfirmationText_image.classList.remove('text-warning');
+      const cancelBtn_image = document.getElementById(
+        "cancel-upload-image-btn"
+      );
+      cancelBtn_image.addEventListener("click", function (e) {
+        fileNameConfirmationText_image.textContent = "No file selected";
+        fileNameConfirmationText_image.classList.remove("text-success");
+        fileNameConfirmationText_image.classList.remove("text-warning");
 
-                revokeImageURL();
-            });
+        revokeImageURL();
+      });
 
-            // Audio selection options:
-            const fileNameConfirmationText_audio = document.getElementById('file-name-audio');
-            const inputElement_audio=document.getElementById('input-audio');
-            const sourceElement_audio=document.getElementById('uploaded-audio');
-            const chooseBtn_audio=document.getElementById('upload-audio-btn');
-            chooseBtn_audio.onclick=function(){
-                fileNameConfirmationText_audio.textContent='You may need to toggle a different file first.';
-                fileNameConfirmationText_audio.classList.add('text-warning');
-                fileNameConfirmationText_audio.classList.remove('text-success');
+      // Audio selection options:
+      const fileNameConfirmationText_audio =
+        document.getElementById("file-name-audio");
+      const inputElement_audio = document.getElementById("input-audio");
+      const sourceElement_audio = document.getElementById("uploaded-audio");
+      const chooseBtn_audio = document.getElementById("upload-audio-btn");
+      chooseBtn_audio.onclick = function () {
+        fileNameConfirmationText_audio.textContent =
+          "You may need to toggle a different file first.";
+        fileNameConfirmationText_audio.classList.add("text-warning");
+        fileNameConfirmationText_audio.classList.remove("text-success");
 
-                // wrapper for click pass-thru
-                inputElement_audio.click();
-            };
-            let AUDIO_URL=null;
-            function revokeAudioURL(){
-                /* AUDIO_URL MUST be the same URL instance to be successfully revoked, hence the global variable.
+        // wrapper for click pass-thru
+        inputElement_audio.click();
+      };
+      let AUDIO_URL = null;
+      function revokeAudioURL() {
+        /* AUDIO_URL MUST be the same URL instance to be successfully revoked, hence the global variable.
                     Creating a new AUDIO_URL=URL.createObjectURL(file[0]); will be a different instance and will not
                     revoke/delete the Blob-url. This will lead to its persistance and thus a memory leak.
                 */
-                if(AUDIO_URL){
-                    URL.revokeObjectURL(AUDIO_URL);
-                    AUDIO_URL=null;
-                    sourceElement_audio.src='';
-                }
-            }
-            inputElement_audio.addEventListener('change', function(e){
-                const file=e.target.files;
-                if(file&&file[0]){
-                    // adds file name below 'Choose file' btn
-                    fileNameConfirmationText_audio.textContent = file[0].name;
-                    fileNameConfirmationText_audio.classList.add('text-success');
-                    fileNameConfirmationText_audio.classList.remove('text-warning');
+        if (AUDIO_URL) {
+          URL.revokeObjectURL(AUDIO_URL);
+          AUDIO_URL = null;
+          sourceElement_audio.src = "";
+        }
+      }
+      inputElement_audio.addEventListener("change", function (e) {
+        const file = e.target.files;
+        if (file && file[0]) {
+          // adds file name below 'Choose file' btn
+          fileNameConfirmationText_audio.textContent = file[0].name;
+          fileNameConfirmationText_audio.classList.add("text-success");
+          fileNameConfirmationText_audio.classList.remove("text-warning");
 
-                    // audio preview
-                    // AUDIO_URL=file[0].name; // this works if the audio file is a sibling to flashcard-builder.html
-                    AUDIO_URL=URL.createObjectURL(file[0]); // this creates a one-time unique URL that points to the local audio file.  
-                    sourceElement_audio.src=AUDIO_URL;
-                    const mimeType=file[0].type;
-                    sourceElement_audio.type=mimeType;
+          // audio preview
+          // AUDIO_URL=file[0].name; // this works if the audio file is a sibling to flashcard-builder.html
+          AUDIO_URL = URL.createObjectURL(file[0]); // this creates a one-time unique URL that points to the local audio file.
+          sourceElement_audio.src = AUDIO_URL;
+          const mimeType = file[0].type;
+          sourceElement_audio.type = mimeType;
 
-                    document.getElementById('audio-element').load();
-                }
-            });
+          document.getElementById("audio-element").load();
+        }
+      });
 
-            const cancelBtn_audio=document.getElementById('cancel-upload-audio-btn');
-            cancelBtn_audio.onclick=function(e){
-                fileNameConfirmationText_audio.textContent='No file selected';
-                fileNameConfirmationText_audio.classList.remove('text-success');
-                fileNameConfirmationText_audio.classList.remove('text-warning');
-                revokeAudioURL();
-            }
+      const cancelBtn_audio = document.getElementById(
+        "cancel-upload-audio-btn"
+      );
+      cancelBtn_audio.onclick = function (e) {
+        fileNameConfirmationText_audio.textContent = "No file selected";
+        fileNameConfirmationText_audio.classList.remove("text-success");
+        fileNameConfirmationText_audio.classList.remove("text-warning");
+        revokeAudioURL();
+      };
 
-            // Local Video selection options:
-            const fileNameConfirmationText_video = document.getElementById('file-name-video');
-            const inputElement_video=document.getElementById('input-video');
-            const sourceElement_video=document.getElementById('uploaded-video');
-            const chooseBtn_video=document.getElementById('upload-video-btn');
-            chooseBtn_video.onclick=function(){
-                fileNameConfirmationText_video.innerHTML='<span>Supported formats: mp4,webm,ogg.</span><br><span>You may need to toggle a different file first.</span>';
-                fileNameConfirmationText_video.classList.add('text-warning');
-                fileNameConfirmationText_video.classList.remove('text-success');
+      // Local Video selection options:
+      const fileNameConfirmationText_video =
+        document.getElementById("file-name-video");
+      const inputElement_video = document.getElementById("input-video");
+      const sourceElement_video = document.getElementById("uploaded-video");
+      const chooseBtn_video = document.getElementById("upload-video-btn");
+      chooseBtn_video.onclick = function () {
+        fileNameConfirmationText_video.innerHTML =
+          "<span>Supported formats: mp4,webm,ogg.</span><br><span>You may need to toggle a different file first.</span>";
+        fileNameConfirmationText_video.classList.add("text-warning");
+        fileNameConfirmationText_video.classList.remove("text-success");
 
-                // wrapper for click pass-thru
-                inputElement_video.click();
-            };
-            let VIDEO_URL=null;
-            function revokeVideoURL(){
-                /* VIDEO_URL MUST be the same URL instance to be successfully revoked, hence the global variable.
+        // wrapper for click pass-thru
+        inputElement_video.click();
+      };
+      let VIDEO_URL = null;
+      function revokeVideoURL() {
+        /* VIDEO_URL MUST be the same URL instance to be successfully revoked, hence the global variable.
                     Creating a new VIDEO_URL=URL.createObjectURL(file[0]); will be a different instance and will not
                     revoke/delete the Blob-url. This will lead to its persistance and thus a memory leak.
                 */
-                if(VIDEO_URL){
-                    URL.revokeObjectURL(VIDEO_URL);
-                    VIDEO_URL=null;
-                    sourceElement_video.src='';
-                }
-            }
-            inputElement_video.addEventListener('change', function(e){
-                const file=e.target.files;
-                if(file&&file[0]){
-                    // adds file name below 'Choose file' btn
-                    fileNameConfirmationText_video.textContent = file[0].name;
-                    fileNameConfirmationText_video.classList.add('text-success');
-                    fileNameConfirmationText_video.classList.remove('text-warning');
+        if (VIDEO_URL) {
+          URL.revokeObjectURL(VIDEO_URL);
+          VIDEO_URL = null;
+          sourceElement_video.src = "";
+        }
+      }
+      inputElement_video.addEventListener("change", function (e) {
+        const file = e.target.files;
+        if (file && file[0]) {
+          // adds file name below 'Choose file' btn
+          fileNameConfirmationText_video.textContent = file[0].name;
+          fileNameConfirmationText_video.classList.add("text-success");
+          fileNameConfirmationText_video.classList.remove("text-warning");
 
-                    // video preview
-                    // VIDEO_URL=file[0].name; // this works if the video file is a sibling to flashcard-builder.html
-                    VIDEO_URL=URL.createObjectURL(file[0]); // this creates a one-time unique URL that points to the local video file.  
-                    sourceElement_video.src=VIDEO_URL;
-                    const mimeType=file[0].type;
-                    sourceElement_video.type=mimeType;
-                    const mainElement = document.querySelector('main');
-                    let width = mainElement.offsetWidth;
-                    if(width>575){
-                        width *=.3;
-                    }
-                    document.getElementById('video-element').setAttribute('width', width);
-                    document.getElementById('video-element').load();
-                    // get dimensions
-                    // const videoElement=document.createElement('video');
-                    // videoElement.src=VIDEO_URL;
-                    // videoElement.addEventListener('loadedmetadata',function(){
-                    //     console.log('width',this.videoWidth);
-                    //     console.log('height',this.videoHeight);
-                    //     let viewportWidth = window.innerWidth;
-                    //     console.log(viewportWidth);
-                    //     let mainElement = document.querySelector('main');
-                    //     let width = mainElement.offsetWidth;
-                    //     console.log(width);
-                    // });
-                }
-            });
+          // video preview
+          // VIDEO_URL=file[0].name; // this works if the video file is a sibling to flashcard-builder.html
+          VIDEO_URL = URL.createObjectURL(file[0]); // this creates a one-time unique URL that points to the local video file.
+          sourceElement_video.src = VIDEO_URL;
+          const mimeType = file[0].type;
+          sourceElement_video.type = mimeType;
+          const mainElement = document.querySelector("main");
+          let width = mainElement.offsetWidth;
+          if (width > 575) {
+            width *= 0.3;
+          }
+          document.getElementById("video-element").setAttribute("width", width);
+          document.getElementById("video-element").load();
+          // get dimensions
+          // const videoElement=document.createElement('video');
+          // videoElement.src=VIDEO_URL;
+          // videoElement.addEventListener('loadedmetadata',function(){
+          //     console.log('width',this.videoWidth);
+          //     console.log('height',this.videoHeight);
+          //     let viewportWidth = window.innerWidth;
+          //     console.log(viewportWidth);
+          //     let mainElement = document.querySelector('main');
+          //     let width = mainElement.offsetWidth;
+          //     console.log(width);
+          // });
+        }
+      });
 
-            const cancelBtn_video=document.getElementById('cancel-upload-video-btn');
-            cancelBtn_video.onclick=function(e){
-                fileNameConfirmationText_video.textContent='No file selected';
-                fileNameConfirmationText_video.classList.remove('text-success');
-                fileNameConfirmationText_video.classList.remove('text-warning');
-                revokeVideoURL();
-            }
+      const cancelBtn_video = document.getElementById(
+        "cancel-upload-video-btn"
+      );
+      cancelBtn_video.onclick = function (e) {
+        fileNameConfirmationText_video.textContent = "No file selected";
+        fileNameConfirmationText_video.classList.remove("text-success");
+        fileNameConfirmationText_video.classList.remove("text-warning");
+        revokeVideoURL();
+      };
 
+      // Create flashcard button
+      const createBtn = document.getElementById("create-btn");
+      createBtn.addEventListener("click", function (e) {
+        e.preventDefault();
 
-            // Create flashcard button
-            const createBtn=document.getElementById('create-btn');
-            createBtn.addEventListener('click',function(e){
-                e.preventDefault();
-                
-                
-                const blob=inputElement_audio.files[0];
-                console.log(blob);
+        const blob = inputElement_audio.files[0];
+        console.log(blob);
 
+        // Memory clean up:
+        revokeImageURL();
+        revokeAudioURL();
+        revokeVideoURL();
+      });
 
+      window.addEventListener("beforeunload", () => {
+        // Memory clean up:
+        revokeImageURL();
+        revokeAudioURL();
+        revokeVideoURL();
+      });
+    </script>
+    <script>
+      /* YouTube Video setting. */
+      const labelYouTubeUrlElem = document.getElementById(
+        "youtube-input-group-text"
+      );
+      const inputYouTubeElem = document.getElementById("input-youtube");
+      const inputYouTubeClearBtn = document.getElementById(
+        "youtube-clear-input-btn"
+      );
+      const youTubeCancelBtn = document.getElementById(
+        "cancel-upload-video-youtube-btn"
+      );
+      const setYouTubeUrlBtn = document.getElementById("set-youtube-url");
+      const iframeYouTube = document.getElementById("iframe-youtube");
+      setYouTubeUrlBtn.onclick = function (e) {
+        e.preventDefault();
+        const src = getSrc(inputYouTubeElem.value);
+        if (src) {
+          labelYouTubeUrlElem.innerText = "URL";
+          inputYouTubeElem.value = src;
+          iframeYouTube.src = src;
+          iframeYouTube.load();
+          return;
+        }
+        labelYouTubeUrlElem.innerText = "iframe";
+        console.log("Paste the YouTube iframe code into the input box.");
+      };
+      inputYouTubeClearBtn.onclick = function (e) {
+        e.preventDefault();
+        inputYouTubeElem.value = "";
+        labelYouTubeUrlElem.innerText = "iframe";
+      };
+      youTubeCancelBtn.onclick = function (e) {
+        e.preventDefault();
+        inputYouTubeElem.value = "";
+        iframeYouTube.src = "";
+        labelYouTubeUrlElem.innerText = "iframe";
+      };
 
-                // Memory clean up:
-                revokeImageURL();
-                revokeAudioURL();
-                revokeVideoURL();
-            });
+      function getSrc(iframeYouTube) {
+        const regex_src = /https:\/\/www.youtube.com\/embed\/.{11,}?"/;
+        src = iframeYouTube.match(regex_src);
+        if (src) {
+          src = src[0].slice(0, -1);
+          return src;
+        }
+      }
+    </script>
+    <script>
+      const mainElement = document.querySelector("main");
+      let width = mainElement.offsetWidth;
+      if (width > 575) {
+        width *= 0.3;
+      }
+      iframeYouTube.setAttribute("width", width);
+    </script>
+    <script
+      async
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"
+    ></script>
+    <script>
+      // clear output text on regular text radio btn selection
+      const radios = document.querySelectorAll("input[type=radio]");
+      radios.forEach(function (radio) {
+        radio.addEventListener("change", function () {
+          if (this.checked && this.value === "regularText") {
+            document.getElementById("latex-answer-output").textContent = "";
+          }
+        });
+      });
 
-            window.addEventListener('beforeunload',()=>{
-                // Memory clean up:
-                revokeImageURL();
-                revokeAudioURL();
-                revokeVideoURL();
-            });
-
-        </script>
-        <script>
-            /* YouTube Video setting. */
-            const labelYouTubeUrlElem=document.getElementById('youtube-input-group-text');
-            const inputYouTubeElem=document.getElementById('input-youtube');
-            const inputYouTubeClearBtn=document.getElementById('youtube-clear-input-btn');
-            const youTubeCancelBtn=document.getElementById('cancel-upload-video-youtube-btn');
-            const setYouTubeUrlBtn=document.getElementById('set-youtube-url');
-            const iframeYouTube=document.getElementById('iframe-youtube');
-            setYouTubeUrlBtn.onclick=function(e){
-                e.preventDefault();
-                const src=getSrc(inputYouTubeElem.value);
-                if(src){
-                    labelYouTubeUrlElem.innerText='URL';
-                    inputYouTubeElem.value=src;
-                    iframeYouTube.src=src;
-                    iframeYouTube.load();
-                    return;
-                }
-                labelYouTubeUrlElem.innerText='iframe';
-                console.log('Paste the YouTube iframe code into the input box.');
-            }
-            inputYouTubeClearBtn.onclick=function(e){
-                e.preventDefault();
-                inputYouTubeElem.value='';
-                labelYouTubeUrlElem.innerText='iframe';
-            }
-            youTubeCancelBtn.onclick=function(e){
-                e.preventDefault();
-                inputYouTubeElem.value='';
-                iframeYouTube.src='';
-                labelYouTubeUrlElem.innerText='iframe';
-            }
-
-            function getSrc(iframeYouTube){
-                const regex_src=/https:\/\/www.youtube.com\/embed\/.{11,}?"/;
-                src=iframeYouTube.match(regex_src);
-                if(src){
-                    src = src[0].slice(0,-1);
-                    return src;
-                }
-            }
-        </script>
-        <script>
-            const mainElement = document.querySelector('main');
-                    let width = mainElement.offsetWidth;
-                    if(width>575){
-                        width *=.3;
-                    }
-                    iframeYouTube.setAttribute('width', width);
-        </script>
-        <script async src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-        <script defer src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
-        <script>
-
-            // clear output text on regular text radio btn selection
-            const radios=document.querySelectorAll('input[type=radio]');
-            radios.forEach(function(radio){
-                radio.addEventListener('change',function(){
-                    if(this.checked && this.value==="regularText"){
-                        document.getElementById('latex-answer-output').textContent = '';
-                    }
-                })
-            });
-
-            // markdown & LaTex radio btn selection based preview output
-            const converter = new showdown.Converter()
-            document.getElementById('input-answer').addEventListener('input', function() {
-                const textAreaContent=this.value;
-                const checkedRadioSelection=document.querySelector('input[type=radio]:checked');
-                if(checkedRadioSelection.value==='markdownText'){
-                    document.getElementById('latex-answer-output').innerHTML = converter.makeHtml(textAreaContent);
-                }else if(checkedRadioSelection.value==='latexText'){
-                    document.getElementById('latex-answer-output').textContent = textAreaContent;
-                    MathJax.typesetPromise();
-                }else if(checkedRadioSelection.value==='mermaidText'){
-                    const output=document.getElementById('latex-answer-output');
-                    output.innerHTML='';
-                    // create new div to ensure mermaid rerenders else no image shown just from inserting text.
-                    const mermaidElem=document.createElement('div');
-                    mermaidElem.className='mermaid';
-                    mermaidElem.textContent=this.value;
-                    output.appendChild(mermaidElem);
-                    mermaid.init(undefined, mermaidElem);
-                }
-            });
-        </script>
-        <script>
-            /*
+      // markdown & LaTex radio btn selection based preview output
+      const converter = new showdown.Converter();
+      document
+        .getElementById("input-answer")
+        .addEventListener("input", function () {
+          const textAreaContent = this.value;
+          const checkedRadioSelection = document.querySelector(
+            "input[type=radio]:checked"
+          );
+          if (checkedRadioSelection.value === "markdownText") {
+            document.getElementById("latex-answer-output").innerHTML =
+              converter.makeHtml(textAreaContent);
+          } else if (checkedRadioSelection.value === "latexText") {
+            document.getElementById("latex-answer-output").textContent =
+              textAreaContent;
+            MathJax.typesetPromise();
+          } else if (checkedRadioSelection.value === "mermaidText") {
+            const output = document.getElementById("latex-answer-output");
+            output.innerHTML = "";
+            // create new div to ensure mermaid rerenders else no image shown just from inserting text.
+            const mermaidElem = document.createElement("div");
+            mermaidElem.className = "mermaid";
+            mermaidElem.textContent = this.value;
+            output.appendChild(mermaidElem);
+            mermaid.init(undefined, mermaidElem);
+          }
+        });
+    </script>
+    <script>
+      /*
                 : PouchDB API Documentation 
                 : MDN Web Docs: Using files from web applications 
                 : MDN Web Docs: Blob 
@@ -633,8 +996,7 @@
                 : MDN Web Docs: HTMLMediaElement.defaultMuted
             */
 
-
-            /*
+      /*
                 // Assuming you have an <input type="file" id="myFileInput">
                 document.getElementById('myFileInput').addEventListener('change', function(e) {
                     const file = e.target.files[0]; // This is a Blob object
@@ -659,8 +1021,7 @@
                 });
             */
 
-
-            /*
+      /*
                 // Create a new PouchDB database
                 const db = new PouchDB('my_database');
 
@@ -678,6 +1039,6 @@
                     console.error('Error retrieving document:', error);
                 });
             */
-        </script>
-    </body>
+    </script>
+  </body>
 </html>
