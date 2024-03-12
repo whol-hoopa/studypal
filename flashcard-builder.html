@@ -20,6 +20,11 @@
       .bg-theme {
         background-color: var(--bs-dark);
       }
+      .outlined-text {
+        color:transparent;
+        -webkit-text-stroke-width: .5px;
+        -webkit-text-stroke-color: orange;
+      }
     </style>
 
     <!-- LaTex: feature -->
@@ -51,7 +56,7 @@
             <!-- Fluid => brand-logo|hamburger => space-between vw vs. space-between container -->
 
             <!-- Brand logo: left -->
-            <a class="navbar-brand" href="#">StudyPal</a>
+            <a class="navbar-brand fs-3" href="#">Study<span class="outlined-text">Pal</span></a>
 
             <!-- hamburger menu button -->
             <button
@@ -74,8 +79,8 @@
               aria-labelledby="offcanvasNavbarLabel"
             >
               <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">
-                  StudyPal
+                <h5 class="offcanvas-title fs-3" id="offcanvasNavbarLabel">
+                  Study<span class="outlined-text">Pal</span>
                 </h5>
                 <button
                   type="button"
@@ -214,7 +219,7 @@
       </header>
       <main>
         <section class="">
-          <h2 class="text-center">Data Entry</h2>
+          <h2 class="text-center text-secondary">Data Entry</h2>
 
           <!-- <form name="builder" class="d-flex flex-column" enctype="multipart/form-data" method="post"> -->
           <form name="builder" class="d-flex flex-column">
