@@ -25,6 +25,19 @@
         -webkit-text-stroke-width: 1px;
         -webkit-text-stroke-color: orange;
       }
+      .bi-info-circle:hover {
+        fill:orange;
+        cursor: pointer;
+      }
+      .sp-output-group {
+        /* text-align: center; */
+        white-space: nowrap;
+        padding: .375rem .75rem;
+        color: var(--bs-body-color);
+        background-color: var(--bs-tertiary-bg);
+        border: var(--bs-border-width) solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+    }
     </style>
 
     <!-- LaTex: feature -->
@@ -422,6 +435,7 @@ What is the formula for the Pythagorean theorem?</textarea
 
                   <!-- radio selector for LaTex | markdown -->
                   <div class="radio-text-format mb-2">
+                    <!-- regular: radio -->
                     <div class="form-check form-check-inline">
                       <input
                         checked
@@ -435,6 +449,7 @@ What is the formula for the Pythagorean theorem?</textarea
                         >Regular</label
                       >
                     </div>
+                    <!-- markdown: radio -->
                     <div class="form-check form-check-inline">
                       <input
                         class="form-check-input"
@@ -449,12 +464,75 @@ What is the formula for the Pythagorean theorem?</textarea
                         title="Danger: open to XSS attacks!&#10; Use at your own risk!!"
                         >Markdown</label
                       >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                      </svg>
-                      <!-- # Hello StudyPal -->
+
+                      <!-- Modal button: markdown -->
+                      <div class="d-inline" rol="button"  data-bs-toggle="modal" data-bs-target="#modal-markdown">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                          <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                        </svg>
+                      </div>
+                      <!-- ***This is*** <span style="font-family:Papyrus; font-size:4em;">FANTASTIC!</span> -->
+                      <!-- # Style: *italic*, **bold**, ***bold and italic*** & <span style="color:red">colorful</span> -->
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="modal-markdown" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-markdown-label" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="modal-markdown-label">Markdown Resource</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <!-- Scrollable modal -->
+                            <div class="modal-dialog modal-dialog-scrollable">
+                              <div class="p-4">
+                                <div>
+                                  <p>
+                                    <span class="text-danger">Warning:</span>
+                                    Markdown opens you up to XSS (Cross-site scripting) attacks!
+                                    <span class="text-danger">Use at your own risk.</span>
+                                  </p>
+                                  <p>Not all markdown features are supported.</p>
+
+                                  <h5>Try Me</h5>
+                                  <pre>
+- First item
+- Second item
+- Third item
+    - Indented item
+    - Indented item
+- Fourth item
+                                  </pre>
+                                </div>
+
+                                <div style="pointer-events: all;">
+                                  <h3 class="modal-title fs-5">Resource Links</h3>
+                                  <hr>
+                                  <!-- pointer-events set to "all" enables href in modal, else bs sets to none, and href won't work. -->
+                                  <ul>
+                                    <li><a href="https://www.markdownguide.org/basic-syntax/" rel="noopener nofollow noreferrer" target="_blank">Basic Syntax</a></li>
+                                    <li><a href="https://www.scottspence.com/posts/writing-with-markdown">All I Know About Markdown</a></li>
+                                    <li><a href="https://showdownjs.com/docs/markdown-syntax/">Showdown's Markdown syntax</a></li>
+                                    <li><a href="https://dev.to/sameerkatija/github-markdown-cheat-sheet-everything-you-need-to-know-to-write-readme-md-2eca" rel="noopener nofollow noreferrer" target="_blank">Everything you need to know...</a></li>
+                                    <li><a href="https://github.com/lifeparticle/Markdown-Cheatsheet" rel="noopener nofollow noreferrer" target="_blank">Markdown-Cheatsheet</a></li>
+                                    <li><a href="https://paperhive.org/help/markdown" rel="noopener nofollow noreferrer" target="_blank">Markdown cheat sheet</a></li>
+                                    <li><a href="https://dev.to/imluka/the-only-markdown-cheatsheet-you-will-ever-need-ccg">The Only Markdown Cheatsheet...</a></li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+
+                    <!-- LaTex: radio -->
                     <div class="form-check form-check-inline">
                       <input
                         class="form-check-input"
@@ -466,12 +544,79 @@ What is the formula for the Pythagorean theorem?</textarea
                       <label class="form-check-label" for="inlineRadio-latex"
                         >LaTex</label
                       >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                      </svg>
+                      <div class="d-inline" rol="button"  data-bs-toggle="modal" data-bs-target="#modal-latex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                          <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                        </svg>
+                      </div>
                       <!-- \(a^2 + b^2 = c^2\); \(\int_a^b f(\mu) \, d\mu\) -->
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="modal-latex" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-latex-label" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="modal-latex-label">LaTex Resource</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <!-- Scrollable modal -->
+                            <div class="modal-dialog modal-dialog-scrollable">
+                              <div class="p-2">
+                                <div>
+                                  <h5>"Bookcase" LaTex code</h5>
+                                  <ul>
+                                    <li>Inline code</li>
+                                    <ul>
+                                      <li>\\( ...LaTex Code... \\)</li>
+                                    </ul>
+                                    <li>Block code
+                                      <ul>
+                                        <li>\\[ ...LaTex Code... \\]</li>
+                                        <li>\$$ ...LaTex Code... \$$</li>
+                                      </ul>
+                                    </li>
+                                  </ul>
+                                  <p>
+                                    Not all LaTex features are supported.
+                                  </p>
+
+                                  <h5>Try Me</h5>
+                                  <pre>
+\[\int_a^b f(\mu) \, d\mu\]
+                                  </pre>
+                                </div>
+
+                                <div style="pointer-events: all;">
+                                  <h3 class="modal-title fs-5">Resource Links</h3>
+                                  <hr>
+                                  <!-- pointer-events set to "all" enables href in modal, else bs sets to none, and href won't work. -->
+                                  <ul>
+                                    <li><a href="https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference" rel="noopener nofollow noreferrer" target="_blank">MathJax basic tutorial and quick reference</a></li>
+                                    <li><a href="https://en.wikibooks.org/wiki/LaTeX/Mathematics" rel="noopener nofollow noreferrer" target="_blank">LaTeX/Mathematics Wiki</a></li>
+                                    <li><a href="https://paperhive.org/help/markdown#formulas" rel="noopener nofollow noreferrer" target="_blank">Alternative LaTex syntax</a></li>
+                                    <li><a href="https://docs.mathjax.org/en/latest/input/tex/index.html" rel="noopener nofollow noreferrer" target="_blank">Tex and LaTex Support</a></li>
+                                    <!-- <li><a href="https://dev.to/imluka/the-only-markdown-cheatsheet-you-will-ever-need-ccg">The Only Markdown Cheatsheet...</a></li> -->
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+
+
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <!-- <button type="button" class="btn btn-primary">Understood</button> -->
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
+
+                    <!-- Mermaid: radio -->
                     <div class="form-check form-check-inline">
                       <input
                         class="form-check-input"
@@ -483,10 +628,12 @@ What is the formula for the Pythagorean theorem?</textarea
                       <label class="form-check-label" for="inlineRadio-mermaid"
                         >Mermaid</label
                       >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                      </svg>
+                      <div class="d-inline" rol="button"  data-bs-toggle="modal" data-bs-target="#modal-mermaid">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                          <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                        </svg>
+                      </div>
                       <!-- test examples to copy&paste into textarea: don't copy comment tag obviously. -->
                       <script>
                         // sequenceDiagram; participant dotcom; participant iframe; participant viewscreen; dotcom->>iframe: loads html w/ iframe url; iframe->>viewscreen: request template; viewscreen->>iframe: html & javascript; iframe->>dotcom: iframe ready;dotcom->>iframe: set mermaid data on iframe; iframe->>iframe: render mermaid;
@@ -497,12 +644,67 @@ What is the formula for the Pythagorean theorem?</textarea
                       <!-- https://mermaid.js.org/ -->
                       <!-- https://gist.github.com/martinwoodward/8ad6296118c975510766d80310db71fd -->
                       <!-- ArjanCodes: https://www.youtube.com/watch?v=JiQmpA474BY -->
+
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="modal-mermaid" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-mermaid-label" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+
+                            <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="modal-mermaid-label">Mermaid Resource</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <!-- Scrollable modal -->
+                            <div class="modal-dialog modal-dialog-scrollable">
+                              <div class="p-2">
+                                <div>
+                                  <h5>Try Me</h5>
+                                  <pre>
+pie
+  title Distribution of Expenses
+  "Food" : 60
+  "Rent" : 15
+  "Entertainment" : 10
+  "Savings" : 15
+                                  </pre>
+                                  <p>
+                                    Not all Mermaid features are supported.
+                                  </p>
+                                </div>
+
+                                <div style="pointer-events: all;">
+                                  <h3 class="modal-title fs-5">Resource Links</h3>
+                                  <hr>
+                                  <!-- pointer-events set to "all" enables href in modal, else bs sets to none, and href won't work. -->
+                                  <ul>
+                                    <li><a href="https://mermaid.live/" rel="noopener nofollow noreferrer" target="_blank">Mermaid live editor</a></li>
+                                    <li><a href="https://mermaid.js.org/intro/" rel="noopener nofollow noreferrer" target="_blank">Mermaid Docs</a></li>
+                                    <li><a href="https://www.freecodecamp.org/news/diagrams-as-code-with-mermaid-github-and-vs-code/" rel="noopener nofollow noreferrer" target="_blank">freeCodeCamp</a></li>
+                                    <li><a href="https://youtu.be/JiQmpA474BY?si=Wd9uOKmqUWWkRQmK" rel="noopener nofollow noreferrer" target="_blank">YouTube tutorial</a></li>
+                                    <!-- <li><a href="https://dev.to/imluka/the-only-markdown-cheatsheet-you-will-ever-need-ccg">The Only Markdown Cheatsheet...</a></li> -->
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <!-- <button type="button" class="btn btn-primary">Understood</button> -->
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
 
+                  <!-- Visual confirmation for text written textArea -->
                   <div
                     id="latex-answer-output"
-                    class="text-bg-info rounded p-2"
+                    class="sp-output-group text-wrap"
                   ></div>
                 </div>
 
@@ -687,7 +889,7 @@ What is the formula for the Pythagorean theorem?</textarea
                       id="input-youtube"
                       aria-label="YouTube URL"
                       aria-describedby="input-youtube-label"
-                      placeholder="share>embed>copy>start:checked[optional]"
+                      placeholder="share>embed>copy <start:checked[optional]"
                     />
                     <!-- <label for="input-youtube">URL</label> -->
                     <!-- <input type="text" name="input-youtube" id="input-youtube"> -->
