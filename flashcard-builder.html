@@ -399,10 +399,9 @@
                     id="input-question"
                     cols="33"
                     rows="10"
-                    spellcheck="true"
-                  >
-What is the formula for the Pythagorean theorem?</textarea
-                  >
+                    spellcheck="true">
+                  </textarea>
+
                   <div id="latex-question-output"></div>
                 </div>
 
@@ -416,22 +415,19 @@ What is the formula for the Pythagorean theorem?</textarea
                   tabindex="0"
                 >
                   <!-- .form-floating: used to float label inside textarea. -->
-                  <div class="form-floating">
-                    <textarea
-                      class="w-100 h-100 form-control"
-                      name="input-answer"
-                      id="input-answer"
-                      cols="33"
-                      rows="10"
-                      spellcheck="true"
-                    >
-\(a^2 + b^2 = c^2\); \(\int_a^b f(\mu) \, d\mu\</textarea
-                    >
+                  <!-- <div class="form-floating"> -->
+                  <textarea
+                    class="w-100 h-100 form-control"
+                    name="input-answer"
+                    id="input-answer"
+                    cols="33"
+                    rows="10"
+                    spellcheck="true">
+                  </textarea>
+
                     <!-- label must come After textarea! for inserting/floating label INSIDE textarea. -->
-                    <label for="input-answer"
-                      >Enter closing ")" for LaTex...</label
-                    >
-                  </div>
+                    <!-- <label for="input-answer">Enter text...</label>
+                  </div> -->
 
                   <!-- radio selector for LaTex | markdown -->
                   <div class="radio-text-format mb-2">
@@ -461,7 +457,6 @@ What is the formula for the Pythagorean theorem?</textarea
                       <label
                         class="form-check-label"
                         for="inlineRadio-markdown"
-                        title="Danger: open to XSS attacks!&#10; Use at your own risk!!"
                         >Markdown</label
                       >
 
@@ -921,18 +916,25 @@ pie
                 </div>
               </div>
 
-              <!-- Tags -->
-              <label for="tags" class="d-flex flex-column mt-3 form-label">
-                Flashcard category tags
-                <input
-                  name="tags"
-                  id="tags"
-                  class="form-control"
-                  type="text"
-                  placeholder="Ex: math,multiplication"
-                  spellcheck="true"
-                />
-              </label>
+              <div>
+                <!-- Tags -->
+
+                <!-- Tag confirmation display -->
+                <div id="tag-confirmation-container" class="d-flex flex-wrap gap-2 py-2"></div>
+
+                <!-- Tag Entry -->
+                <label for="tags" class="d-flex flex-column mt-3 form-label">
+                  Flashcard category tags
+                  <input
+                    name="tags"
+                    id="tags"
+                    class="form-control"
+                    type="text"
+                    placeholder="Ex: math,multiplication"
+                    spellcheck="true"
+                  />
+                </label>
+              </div>
             </div>
 
             <!-- align-self-stretch is for mobile; d-sm-flex enables mx-sm-auto for >=tablet -->
@@ -1277,6 +1279,28 @@ pie
         html.setAttribute('data-bs-theme','light');
         
       }
+
+    </script>
+    <script>
+      // Hash tag processing
+      const tagInputElement=document.getElementById('tags');
+      tagInputElement.addEventListener('blur',function(){
+        const tagInputValues=tagInputElement.value.toLowerCase();
+        const tagsArray=tagInputValues.split(',');
+        const tagsArrayTrimmed=[];
+        const fragmentElement=document.createDocumentFragment();
+        for(let i=0; i<tagsArray.length; i++){
+          const item=tagsArray[i].trim();
+          tagsArrayTrimmed.push(item);
+          const div=document.createElement('div');
+          div.classList.add('rounded','border','border-warning');
+          div.append(item)
+          fragmentElement.append(div);
+        }
+        const tagConfirmationContainer=document.getElementById('tag-confirmation-container');
+        tagConfirmationContainer.innerHTML='';
+        tagConfirmationContainer.append(fragmentElement);
+      });
 
     </script>
     <script>
