@@ -54,6 +54,9 @@
 
     <!-- mermaid feature -->
     <script async src="https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.min.js"></script>
+
+
+    <script src="/static/js/db.js" type="text/javascript"></script>
   </head>
   <body class="">
     <div
@@ -467,8 +470,6 @@
                           <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                         </svg>
                       </div>
-                      <!-- ***This is*** <span style="font-family:Papyrus; font-size:4em;">FANTASTIC!</span> -->
-                      <!-- # Style: *italic*, **bold**, ***bold and italic*** & <span style="color:red">colorful</span> -->
 
                       <!-- Modal -->
                       <div class="modal fade" id="modal-markdown" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-markdown-label" aria-hidden="true">
@@ -545,7 +546,6 @@
                           <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                         </svg>
                       </div>
-                      <!-- \(a^2 + b^2 = c^2\); \(\int_a^b f(\mu) \, d\mu\) -->
 
                       <!-- Modal -->
                       <div class="modal fade" id="modal-latex" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-latex-label" aria-hidden="true">
@@ -629,17 +629,6 @@
                           <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                         </svg>
                       </div>
-                      <!-- test examples to copy&paste into textarea: don't copy comment tag obviously. -->
-                      <script>
-                        // sequenceDiagram; participant dotcom; participant iframe; participant viewscreen; dotcom->>iframe: loads html w/ iframe url; iframe->>viewscreen: request template; viewscreen->>iframe: html & javascript; iframe->>dotcom: iframe ready;dotcom->>iframe: set mermaid data on iframe; iframe->>iframe: render mermaid;
-                      </script>
-                      <script>
-                        // graph TD; A-->B; A-->C; B-->D; C-->D;
-                      </script>
-                      <!-- https://mermaid.js.org/ -->
-                      <!-- https://gist.github.com/martinwoodward/8ad6296118c975510766d80310db71fd -->
-                      <!-- ArjanCodes: https://www.youtube.com/watch?v=JiQmpA474BY -->
-
 
                       <!-- Modal -->
                       <div class="modal fade" id="modal-mermaid" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-mermaid-label" aria-hidden="true">
@@ -655,18 +644,24 @@
                             <div class="modal-dialog modal-dialog-scrollable">
                               <div class="p-2">
                                 <div>
-                                  <h5>Try Me</h5>
-                                  <pre>
+                                  <div>
+                                    <h5>Try Me</h5>
+                                    <pre>
 pie
   title Distribution of Expenses
   "Food" : 60
   "Rent" : 15
   "Entertainment" : 10
   "Savings" : 15
-                                  </pre>
-                                  <p>
+                                    </pre>
+                                  </div>
+                                  <div>
+                                    <h5>Using semi-colons as punctuation</h5>
+                                    <div>sequenceDiagram; participant dotcom; participant iframe; participant viewscreen; dotcom->>iframe: loads html w/ iframe url; iframe->>viewscreen: request template; viewscreen->>iframe: html & javascript; iframe->>dotcom: iframe ready;dotcom->>iframe: set mermaid data on iframe; iframe->>iframe: render mermaid;</div>
+                                  </div>
+                                  <div class="py-3 text-warning">
                                     Not all Mermaid features are supported.
-                                  </p>
+                                  </div>
                                 </div>
 
                                 <div style="pointer-events: all;">
@@ -697,10 +692,20 @@ pie
                   </div>
 
                   <!-- Visual confirmation for text written textArea -->
-                  <div
-                    id="latex-answer-output"
-                    class="sp-output-group text-wrap"
-                  ></div>
+                  <div id="container-textarea-confirmation">
+                    <!-- textarea confirmation -->
+                    <div
+                      id="latex-answer-output"
+                      class="sp-output-group text-wrap"
+                    ></div>
+                    <!-- toggle switch -->
+                    <div class="form-check form-switch d-flex justify-content-end">
+                      <div>
+                        <label class="form-check-label ps-1" for="darkmode-toggler-textarea-confirmation" aria-label="Dark mode toggler" id="darkmode-toggle-textarea-confirmation-label">Dark mode</label>
+                        <input class="form-check-input" type="checkbox" role="switch" id="darkmode-toggler-textarea-confirmation" aria-labelledby="darkmode-toggle-textarea-confirmation-label" aria-live="polite" checked>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <!-- input: image -->
@@ -902,16 +907,16 @@ pie
                     >
                     </iframe>
                     <!-- 
-                                            Forbidden url src: (You can't use the vanilla youtube link! Must use an embedded link.)
-                                                src="https://youtu.be/omWmWu1XO8U?si=RDFRzbfTf48IaCV_&t=96"
+                          Forbidden url src: (You can't use the vanilla youtube link! Must use an embedded link.)
+                              src="https://youtu.be/omWmWu1XO8U?si=RDFRzbfTf48IaCV_&t=96"
 
-                                            Allowed url src: ( Must use "share">"embed">"copy"> start:checked[optional] )
-                                                with start:
-                                                    src="https://www.youtube.com/embed/omWmWu1XO8U?si=gLK6nzBirmX0DvlH&amp;start=96"
-                                                    src="https://www.youtube.com/embed/omWmWu1XO8U?si=gLK6nzBirmX0DvlH&start=96"
-                                                without start:
-                                                    src="https://www.youtube.com/embed/omWmWu1XO8U?si=XVdvDSc1zFNN4qvx"
-                                        -->
+                          Allowed url src: ( Must use "share">"embed">"copy"> start:checked[optional] )
+                              with start:
+                                  src="https://www.youtube.com/embed/omWmWu1XO8U?si=gLK6nzBirmX0DvlH&amp;start=96"
+                                  src="https://www.youtube.com/embed/omWmWu1XO8U?si=gLK6nzBirmX0DvlH&start=96"
+                              without start:
+                                  src="https://www.youtube.com/embed/omWmWu1XO8U?si=XVdvDSc1zFNN4qvx"
+                      -->
                   </div>
                 </div>
               </div>
@@ -1279,7 +1284,19 @@ pie
         html.setAttribute('data-bs-theme','light');
         
       }
+    </script>
+    <script>
+      // darkmode toggler for textarea confirmation content
 
+      const darkModeTextareaConfirmationSwitch=document.getElementById('darkmode-toggler-textarea-confirmation');
+      darkModeTextareaConfirmationSwitch.onchange=function(){
+        const outputDiv = document.getElementById('latex-answer-output');
+        if(this.checked){
+          outputDiv.setAttribute('data-bs-theme','dark');
+          return;
+        }
+        outputDiv.setAttribute('data-bs-theme','light');
+      }
     </script>
     <script>
       // Hash tag processing
@@ -1291,11 +1308,13 @@ pie
         const fragmentElement=document.createDocumentFragment();
         for(let i=0; i<tagsArray.length; i++){
           const item=tagsArray[i].trim();
-          tagsArrayTrimmed.push(item);
-          const div=document.createElement('div');
-          div.classList.add('rounded','border','border-warning');
-          div.append(item)
-          fragmentElement.append(div);
+          if(item){ 
+            tagsArrayTrimmed.push(item); 
+            const div=document.createElement('div');
+            div.classList.add('rounded','border','border-warning');
+            div.append(item)
+            fragmentElement.append(div);
+          }
         }
         const tagConfirmationContainer=document.getElementById('tag-confirmation-container');
         tagConfirmationContainer.innerHTML='';
