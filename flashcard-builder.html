@@ -485,22 +485,29 @@
                             <div class="modal-dialog modal-dialog-scrollable">
                               <div class="p-4">
                                 <div>
-                                  <p>
-                                    <span class="text-danger">Warning:</span>
-                                    Markdown opens you up to XSS (Cross-site scripting) attacks!
-                                    <span class="text-danger">Use at your own risk.</span>
-                                  </p>
-                                  <p>Not all markdown features are supported.</p>
-
-                                  <h5>Try Me</h5>
-                                  <pre>
+                                  <div>
+                                    <p>
+                                      <span class="text-danger">Warning:</span>
+                                      Markdown opens you up to XSS (Cross-site scripting) attacks!
+                                      <span class="text-danger">Use at your own risk.</span>
+                                    </p>
+                                  </div>
+                                  
+                                  <div>
+                                    <h5>Try Me</h5>
+                                    <pre class="mb-0">
 - First item
 - Second item
 - Third item
-    - Indented item
-    - Indented item
+  - Indented item
+  - Indented item
 - Fourth item
-                                  </pre>
+                                    </pre>
+                                  </div>
+
+                                  <div class="text-warning mb-2">
+                                    Not all markdown features are supported.
+                                  </div>
                                 </div>
 
                                 <div style="pointer-events: all;">
@@ -559,29 +566,35 @@
 
                             <!-- Scrollable modal -->
                             <div class="modal-dialog modal-dialog-scrollable">
-                              <div class="p-2">
+                              <div class="p-4">
                                 <div>
-                                  <h5>"Bookcase" LaTex code</h5>
-                                  <ul>
-                                    <li>Inline code</li>
+                                  <div>
+                                    <h5>"Bookcase" LaTex code</h5>
                                     <ul>
-                                      <li>\\( ...LaTex Code... \\)</li>
-                                    </ul>
-                                    <li>Block code
+                                      <li>Inline code</li>
                                       <ul>
-                                        <li>\\[ ...LaTex Code... \\]</li>
-                                        <li>\$$ ...LaTex Code... \$$</li>
+                                        <!-- Note: using "\" to escape special char of "\" and "$". \ and $ literals are desired. -->
+                                        <li>\\( ...LaTex Code... \\)</li>
                                       </ul>
-                                    </li>
-                                  </ul>
-                                  <p>
-                                    Not all LaTex features are supported.
-                                  </p>
+                                      <li>Block code
+                                        <ul>
+                                          <li>\\[ ...LaTex Code... \\]</li>
+                                          <li>\$$ ...LaTex Code... \$$</li>
+                                        </ul>
+                                      </li>
+                                    </ul>
+                                  </div>
 
-                                  <h5>Try Me</h5>
-                                  <pre>
+                                  <div>
+                                    <h5>Try Me</h5>
+                                    <pre class="mb-0">
 \[\int_a^b f(\mu) \, d\mu\]
-                                  </pre>
+                                    </pre>
+                                  </div>
+
+                                  <div class="text-warning mb-2">
+                                    Not all LaTex features are supported.
+                                </div>
                                 </div>
 
                                 <div style="pointer-events: all;">
@@ -642,8 +655,17 @@
 
                             <!-- Scrollable modal -->
                             <div class="modal-dialog modal-dialog-scrollable">
-                              <div class="p-2">
+                              <div class="p-4">
                                 <div>
+
+                                  <div>
+                                    <p>
+                                      <span class="text-danger">Warning:</span>
+                                      Markdown opens you up to XSS (Cross-site scripting) attacks!
+                                      <span class="text-danger">Use at your own risk.</span>
+                                    </p>
+                                  </div>
+
                                   <div>
                                     <h5>Try Me</h5>
                                     <pre>
