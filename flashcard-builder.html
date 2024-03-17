@@ -813,6 +813,11 @@ pie
                                     <p>
                                       External data will not be cached. You will need to have a network connection to view data.
                                     </p>
+                                    <p>
+                                      <span class="text-warning">Note:</span> Hyphens in text will cause highlighting failure.
+                                      You may want to use the range option (textStart, textEnd) instead of pasting the text 
+                                      directly in the textarea to bypass the hyphen issue.
+                                    </p>
                                   </div>
 
                                   <div>
@@ -863,6 +868,7 @@ pie
                     <div
                       id="latex-answer-output"
                       class="sp-output-group text-wrap"
+                      style="overflow-x: auto;"
                     ></div>
                     <!-- toggle switch -->
                     <div class="form-check form-switch d-flex justify-content-end">
@@ -1446,8 +1452,26 @@ pie
           const name=document.getElementById('fragment-name').value;
           document.getElementById("latex-answer-output").innerHTML = `<a href=${myURL} rel="noopener noreferer nofollow" target="_blank">${name}</a><br><p>${myURL}</p>`;
         }else{
+          // textarea has text to be used in url fragment.
           textAreaContentElement.classList.remove('d-none');
         }
+      }
+
+      document.getElementById('input-answer').addEventListener('input',constructFragIdUrlFromTextArea);
+      function constructFragIdUrlFromTextArea(){
+        // textarea has text to be used in url fragment.
+        const baseURL=document.getElementById('fragment-domain').value.trim();
+        const name=document.getElementById('fragment-name').value.trim();
+        const textAreaContent=textAreaContentElement.value.trim();
+        if(!textAreaContent || !baseURL || !name){
+            return null;
+        }
+
+        let constructedURL=null;
+        const fragmentIdDirective='#:~:text=';
+        const encodedTextAreaContent=encodeURIComponent(textAreaContent);
+        constructedURL=`${baseURL}${fragmentIdDirective}${encodedTextAreaContent}`;
+        document.getElementById("latex-answer-output").innerHTML = `<a href=${constructedURL} rel="noopener noreferer nofollow" target="_blank">${name}</a><br><p>${constructedURL}</p>`;
       }
 
       function constructFragIdURL(prefix, suffix, textStart, textEnd, domain){
