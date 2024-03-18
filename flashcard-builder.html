@@ -400,11 +400,6 @@
                 <li class="ms-auto align-self-end" role="presentation">
                   <button class="btn btn-warning px-2 px-sm-3" 
                     id="question-clear-btn" type="button"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="left"
-                    data-bs-custom-class="custom-tooltip"
-                    data-bs-html="true"
-                    data-bs-title="<u>Question tab</u><br><b>click</b>: Clears textarea."
                     >
                     Clear
                   </button>
@@ -412,19 +407,20 @@
                 <li class="ms-auto align-self-end d-none" role="presentation">
                   <button class="btn btn-warning px-2 px-sm-3" 
                     id="fragment-clear-btn" type="button"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="left"
-                    data-bs-custom-class="custom-tooltip"
-                    data-bs-html="true"
-                    data-bs-title="<u>Answer tab</u><br><b>click</b>: Clears textarea & fragment sub-components. <b>dblclick</b>: Clears Base URL & ref name."
                     >
                     Clear
                   </button>
+                  <!-- data-bs-toggle="tooltip"
+                  data-bs-placement="left"
+                  data-bs-custom-class="custom-tooltip"
+                  data-bs-html="true"
+                  data-bs-title="" -->
+                  <!-- data-bs-title="<u>Answer tab</u><br><b>click</b>: Clears textarea & fragment sub-components. <b>dblclick</b>: Clears Source URL & Link name." -->
                 </li>
               </ul>
               <!-- Tab body -->
               <div class="tab-content" id="myTabContent">
-                <!-- Query body: front -->
+                <!-- Question body: front -->
                 <!-- <div class="tab-pane fade show active" id="question-tab-pane" role="tabpanel" aria-labelledby="question-tab" tabindex="0"> -->
                 <div
                   class="tab-pane fade show active"
@@ -433,15 +429,20 @@
                   aria-labelledby="question-tab"
                   tabindex="0"
                 >
-                  <textarea
-                    class="w-100 form-control"
-                    name="input-question"
-                    id="input-question"
-                    cols="33"
-                    rows="10"
-                    spellcheck="true"></textarea>
+
+                  <div class="form-floating">
+                    <textarea
+                      class="w-100 h-100 form-control"
+                      name="input-question"
+                      id="input-question"
+                      cols="33"
+                      rows="10"
+                      spellcheck="true"></textarea>
+                    <label for="input-question">Enter Question text...</label>
+                  </div>
 
                   <div id="latex-question-output"></div>
+
                 </div>
 
                 <!-- Answer body: back -->
@@ -451,25 +452,73 @@
                   id="answer-tab-pane"
                   role="tabpanel"
                   aria-labelledby="text-answer-tab"
-                  tabindex="0"
-                >
-                  <!-- .form-floating: used to float label inside textarea. -->
-                  <!-- <div class="form-floating"> -->
-                  <textarea
-                    class="w-100 h-100 form-control"
-                    name="input-answer"
-                    id="input-answer"
-                    cols="33"
-                    rows="10"
-                    spellcheck="true"></textarea>
+                  tabindex="0">
+                
+                  <!-- textarea: Regular -->
+                  <div class="form-floating" id="input-answer-container">
+                    <!-- div.form-floating: used to float label inside textarea; don't forget to </div> -->
+                    <textarea
+                      class="w-100 h-100 form-control"
+                      name="input-answer"
+                      id="input-answer"
+                      cols="33"
+                      rows="10"
+                      spellcheck="true"></textarea>
+                      <!-- label must come After textarea! for inserting/floating label INSIDE textarea. -->
+                    <label for="input-answer">Enter Regular text...</label>
+                  </div>
+                  <!-- textarea: Markdown -->
+                  <div class="form-floating d-none" id="input-answer-markdown-container">
+                    <textarea
+                      class="w-100 h-100 form-control"
+                      name="input-answer-markdown"
+                      id="input-answer-markdown"
+                      cols="33"
+                      rows="10"
+                      spellcheck="true"></textarea>
+                    <label for="input-answer-markdown">Enter Markdown text...</label>
+                  </div>
+                  <!-- textarea: LaTex -->
+                  <div class="form-floating d-none" id="input-answer-latex-container">
+                    <textarea
+                      class="w-100 h-100 form-control"
+                      name="input-answer-latex"
+                      id="input-answer-latex"
+                      cols="33"
+                      rows="10"
+                      spellcheck="true"></textarea>
+                    <label for="input-answer-latex">Enter LaTex text...</label>
+                  </div>
+                  <!-- textarea: Mermaid -->
+                  <div class="form-floating d-none" id="input-answer-mermaid-container">
+                    <textarea
+                      class="w-100 h-100 form-control"
+                      name="input-answer-mermaid"
+                      id="input-answer-mermaid"
+                      cols="33"
+                      rows="10"
+                      spellcheck="true"></textarea>
+                    <label for="input-answer-mermaid">Enter Mermaid text...</label>
+                  </div>
+                  <!-- textarea: Webpage -->
+                  <div class="form-floating d-none" id="input-answer-webpage-container">
+                    <textarea
+                      class="w-100 h-100 form-control"
+                      name="input-answer-webpage"
+                      id="input-answer-webpage"
+                      cols="33"
+                      rows="10"
+                      spellcheck="true"></textarea>
+                    <label for="input-answer-webpage">Enter Webpage text...</label>
+                  </div>
 
-                  <!-- conditional input for fragment identifier linked webpage -->
+                  <!-- conditional input options for fragment identifier linked webpage -->
                   <div id="fragment-container" class="d-flex flex-wrap position-relative d-none">
 
                     <label for="fragment-domain" class="position-absolute v-hidden">Webpage URL</label>
-                    <input class="form-control w-50" type="text" name="fragment-domain" id="fragment-domain" placeholder="Base URL" spellcheck="true">
-                    <label for="fragment-name" class="position-absolute v-hidden">Name your reference</label>
-                    <input class="form-control w-50" type="text" name="fragment-name" id="fragment-name" placeholder="Name your reference" spellcheck="true">
+                    <input required class="form-control w-50" type="text" name="fragment-domain" id="fragment-domain" placeholder="Source URL" spellcheck="true">
+                    <label for="fragment-name" class="position-absolute v-hidden">Name link [optional]</label>
+                    <input class="form-control w-50" type="text" name="fragment-name" id="fragment-name" placeholder="Name link [optional]" spellcheck="true">
                     <label for="fragment-prefix" class="position-absolute v-hidden">Prefix [optional]</label>
                     <input class="form-control w-50" type="text" name="fragment-prefix" id="fragment-prefix" placeholder="prefix [optional]" spellcheck="true">
                     <label for="fragment-suffix" class="position-absolute v-hidden">Suffix [optional]</label>
@@ -480,9 +529,6 @@
                     <input class="form-control w-50" type="text" name="fragment-textEnd" id="fragment-textEnd" placeholder="textEnd [optional]" spellcheck="true">
                   </div>
 
-                    <!-- label must come After textarea! for inserting/floating label INSIDE textarea. -->
-                    <!-- <label for="input-answer">Enter text...</label>
-                  </div> -->
 
                   <!-- radio selector for LaTex | markdown -->
                   <div class="radio-text-format mb-2">
@@ -496,14 +542,12 @@
                         id="inlineRadio-regular"
                         value="regularText"
                       />
-                      <label class="form-check-label" for="inlineRadio-regular"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        data-bs-custom-class="custom-tooltip"
-                        data-bs-html="true"
-                        data-bs-title="Also clears confirmation content below."
-                        >Regular</label
-                      >
+                      <label 
+                        class="form-check-label" 
+                        for="inlineRadio-regular"
+                        >
+                        Regular
+                      </label>
                     </div>
 
                     <!-- markdown: radio -->
@@ -557,8 +601,8 @@
 - First item
 - Second item
 - Third item
-  - Indented item
-  - Indented item
+    - Indented item
+    - Indented item
 - Fourth item
                                     </pre>
                                   </div>
@@ -1092,6 +1136,7 @@ pie
                   </div>
                 </div>
               </div>
+              <!-- End of Answer panel tab container. #myTabContent -->
 
               <div>
                 <!-- Tags -->
@@ -1126,7 +1171,7 @@ pie
         </section>
       </main>
       <footer class="text-center">
-        <h3 class="mb-3 mt-md-3 text-secondary fs-6">StudyPal &copy;2024</h3>
+        <h3 class="my-3 text-secondary fs-6">StudyPal &copy;2024</h3>
       </footer>
     </div>
     <script>
@@ -1154,9 +1199,9 @@ pie
       function revokeImageURL() {
         if (IMAGE_URL) {
           /* IMAGE_URL MUST be the same URL instance to be successfully revoked, hence the global variable.
-                        Creating a new IMAGE_URL=URL.createObjectURL(file[0]); will be a different instance and will not
-                        revoke/delete the Blob-url. This will lead to its persistance and thus a memory leak.
-                    */
+              Creating a new IMAGE_URL=URL.createObjectURL(file[0]); will be a different instance and will not
+              revoke/delete the Blob-url. This will lead to its persistance and thus a memory leak.
+          */
           URL.revokeObjectURL(IMAGE_URL);
           IMAGE_URL = null;
           imageElement_upload.src = "";
@@ -1403,10 +1448,19 @@ pie
       // clear output text on regular text radio btn selection
       const clearTextDataBtn=document.getElementById('fragment-clear-btn'); // used to clear textArea and especially fragment sub-component inputs. 
       const clearTextDataQuestionBtn=document.getElementById('question-clear-btn'); // used to clear textArea for question. 
+
       const radios = document.querySelectorAll('input[type=radio]');
+
+      // textarea element for each text input option type
+      const textAreaContentElement=document.getElementById('input-answer'); // regular
+      const textAreaMarkdownElement=document.getElementById('input-answer-markdown');
+      const textAreaLaTexElement=document.getElementById('input-answer-latex');
+      const textAreaMermaidElement=document.getElementById('input-answer-mermaid');
+      const textAreaWebpageElement=document.getElementById('input-answer-webpage');
+
+      // fragment identifier for webpage text
       const fragmentDomain = document.getElementById('fragment-domain');
       const fragmentName = document.getElementById('fragment-name');
-      const textAreaContentElement=document.getElementById('input-answer');
       const fragmentContainer=document.getElementById('fragment-container');
       const fragmentPrefix = document.getElementById('fragment-prefix');
       const fragmentSuffix = document.getElementById('fragment-suffix');
@@ -1415,66 +1469,87 @@ pie
       const fragmentSubComponentArray=[fragmentPrefix,fragmentSuffix,fragmentTextStart,fragmentTestEnd];
       const fragmentBaseUrlAndNameArray=[fragmentDomain,fragmentName];
 
-      textAreaContentElement.addEventListener('input',hideFragmentSubComponents);
+      // output confirmation element
+      const outputDiv = document.getElementById('latex-answer-output');
+
+      // Webpage url frag id has two data entry options. Entering data in textarea hides the other input sub-components.
+      textAreaWebpageElement.addEventListener('input',hideFragmentSubComponents);
       function hideFragmentSubComponents(){
-                const textAreaValue=this.value.trim();
-                if(textAreaValue){
-                  fragmentPrefix.classList.add('d-none');
-                  fragmentSuffix.classList.add('d-none');
-                  fragmentTextStart.classList.add('d-none');
-                  fragmentTestEnd.classList.add('d-none');
-                }else{
-                  fragmentPrefix.classList.remove('d-none');
-                  fragmentSuffix.classList.remove('d-none');
-                  fragmentTextStart.classList.remove('d-none');
-                  fragmentTestEnd.classList.remove('d-none');
-                }
+        /* handles hiding|showing of fragment constructor inputs.
+            Calls a function to construct the frag id URL from textarea content.
+            Calls a function to output url for confirmation.
+        */
+        const textAreaValue=this.value.trim();
+        if(textAreaValue){
+          fragmentPrefix.classList.add('d-none');
+          fragmentSuffix.classList.add('d-none');
+          fragmentTextStart.classList.add('d-none');
+          fragmentTestEnd.classList.add('d-none');
 
-              }
-
-      
-      fragmentSubComponentArray.forEach(element=>{
-        element.addEventListener('input',hideTextArea);
-      });
-      function hideTextArea(){
-        const fragmentPrefixVal=fragmentPrefix.value.trim();
-        const fragmentSuffixVal=fragmentSuffix.value.trim();
-        const fragmentTextStartVal=fragmentTextStart.value.trim();
-        const fragmentTestEndVal=fragmentTestEnd.value.trim();
-        const baseURL=document.getElementById('fragment-domain').value.trim();
-
-
-        if(fragmentPrefixVal || fragmentSuffixVal || fragmentTextStartVal || fragmentTestEndVal){
-          textAreaContentElement.classList.add('d-none');
-
-          // construct fragmentIdentifierURL for webpage text reference.
-          const myURL=constructFragIdURL(fragmentPrefixVal,fragmentSuffixVal,fragmentTextStartVal,fragmentTestEndVal,baseURL);
-          const name=document.getElementById('fragment-name').value;
-          document.getElementById("latex-answer-output").innerHTML = `<a href=${myURL} rel="noopener noreferer nofollow" target="_blank">${name}</a><br><p>${myURL}</p>`;
+          const URL=constructFragIdUrlFromTextArea(textAreaValue);
+          outputURLConfirmation(URL);
         }else{
-          // textarea has text to be used in url fragment.
-          textAreaContentElement.classList.remove('d-none');
+          fragmentPrefix.classList.remove('d-none');
+          fragmentSuffix.classList.remove('d-none');
+          fragmentTextStart.classList.remove('d-none');
+          fragmentTestEnd.classList.remove('d-none');
         }
       }
 
-      document.getElementById('input-answer').addEventListener('input',constructFragIdUrlFromTextArea);
-      function constructFragIdUrlFromTextArea(){
-        // textarea has text to be used in url fragment.
-        const baseURL=document.getElementById('fragment-domain').value.trim();
-        const name=document.getElementById('fragment-name').value.trim();
-        const textAreaContent=textAreaContentElement.value.trim();
-        if(!textAreaContent || !baseURL || !name){
+      function constructFragIdUrlFromTextArea(textAreaContent){
+        /* handles construction of URL from textarea text. */
+
+        const sourceURL=fragmentDomain.value.trim();
+        if(!textAreaContent || !sourceURL){
             return null;
         }
 
         let constructedURL=null;
         const fragmentIdDirective='#:~:text=';
         const encodedTextAreaContent=encodeURIComponent(textAreaContent);
-        constructedURL=`${baseURL}${fragmentIdDirective}${encodedTextAreaContent}`;
-        document.getElementById("latex-answer-output").innerHTML = `<a href=${constructedURL} rel="noopener noreferer nofollow" target="_blank">${name}</a><br><p>${constructedURL}</p>`;
+        constructedURL=`${sourceURL}${fragmentIdDirective}${encodedTextAreaContent}`;
+        return constructedURL;
       }
 
-      function constructFragIdURL(prefix, suffix, textStart, textEnd, domain){
+      function outputURLConfirmation(constructedURL, name){
+        /* Outputs constructed URL and link in confirmation output area. */
+        if(constructedURL){
+          name=name||fragmentName.value.trim()||extractDomainName(constructedURL)||'Possible Source URL error.';
+          outputDiv.innerHTML = `<a href=${constructedURL} rel="noopener noreferrer nofollow" target="_blank">${name}</a><br><p>${constructedURL}</p>`;
+        }
+      }
+      function extractDomainName(subjectURL){
+        const urlObj=new URL(subjectURL);
+        const urlArray=urlObj.hostname.split('.');
+        return urlArray.slice(-2).join('.');
+      }
+
+
+      //  Webpage url frag id has two data entry options. Entering data in input sub-components, hides textarea.
+      fragmentSubComponentArray.forEach(element=>{
+        element.addEventListener('input',hideTextArea);
+      });
+      function hideTextArea(){
+        /* If data entered for fragment sub-components, hide textarea, then output constructed URL from sub-components. */
+        const fragmentPrefixVal=fragmentPrefix.value.trim();
+        const fragmentSuffixVal=fragmentSuffix.value.trim();
+        const fragmentTextStartVal=fragmentTextStart.value.trim();
+        const fragmentTestEndVal=fragmentTestEnd.value.trim();
+        const baseURL=document.getElementById('fragment-domain').value.trim();
+
+        if(fragmentPrefixVal || fragmentSuffixVal || fragmentTextStartVal || fragmentTestEndVal){
+          textAreaWebpageElement.parentElement.classList.add('d-none');
+
+          const constructedURL=constructFragIdUrlFromComponents(fragmentPrefixVal,fragmentSuffixVal,fragmentTextStartVal,fragmentTestEndVal,baseURL);
+          outputURLConfirmation(constructedURL);
+        }else{
+          // textarea has text to be used in url fragment, unhide.
+          textAreaWebpageElement.parentElement.classList.remove('d-none');
+        }
+      }
+
+      function constructFragIdUrlFromComponents(prefix, suffix, textStart, textEnd, domain){
+        /* Constructs fragment URL from range sub-components. */
         if(!domain || !textStart){
           return null;
         }
@@ -1517,33 +1592,148 @@ pie
       }
 
 
+      const answerRegularContainer=document.getElementById("input-answer-container");
+      const answerMarkdownContainer=document.getElementById("input-answer-markdown-container");
+      const answerLaTexContainer=document.getElementById("input-answer-latex-container");
+      const answerMermaidContainer=document.getElementById("input-answer-mermaid-container");
+      const answerWebpageContainer=document.getElementById("input-answer-webpage-container");
+      // toggle textarea container for particular text input option types
       radios.forEach(function (radio) {
         radio.addEventListener("change", function () {
           fragmentContainer.classList.add('d-none');
-          textAreaContentElement.focus();
+          // clearTextDataBtn.setAttribute('data-bs-title','');
           if (this.checked) {
+            if(this.value !=='fragmentIdentifier'){
+              // removes tooltip for dblclick instructions when webpage radio is not active
+              const hasBootstrapTooltip=clearTextDataBtn.hasAttribute('data-bs-toggle');
+              if(hasBootstrapTooltip){ destroyBootstrapTooltip(clearTextDataBtn); }
+            }
             if(this.value === "regularText"){
-              document.getElementById("latex-answer-output").textContent = "";
+              outputDiv.textContent = "";
+              answerRegularContainer.classList.remove('d-none');
+              textAreaContentElement.focus();
+              answerMarkdownContainer.classList.add('d-none');
+              answerLaTexContainer.classList.add('d-none');
+              answerMermaidContainer.classList.add('d-none');
+              answerWebpageContainer.classList.add('d-none');
+            }else if(this.value === "markdownText"){
+              outputDiv.textContent = "";
+              answerRegularContainer.classList.add('d-none');
+              answerMarkdownContainer.classList.remove('d-none');
+              textAreaMarkdownElement.focus();
+              answerLaTexContainer.classList.add('d-none');
+              answerMermaidContainer.classList.add('d-none');
+              answerWebpageContainer.classList.add('d-none');
+            }else if(this.value === "latexText"){
+              outputDiv.textContent = "";
+              answerRegularContainer.classList.add('d-none');
+              answerMarkdownContainer.classList.add('d-none');
+              answerLaTexContainer.classList.remove('d-none');
+              textAreaLaTexElement.focus();
+              answerMermaidContainer.classList.add('d-none');
+              answerWebpageContainer.classList.add('d-none');
+            }else if(this.value === "mermaidText"){
+              outputDiv.textContent = "";
+              answerRegularContainer.classList.add('d-none');
+              answerMarkdownContainer.classList.add('d-none');
+              answerLaTexContainer.classList.add('d-none');
+              answerMermaidContainer.classList.remove('d-none');
+              textAreaMermaidElement.focus();
+              answerWebpageContainer.classList.add('d-none');
             }else if(this.value === "fragmentIdentifier"){
+              outputDiv.textContent = "";
+              answerRegularContainer.classList.add('d-none');
+              answerMarkdownContainer.classList.add('d-none');
+              answerLaTexContainer.classList.add('d-none');
+              answerMermaidContainer.classList.add('d-none');
+              answerWebpageContainer.classList.remove('d-none');
               fragmentContainer.classList.remove('d-none');
+              fragmentDomain.focus();
+              createBootstrapTooltip(clearTextDataBtn);
             }
           }
         });
       });
+      function destroyBootstrapTooltip(element){
+        /* Dynamically removing bootstrap tooltip.
+            Bootstrap tooltips already causes a performance hit.
+            Dynamic operations further increase costs.
+        */
+        const tooltipAttributes=['toggle','placement','custom-class','html','title']; // delay, trigger
+        tooltipAttributes.forEach(attribute=>{
+          element.removeAttribute(`data-bs-${attribute}`);
+        });
+        const tooltipInstance=bootstrap.Tooltip.getInstance(element);
+        if(tooltipInstance){ tooltipInstance.dispose(); }
+      }
+      function createBootstrapTooltip(element,titleMsg){
+        /* Dynamically adding a bootstrap tooltip to an element.
+            Bootstrap tooltips are already expensive.
+            Dynamic operations make them even more so.
 
+            .tooltip-inner {...} targets the element with the actual 
+              text w/in the tooltip. it's not an attr, add the class 
+              to the stylesheet if you want to say, text-align.
 
+            'custom-tooltip' is a user-defined CSS rule class ie .custom-tooltip {...}
+        */
 
+        titleMsg=titleMsg||'<b>dblclick</b>: Clears Source URL & Link name.';
+
+        // element.setAttribute('data-bs-toggle','tooltip');
+        const tooltipAttributes={
+          toggle:'tooltip',
+          placement:'left',
+          'custom-class':'custom-tooltip',
+          html:'true',
+          title:titleMsg,
+          // delay: { show: 500, hide: 200 },
+          // trigger: 'hover focus',
+        };
+        for(const [key,value] of Object.entries(tooltipAttributes)){
+          element.setAttribute(`data-bs-${key}`,value);
+        }
+        
+        // must initialize else not rendered.
+        const tooltip=new bootstrap.Tooltip(element);
+      }
+      function updateBootstrapTooltipTitle(element,titleMsg){
+        titleMsg=titleMsg||'New Title';
+        // Set the data-bs-title attribute dynamically
+        element.setAttribute('data-bs-title', titleMsg);
+        // If Bootstrap tooltip is already initialized, update it
+        const tooltip = new bootstrap.Tooltip(element);
+        tooltip.update();
+      }
 
 
       // delete textArea and fragment sub-component input:text data
       clearTextDataBtn.addEventListener('click',clearTextAreaAndFragInputs);
       function clearTextAreaAndFragInputs(){
-        textAreaContentElement.value='';
-        textAreaContentElement.classList.remove('d-none');
-        fragmentSubComponentArray.forEach(function(inputElem){
-          inputElem.value='';
-          inputElem.classList.remove('d-none');
-        });
+        const radioSelection=this.form.querySelector("input[type='radio']:checked");
+        
+        if(radioSelection.value === "regularText"){
+          textAreaContentElement.value='';
+          textAreaContentElement.focus();
+        }else if(radioSelection.value === "markdownText"){
+          textAreaMarkdownElement.value='';
+          textAreaMarkdownElement.focus();
+        }else if(radioSelection.value === "latexText"){
+          textAreaLaTexElement.value='';
+          textAreaLaTexElement.focus();
+        }else if(radioSelection.value === "mermaidText"){
+          textAreaMermaidElement.value='';
+          textAreaMermaidElement.focus();
+        }else if(radioSelection.value === "fragmentIdentifier"){
+          textAreaWebpageElement.value='';
+          answerWebpageContainer.classList.remove('d-none');
+          fragmentSubComponentArray.forEach(function(inputElem){
+            inputElem.value='';
+            inputElem.classList.remove('d-none');
+          });
+          outputDiv.textContent = "";
+          fragmentTextStart.focus();
+        }          
       }
       // interestingly, dblclick DOES NOT work on mobile devices!! it's interpreted as zoom cmd. use "touchend" event to mimic.
       clearTextDataBtn.addEventListener('dblclick',clearTextFragDomainAndName);
@@ -1559,10 +1749,8 @@ pie
         const currentTime=new Date().getTime();
         const tapInterval=currentTime-lastTouchTime;
         if(tapInterval<300){
-          event.preventDefault(); // Prevent default behavior (e.g., zoom)
-          fragmentBaseUrlAndNameArray.forEach(function(inputElem){
-            inputElem.value='';
-          });
+          event.preventDefault(); // Prevent default behavior (e.g. zoom)
+          clearTextFragDomainAndName();
         }
         lastTouchTime=currentTime;
       }
@@ -1596,36 +1784,30 @@ pie
         });
       });
 
+    </script>
 
 
-
-
-      // markdown & LaTex radio btn selection based preview output
-      const converter = new showdown.Converter();
-      textAreaContentElement
-        .addEventListener("input", function () {
-          const textAreaContent = this.value;
-          const checkedRadioSelection = document.querySelector(
-            "input[type=radio]:checked"
-          );
-          if (checkedRadioSelection.value === "markdownText") {
-            document.getElementById("latex-answer-output").innerHTML =
-              converter.makeHtml(textAreaContent);
-          } else if (checkedRadioSelection.value === "latexText") {
-            document.getElementById("latex-answer-output").textContent =
-              textAreaContent;
-            MathJax.typesetPromise();
-          } else if (checkedRadioSelection.value === "mermaidText") {
-            const output = document.getElementById("latex-answer-output");
-            output.innerHTML = "";
-            // create new div to ensure mermaid rerenders else no image shown just from inserting text.
-            const mermaidElem = document.createElement("div");
-            mermaidElem.className = "mermaid";
-            mermaidElem.textContent = this.value;
-            output.appendChild(mermaidElem);
-            mermaid.init(undefined, mermaidElem);
-          }
-        });
+    <script>
+      // Markdown, LaTex, & Mermaid preview output
+      const markdownConverter = new showdown.Converter();
+      textAreaMarkdownElement.addEventListener("input", function () {
+        const textAreaContent = this.value;
+        outputDiv.innerHTML=markdownConverter.makeHtml(textAreaContent);
+      });
+      textAreaLaTexElement.addEventListener("input", function () {
+        const textAreaContent = this.value;
+        outputDiv.textContent=textAreaContent;
+        MathJax.typesetPromise();
+      });
+      textAreaMermaidElement.addEventListener("input", function () {
+        outputDiv.innerHTML = "";
+        // create new div to ensure mermaid rerenders else no image shown just from inserting text.
+        const mermaidElem = document.createElement("div");
+        mermaidElem.className = "mermaid";
+        mermaidElem.textContent = this.value;
+        outputDiv.appendChild(mermaidElem);
+        mermaid.init(undefined, mermaidElem);
+      });
     </script>
 
     <script>
@@ -1688,12 +1870,13 @@ pie
       crossorigin="anonymous"
     ></script>
 
-    <script defer>
+    <!-- <script defer>
       window.addEventListener('DOMContentLoaded',()=>{
+        // initialize tooltip, when tooltip statically defined.
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
       })
-    </script>
+    </script> -->
 
     <script
       defer

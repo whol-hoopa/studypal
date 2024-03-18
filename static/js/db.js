@@ -9,9 +9,10 @@ const flashcardData = {
             regular:"regular text.",
             markdown:"#Markdown text",
             latex:"\\[\\int_a^b f(\\mu) \\, d\\mu\\]",
-            mermaid:"graph LR;A[Square Rect] -- Link text --> B((Circle));A --> C(Round Rect);B --> D{Rhombus};C --> D;"
+            mermaid:"graph LR;A[Square Rect] -- Link text --> B((Circle));A --> C(Round Rect);B --> D{Rhombus};C --> D;",
+            webpage:"url"
         },
-        image:"Blob",
+        image:"BlobURL",
         audio:"BlobURL",
         video:{
             local:"BlobURL",
@@ -29,7 +30,7 @@ const pouchDB={
         flashCardDoc=flashCardDoc||this.constructFlashcardDocument(this.data);
         if(flashCardDoc.hasOwnProperty('_id')){
             // db == new PouchDB('myDBInstance') from global context.
-            db.put(flashCardDoc);
+            db.put(flashCardDoc).then().catch(err=>console.error(err));
             return;
         }
         throw 'The flashcard document must have an _id property.'
