@@ -10,7 +10,10 @@ const flashcardData = {
             markdown:"#Markdown text",
             latex:"\\[\\int_a^b f(\\mu) \\, d\\mu\\]",
             mermaid:"graph LR;A[Square Rect] -- Link text --> B((Circle));A --> C(Round Rect);B --> D{Rhombus};C --> D;",
-            webpage:"url"
+            webpage:{
+                label:"Link name",
+                href:"url:frag"
+            }
         },
         image:"BlobURL",
         audio:"BlobURL",

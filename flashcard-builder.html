@@ -1250,10 +1250,11 @@ pie
       };
       let AUDIO_URL = null;
       function revokeAudioURL() {
+        
         /* AUDIO_URL MUST be the same URL instance to be successfully revoked, hence the global variable.
-                    Creating a new AUDIO_URL=URL.createObjectURL(file[0]); will be a different instance and will not
-                    revoke/delete the Blob-url. This will lead to its persistance and thus a memory leak.
-                */
+            Creating a new AUDIO_URL=URL.createObjectURL(file[0]); will be a different instance and will not
+            revoke/delete the Blob-url. This will lead to its persistance and thus a memory leak.
+        */
         if (AUDIO_URL) {
           URL.revokeObjectURL(AUDIO_URL);
           AUDIO_URL = null;
@@ -1601,7 +1602,6 @@ pie
       radios.forEach(function (radio) {
         radio.addEventListener("change", function () {
           fragmentContainer.classList.add('d-none');
-          // clearTextDataBtn.setAttribute('data-bs-title','');
           if (this.checked) {
             if(this.value !=='fragmentIdentifier'){
               // removes tooltip for dblclick instructions when webpage radio is not active
