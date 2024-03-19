@@ -278,6 +278,7 @@
                     data-bs-toggle="tab"
                     data-bs-target="#question-tab-pane"
                     type="button"
+                    aria-label="Question Tab"
                     role="tab"
                     aria-controls="question-tab-pane"
                     aria-selected="true"
@@ -296,6 +297,7 @@
                     data-bs-toggle="dropdown"
                     href="#"
                     type="button"
+                    aria-label="Answer Dropdown Options Tab"
                     role="tab"
                     aria-controls=""
                     aria-expanded="false"
@@ -400,6 +402,7 @@
                 <li class="ms-auto align-self-end" role="presentation">
                   <button class="btn btn-warning px-2 px-sm-3" 
                     id="question-clear-btn" type="button"
+                    aria-label="Clear textarea for question input"
                     >
                     Clear
                   </button>
@@ -407,6 +410,7 @@
                 <li class="ms-auto align-self-end d-none" role="presentation">
                   <button class="btn btn-warning px-2 px-sm-3" 
                     id="fragment-clear-btn" type="button"
+                    aria-label="Clear textarea for answer and URL fragment inputs"
                     >
                     Clear
                   </button>
@@ -917,7 +921,7 @@ pie
                     <!-- toggle switch -->
                     <div class="form-check form-switch d-flex justify-content-end">
                       <div>
-                        <label class="form-check-label ps-1" for="darkmode-toggler-textarea-confirmation" aria-label="Dark mode toggler" id="darkmode-toggle-textarea-confirmation-label">Dark mode</label>
+                        <label class="form-check-label ps-1" for="darkmode-toggler-textarea-confirmation" aria-label="Dark mode toggler for confirmation output element" id="darkmode-toggle-textarea-confirmation-label">Dark mode</label>
                         <input class="form-check-input" type="checkbox" role="switch" id="darkmode-toggler-textarea-confirmation" aria-labelledby="darkmode-toggle-textarea-confirmation-label" aria-live="polite" checked>
                       </div>
                     </div>
@@ -980,6 +984,7 @@ pie
                       class="btn btn-secondary py-0 px-2 py-sm-1 px-sm-5"
                       id="upload-audio-btn"
                       type="button"
+                      aria-label="Choose audio from local filesystem"
                     >
                       Choose Audio
                     </button>
@@ -987,6 +992,7 @@ pie
                       class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5"
                       id="cancel-upload-audio-btn"
                       type="button"
+                      aria-label="Cancel local file audio upload"
                     >
                       Cancel
                     </button>
@@ -1000,8 +1006,9 @@ pie
                       class="d-none"
                       name="input-audio"
                       id="input-audio"
-                      accept="audio/*"
-                    />
+                      accept="audio/mpeg,audio/wav,audio/ogg"
+                      />
+                      <!-- accept="audio/*" -->
                     <audio id="audio-element" controls>
                       <source id="uploaded-audio" src="" type="audio/mpeg" />
                       Your browser does not support the audio element. Upgrade
@@ -1023,6 +1030,7 @@ pie
                       class="btn btn-secondary py-0 px-2 py-sm-1 px-sm-5"
                       id="upload-video-btn"
                       type="button"
+                      aria-label="Choose video from local filesystem"
                     >
                       Choose Video
                     </button>
@@ -1030,6 +1038,7 @@ pie
                       class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5"
                       id="cancel-upload-video-btn"
                       type="button"
+                      aria-label="Cancel local file video upload"
                     >
                       Cancel
                     </button>
@@ -1065,7 +1074,8 @@ pie
                     <button
                       class="btn btn-success py-0 px-2 py-sm-1 px-sm-5"
                       id="set-youtube-url"
-                      role="button"
+                      type="button"
+                      aria-label="Set YouTube link from iframe"
                     >
                       Set Link
                     </button>
@@ -1075,6 +1085,7 @@ pie
                         class="btn btn-warning py-0 px-2 py-sm-1 px-sm-5"
                         id="youtube-clear-input-btn"
                         type="button"
+                        aria-label="Clear source input field"
                       >
                         Clear
                       </button>
@@ -1082,6 +1093,7 @@ pie
                         class="btn btn-danger py-0 px-2 py-sm-1 px-sm-5"
                         id="cancel-upload-video-youtube-btn"
                         type="button"
+                        aria-label="Cancel linked YouTube video"
                       >
                         Cancel
                       </button>
@@ -1446,7 +1458,7 @@ pie
 
 
     <script>
-      // clear output text on regular text radio btn selection
+      // clear output text in textarea for text radio btn selections
       const clearTextDataBtn=document.getElementById('fragment-clear-btn'); // used to clear textArea and especially fragment sub-component inputs. 
       const clearTextDataQuestionBtn=document.getElementById('question-clear-btn'); // used to clear textArea for question. 
 
