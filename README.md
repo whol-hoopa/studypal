@@ -7,9 +7,13 @@ Backend:
 - Anthony Mei
 - Joshua Perez
 
-> Changing name from master to main:
+### Changing name from master to main
 ```powershell
 git branch -m master main
+```
+### Pulling merged repo to local machine
+```powershell
+git pull origin main
 ```
 
 # Backend setup
