@@ -38,8 +38,14 @@
         border: var(--bs-border-width) solid var(--bs-border-color);
         border-radius: var(--bs-border-radius);
       }
-      .v-hidden {
-        visibility: hidden;
+
+      .aria-visible-only {
+        /* position: absolute !important; */
+        width: 1px !important;
+        height: 1px !important;
+        overflow: hidden !important;
+        white-space: nowrap !important;
+        opacity:0 !important;
       }
       .custom-tooltip {
         --bs-tooltip-bg: orange;
@@ -517,25 +523,25 @@
                   </div>
 
                   <!-- conditional input options for fragment identifier linked webpage -->
-                  <div id="fragment-container" class="d-flex flex-wrap position-relative d-none">
+                  <div id="fragment-container" aria-roledescription="A container clustering inputs for building a webpage url with a fragment id slug that targets specific text in a webpage for highlighting." class="d-flex flex-wrap position-relative d-none">
 
-                    <label for="fragment-domain" class="position-absolute v-hidden">Webpage URL</label>
+                    <label for="fragment-domain" class="position-absolute aria-visible-only">Webpage URL</label>
                     <input required class="form-control w-50" type="text" name="fragment-domain" id="fragment-domain" placeholder="Source URL" spellcheck="true">
-                    <label for="fragment-name" class="position-absolute v-hidden">Name link [optional]</label>
+                    <label for="fragment-name" class="position-absolute aria-visible-only">Name link [optional]</label>
                     <input class="form-control w-50" type="text" name="fragment-name" id="fragment-name" placeholder="Name link [optional]" spellcheck="true">
-                    <label for="fragment-prefix" class="position-absolute v-hidden">Prefix [optional]</label>
+                    <label for="fragment-prefix" class="position-absolute aria-visible-only">Prefix [optional]</label>
                     <input class="form-control w-50" type="text" name="fragment-prefix" id="fragment-prefix" placeholder="prefix [optional]" spellcheck="true">
-                    <label for="fragment-suffix" class="position-absolute v-hidden">Suffix [optional]</label>
+                    <label for="fragment-suffix" class="position-absolute aria-visible-only">Suffix [optional]</label>
                     <input class="form-control w-50" type="text" name="fragment-suffix" id="fragment-suffix" placeholder="suffix [optional]" spellcheck="true">
-                    <label for="fragment-textStart" class="position-absolute v-hidden">textStart</label>
+                    <label for="fragment-textStart" class="position-absolute aria-visible-only">textStart</label>
                     <input required class="form-control w-50" type="text" name="fragment-textStart" id="fragment-textStart" placeholder="textStart" spellcheck="true">
-                    <label for="fragment-textEnd" class="position-absolute v-hidden">textEnd [optional]</label>
+                    <label for="fragment-textEnd" class="position-absolute aria-visible-only">textEnd [optional]</label>
                     <input class="form-control w-50" type="text" name="fragment-textEnd" id="fragment-textEnd" placeholder="textEnd [optional]" spellcheck="true">
                   </div>
 
 
                   <!-- radio selector for LaTex | markdown -->
-                  <div class="radio-text-format mb-2">
+                  <div class="radio-text-format mb-2" role="radiogroup" aria-label="Select what type of text you will enter">
                     <!-- regular: radio -->
                     <div class="form-check form-check-inline">
                       <input
@@ -545,6 +551,7 @@
                         name="inlineRadioOptions"
                         id="inlineRadio-regular"
                         value="regularText"
+                        aria-controls="input-answer-container"
                       />
                       <label 
                         class="form-check-label" 
@@ -562,6 +569,7 @@
                         name="inlineRadioOptions"
                         id="inlineRadio-markdown"
                         value="markdownText"
+                        aria-controls="input-answer-markdown-container"
                       />
                       <label
                         class="form-check-label"
@@ -649,6 +657,7 @@
                         name="inlineRadioOptions"
                         id="inlineRadio-latex"
                         value="latexText"
+                        aria-controls="input-answer-latex-container"
                       />
                       <label class="form-check-label" for="inlineRadio-latex"
                         >LaTex</label
@@ -738,6 +747,7 @@
                         name="inlineRadioOptions"
                         id="inlineRadio-mermaid"
                         value="mermaidText"
+                        aria-controls="input-answer-mermaid-container"
                       />
                       <label class="form-check-label" for="inlineRadio-mermaid"
                         >Mermaid</label
@@ -826,6 +836,7 @@ pie
                         name="inlineRadioOptions"
                         id="inlineRadio-webpage"
                         value="fragmentIdentifier"
+                        aria-controls="input-answer-webpage-container fragment-container"
                       />
                       <label class="form-check-label" for="inlineRadio-webpage"
                         >Webpage</label
