@@ -528,7 +528,7 @@
                   </div>
 
                   <!-- conditional input options for fragment identifier linked webpage -->
-                  <div id="fragment-container" aria-roledescription="A container clustering inputs for building a webpage url with a fragment id slug that targets specific text in a webpage for highlighting." class="d-flex flex-wrap position-relative d-none">
+                  <div id="fragment-container" role="group" aria-roledescription="A container clustering inputs for building a webpage url with a fragment id slug that targets specific text in a webpage for highlighting." class="d-flex flex-wrap position-relative d-none">
 
                     <label for="fragment-domain" class="position-absolute aria-visible-only">Webpage URL</label>
                     <input required class="form-control w-50" type="text" name="fragment-domain" id="fragment-domain" placeholder="Source URL" spellcheck="true">
@@ -1321,7 +1321,7 @@ pie
       // Local Video selection options:
       const fileNameConfirmationText_video =
         document.getElementById("file-name-video");
-      // const inputElement_video = document.getElementById("input-video");
+      const inputElement_video = document.getElementById("input-video");
       const sourceElement_video = document.getElementById("uploaded-video");
       const chooseBtn_video = document.getElementById("upload-video-btn");
       chooseBtn_video.onclick = function () {
