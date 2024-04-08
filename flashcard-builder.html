@@ -517,9 +517,9 @@
                   </div>
                   <!-- textarea: Webpage -->
                   <div class="form-floating d-none" id="input-answer-webpage-container">
+                    <!-- name="input-answer-webpage" -->
                     <textarea
                       class="w-100 h-100 form-control"
-                      name="input-answer-webpage"
                       id="input-answer-webpage"
                       cols="33"
                       rows="10"
@@ -530,7 +530,23 @@
                   <!-- conditional input options for fragment identifier linked webpage -->
                   <div id="fragment-container" role="group" aria-roledescription="A container clustering inputs for building a webpage url with a fragment id slug that targets specific text in a webpage for highlighting." class="d-flex flex-wrap position-relative d-none">
 
+                    <!-- no need to aggregate components. Only need final <a>. -->
+                    <input required class="d-none" name="input-answer-webpage-anchor" type="text" id="input-answer-webpage-anchor">
+                    
                     <label for="fragment-domain" class="position-absolute aria-visible-only">Webpage URL</label>
+                    <input required class="form-control w-50" type="text" id="fragment-domain" placeholder="Source URL" spellcheck="true">
+                    <label for="fragment-name" class="position-absolute aria-visible-only">Name link [optional]</label>
+                    <input class="form-control w-50" type="text" id="fragment-name" placeholder="Name link [optional]" spellcheck="true">
+                    <label for="fragment-prefix" class="position-absolute aria-visible-only">Prefix [optional]</label>
+                    <input class="form-control w-50" type="text" id="fragment-prefix" placeholder="prefix [optional]" spellcheck="true">
+                    <label for="fragment-suffix" class="position-absolute aria-visible-only">Suffix [optional]</label>
+                    <input class="form-control w-50" type="text" id="fragment-suffix" placeholder="suffix [optional]" spellcheck="true">
+                    <label for="fragment-textStart" class="position-absolute aria-visible-only">textStart</label>
+                    <input required class="form-control w-50" type="text" id="fragment-textStart" placeholder="textStart" spellcheck="true">
+                    <label for="fragment-textEnd" class="position-absolute aria-visible-only">textEnd [optional]</label>
+                    <input class="form-control w-50" type="text" id="fragment-textEnd" placeholder="textEnd [optional]" spellcheck="true">
+
+                    <!-- <label for="fragment-domain" class="position-absolute aria-visible-only">Webpage URL</label>
                     <input required class="form-control w-50" type="text" name="fragment-domain" id="fragment-domain" placeholder="Source URL" spellcheck="true">
                     <label for="fragment-name" class="position-absolute aria-visible-only">Name link [optional]</label>
                     <input class="form-control w-50" type="text" name="fragment-name" id="fragment-name" placeholder="Name link [optional]" spellcheck="true">
@@ -541,7 +557,7 @@
                     <label for="fragment-textStart" class="position-absolute aria-visible-only">textStart</label>
                     <input required class="form-control w-50" type="text" name="fragment-textStart" id="fragment-textStart" placeholder="textStart" spellcheck="true">
                     <label for="fragment-textEnd" class="position-absolute aria-visible-only">textEnd [optional]</label>
-                    <input class="form-control w-50" type="text" name="fragment-textEnd" id="fragment-textEnd" placeholder="textEnd [optional]" spellcheck="true">
+                    <input class="form-control w-50" type="text" name="fragment-textEnd" id="fragment-textEnd" placeholder="textEnd [optional]" spellcheck="true"> -->
                   </div>
 
 
@@ -550,10 +566,10 @@
                     <!-- regular: radio -->
                     <div class="form-check form-check-inline">
                       <input
+                        name="inlineRadioOptions"
                         checked
                         class="form-check-input"
                         type="radio"
-                        name="inlineRadioOptions"
                         id="inlineRadio-regular"
                         value="regularText"
                         aria-controls="input-answer-container"
@@ -569,9 +585,9 @@
                     <!-- markdown: radio -->
                     <div class="form-check form-check-inline">
                       <input
+                        name="inlineRadioOptions"
                         class="form-check-input"
                         type="radio"
-                        name="inlineRadioOptions"
                         id="inlineRadio-markdown"
                         value="markdownText"
                         aria-controls="input-answer-markdown-container"
@@ -657,9 +673,9 @@
                     <!-- LaTex: radio -->
                     <div class="form-check form-check-inline">
                       <input
+                        name="inlineRadioOptions"
                         class="form-check-input"
                         type="radio"
-                        name="inlineRadioOptions"
                         id="inlineRadio-latex"
                         value="latexText"
                         aria-controls="input-answer-latex-container"
@@ -747,9 +763,9 @@
                     <!-- Mermaid: radio -->
                     <div class="form-check form-check-inline">
                       <input
+                        name="inlineRadioOptions"
                         class="form-check-input"
                         type="radio"
-                        name="inlineRadioOptions"
                         id="inlineRadio-mermaid"
                         value="mermaidText"
                         aria-controls="input-answer-mermaid-container"
@@ -836,9 +852,9 @@ pie
                     <!-- Webpage content: radio -->
                     <div class="form-check form-check-inline">
                       <input
+                        name="inlineRadioOptions"
                         class="form-check-input"
                         type="radio"
-                        name="inlineRadioOptions"
                         id="inlineRadio-webpage"
                         value="fragmentIdentifier"
                         aria-controls="input-answer-webpage-container fragment-container"
@@ -1293,6 +1309,11 @@ pie
         const file = e.target.files;
         if (file && file[0]) {
           // adds file name below 'Choose file' btn
+          // const AUDIO_FILE = file[0];
+          // console.log(typeof AUDIO_FILE);
+          // console.log(AUDIO_FILE);
+          // console.log(new Blob([AUDIO_FILE], {type: AUDIO_FILE.type}));
+
           fileNameConfirmationText_audio.textContent = file[0].name;
           fileNameConfirmationText_audio.classList.add("text-success");
           fileNameConfirmationText_audio.classList.remove("text-warning");
@@ -1397,7 +1418,7 @@ pie
       createBtn.addEventListener("click", function (e) {
         e.preventDefault();
 
-        const blob = inputElement_audio.files[0];
+        // const blob = inputElement_audio.files[0];
         // console.log(blob);
 
         // Memory clean up:
@@ -1435,7 +1456,7 @@ pie
           labelYouTubeUrlElem.innerText = "URL";
           inputYouTubeElem.value = src;
           iframeYouTube.src = src;
-          iframeYouTube.load();
+          // iframeYouTube.load(); // throws console.err
           return;
         }
         labelYouTubeUrlElem.innerText = "iframe";
@@ -1545,6 +1566,10 @@ pie
         /* Outputs constructed URL and link in confirmation output area. */
         if(constructedURL){
           name=name||fragmentName.value.trim()||extractDomainName(constructedURL)||'Possible Source URL error.';
+          // const anchor = `<a href=${constructedURL} rel="noopener noreferrer nofollow" target="_blank">${name}</a>`;
+          // console.log(anchor);
+          document.getElementById('input-answer-webpage-anchor').value = `${name}@${constructedURL}`; // use @ to split sting & construct on db.get() => <a href=constructedURL>name</a>
+          // outputDiv.innerHTML = `${anchor}<br><p>${constructedURL}</p>`;
           outputDiv.innerHTML = `<a href=${constructedURL} rel="noopener noreferrer nofollow" target="_blank">${name}</a><br><p>${constructedURL}</p>`;
         }
       }
@@ -1740,7 +1765,7 @@ pie
       clearTextDataBtn.addEventListener('click',clearTextAreaAndFragInputs);
       function clearTextAreaAndFragInputs(){
         const radioSelection=this.form.querySelector("input[type='radio']:checked");
-        
+        // console.log(radioSelection)
         if(radioSelection.value === "regularText"){
           textAreaContentElement.value='';
           textAreaContentElement.focus();
