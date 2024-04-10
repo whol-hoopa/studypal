@@ -73,7 +73,10 @@
     <!-- mermaid feature -->
     <script async src="https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.min.js"></script>
 
-
+    <!-- <script defer src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script> -->
+    <!-- <script defer src="https://unpkg.com/browse/pouchdb@8.0.1/dist/pouchdb.find.min.js"></script> -->
+    <script defer src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.js"></script>
+    <!-- <script defer src="https://unpkg.com/browse/pouchdb@8.0.1/dist/pouchdb.find.js" type="application/javascript"></script> -->
     <script defer src="/static/js/db.js" type="text/javascript"></script>
     <script defer src="/static/js/dbActions.js" type="text/javascript"></script>
   </head>
@@ -1418,18 +1421,18 @@ pie
       };
 
       // Create flashcard button
-      const createBtn = document.getElementById("create-btn");
-      createBtn.addEventListener("click", function (e) {
-        e.preventDefault();
+      // const createBtn = document.getElementById("create-btn");
+      // createBtn.addEventListener("click", function (e) {
+      //   e.preventDefault();
 
-        // const blob = inputElement_audio.files[0];
-        // console.log(blob);
+      //   // const blob = inputElement_audio.files[0];
+      //   // console.log(blob);
 
-        // Memory clean up:
-        revokeImageURL();
-        revokeAudioURL();
-        revokeVideoURL();
-      });
+      //   // Memory clean up:
+      //   revokeImageURL();
+      //   revokeAudioURL();
+      //   revokeVideoURL();
+      // });
 
       window.addEventListener("beforeunload", () => {
         // Memory clean up:
@@ -1917,6 +1920,7 @@ pie
         const tagConfirmationContainer=document.getElementById('tag-confirmation-container');
         tagConfirmationContainer.innerHTML='';
         tagConfirmationContainer.append(fragmentElement);
+        tagInputElement.value=tagsArrayTrimmed.join(',');
       });
 
     </script>
@@ -1936,10 +1940,10 @@ pie
       })
     </script> -->
 
-    <script
+    <!-- <script
       defer
       src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"
-    ></script>
+    ></script> -->
 
     <script>
       /*
