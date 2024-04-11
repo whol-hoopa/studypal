@@ -179,7 +179,7 @@ class Query {
             const queryOptions={
                 include_docs:false,
                 descending: isDescending,
-                limit: 5,
+                limit: 10,
             };
             if(lastId){
                 queryOptions.startkey=lastId;

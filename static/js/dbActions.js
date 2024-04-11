@@ -44,6 +44,11 @@ descendingToggler?.addEventListener('change',function(){
        changeToggle=true;
    }
 });
+searchElement?.addEventListener('change',function(){
+    paginationStatus.dataset.count=0;
+    searchResultsContainer.innerHTML="";
+    paginationStatus.textContent="";
+})
 btnSearch?.addEventListener('click',function(e){
     // https://pouchdb.com/2014/04/14/pagination-strategies-with-pouchdb.html
     // https://github.com/garbados/pouchdb-paginators
@@ -77,12 +82,12 @@ btnSearch?.addEventListener('click',function(e){
             searchResultsContainer.innerHTML="";
             searchResultsContainer?.append(frag);
 
+            const previousCount = parseInt(paginationStatus?.dataset.count);
+            totalRecords=records.total_rows;
+            const currentCount = previousCount+records.rows.length;
+            paginationStatus.dataset.count=currentCount;
             // pagination status
             if(changeToggle===false){
-                const previousCount = parseInt(paginationStatus?.dataset.count);
-                totalRecords=records.total_rows;
-                const currentCount = previousCount+records.rows.length;
-                paginationStatus.dataset.count=currentCount;
                 paginationStatus.textContent=`${currentCount}/${records.total_rows}`;
             }
             if(!records.rows.length){
