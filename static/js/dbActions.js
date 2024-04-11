@@ -83,7 +83,6 @@ btnSearch?.addEventListener('click',function(e){
                 li.textContent=element.value.question;
                 li.dataset._id=element.id;
                 li.dataset._rev=element.value._rev;
-                li.setAttribute('style','cursor:pointer');
                 li.ondblclick=function(){
                     console.log(this.dataset._id);
                     console.log(this.dataset._rev);
