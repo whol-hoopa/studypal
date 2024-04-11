@@ -156,6 +156,57 @@ class Query {
         }).catch(err=>console.log(err));
     }
 
+    /* Temporary-Development query */
+    async _question_async_page(regex, lastId, isDescending, isCaseSensitive){
+        /* Use backslash to escape regex special characters.
+            e.g. `h\.t`
+
+            Find flashcards based on questions posed. 
+
+            This is a `Temporary query` && is considered very slow.
+            It is meant for debugging during development.
+
+            https://pouchdb.com/guides/queries.html#mappin-and-reducin
+        */
+        if(regex===""){return null;}
+        /** @type {String} */
+        lastId=lastId||"";
+        /** @type {Boolean} */
+        isCaseSensitive=isCaseSensitive||false;
+        /** @type {String} */
+        regex=isCaseSensitive?new RegExp(regex):new RegExp(regex,'i');
+        try{
+            const queryOptions={
+                include_docs:false,
+                descending: isDescending,
+                limit: 5,
+            };
+            if(lastId){
+                queryOptions.startkey=lastId;
+                queryOptions.skip=1;
+            }
+
+
+            const records = await db.query((doc,emit)=>{
+                if(regex.test(doc['input-question'])){
+                    // seems to order by key parameter, emit _id for expected ordering.
+                    const valueEmitted={
+                        _rev: doc._rev,
+                        question: doc['input-question']
+                    };
+                    emit(doc._id, valueEmitted); // props returned => key, value; not key: value
+                }
+            }, queryOptions);
+
+            
+            // console.log(records.rows);
+            console.log(records);
+            return records; // Assignable w/in promise chain.
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     async _question_async(regex, isCaseSensitive){
         /* Use backslash to escape regex special characters.
             e.g. `h\.t`
@@ -167,21 +218,27 @@ class Query {
 
             https://pouchdb.com/guides/queries.html#mappin-and-reducin
         */
+        if(regex===""){return null;}
         /** @type {Boolean} */
         isCaseSensitive=isCaseSensitive||false;
         /** @type {String} */
         regex=isCaseSensitive?new RegExp(regex):new RegExp(regex,'i');
-
+        console.log("regex:", regex);
         try{
-            const result = await db.query((doc,emit)=>{
-                if(regex.test(doc['input-question'])){
-                    emit(doc['input-question'],doc._rev);
-                }
-            },{
+            const queryOptions={
                 include_docs:true,
                 descending:true,
-            });
-            // console.log(result.rows);
+                // limit: 5,
+                // skip:2,
+            };
+            const result = await db.query((doc,emit)=>{
+                if(regex.test(doc['input-question'])){
+                    // orders by _rev not by _id! kept for lesson reminder.
+                    emit(doc._rev,doc['input-question']); // props returned => key, value; not key: value
+                }
+            }, queryOptions);
+
+            console.log(result.rows);
             console.log(result);
             return result.rows; // Assignable w/in promise chain.
         }catch(err){
@@ -222,4 +279,26 @@ class Query {
             console.log(err);
         });
     }
+
+    /* Persistent query */
+    // _indexForQuestion(){
+    //     const designDoc ={
+    //         _id: '_design_docs/questions',
+    //         views: {
+    //             by_questions: {
+    //                 map: function(doc){
+    //                     emit(doc.name); // "The emit function will be available in scope when the map function is run, so don't pass it in as a parameter."
+    //                 }.toString() // The .toString() at the end of the map function is necessary to prep the object for becoming valid JSON.
+    //             }
+    //         }
+    //     }
+
+    //     // save the Index
+    //     this._db.put(designDoc).then(function(){
+    //         // saved index.
+    //     }).catch(function(err){
+    //         console.log(err);
+    //     })
+    // }
+
 }
