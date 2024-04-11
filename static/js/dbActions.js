@@ -1,6 +1,8 @@
 
 // Create flashcard
-document.getElementById('create-btn')?.addEventListener('click',function(e){
+const createBtn=document.getElementById('create-btn');
+const dbIconBtn=document.getElementById('btn-flashcard-added-icon');
+createBtn?.addEventListener('click',function(e){
     // identical evListener in html on line 1411.
     // https://pouchdb.com/api.html#save_attachment
     e.preventDefault();
@@ -14,6 +16,12 @@ document.getElementById('create-btn')?.addEventListener('click',function(e){
     // console.log(flashcard.lastSavedCard); // doesn't work as expected. empty obj.
     // flashcard.print();
     flashcard.pprint();
+
+    
+    dbIconBtn?.classList.remove('d-none');
+    setTimeout(() => {
+        dbIconBtn?.classList.add('d-none');
+    }, 800);
 
     // const testDB=new Query(db);
     // testDB.getAll(); // doesn't show currently saved flashcard here, but does when manually doing so in console. May not have refreshed yet.
@@ -45,11 +53,13 @@ descendingToggler?.addEventListener('change',function(){
    }
 });
 searchElement?.addEventListener('change',function(){
+    /* Fixes bug pagination status bug from changing queries. */
     paginationStatus.dataset.count=0;
     searchResultsContainer.innerHTML="";
     paginationStatus.textContent="";
 })
 btnSearch?.addEventListener('click',function(e){
+    /* Searches database with pagination to prevent overflow. */
     // https://pouchdb.com/2014/04/14/pagination-strategies-with-pouchdb.html
     // https://github.com/garbados/pouchdb-paginators
     // https://stackoverflow.com/questions/70803475/pouchdb-pagination
