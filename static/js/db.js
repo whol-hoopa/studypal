@@ -1,29 +1,6 @@
 const db=new PouchDB('test');
 // const remoteCouch=false;
 
-// const flashcardData = {
-//     tags: ["math", "multiplication"],
-//     question: "What is 10 * 10?",
-//     answer:{
-//         text:{
-//             regular:"regular text.",
-//             markdown:"#Markdown text",
-//             latex:"\\[\\int_a^b f(\\mu) \\, d\\mu\\]",
-//             mermaid:"graph LR;A[Square Rect] -- Link text --> B((Circle));A --> C(Round Rect);B --> D{Rhombus};C --> D;",
-//             webpage:{
-//                 label:"Link name",
-//                 href:"url:frag"
-//             }
-//         },
-//         image:"BlobURL",
-//         audio:"BlobURL",
-//         video:{
-//             local:"BlobURL",
-//             youtube:"src"
-//         }
-//     }
-// };
-
 class Flashcard {
     static blobType = ['input-image', 'input-audio', 'input-video'];
 
@@ -79,9 +56,10 @@ class Flashcard {
             // console.log('flashCard put request queued.');
             db.put(flashCardDoc)
                 .then(res=>{
-                    console.log('Flashcard was saved to database.');
                     this.lastSavedCard=res;
-                    console.log(res);
+                    
+                    // just in case we need _rev, _id
+                    console.log(`Flashcard was saved to database: "${this.formData.get('input-question')}"`, this.lastSavedCard);
                 })
                 .catch(err=>console.error(err));
             return;

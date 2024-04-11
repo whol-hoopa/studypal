@@ -13,7 +13,7 @@ createBtn?.addEventListener('click',function(e){
     // console.log(flashcard.numInputs);
     // console.log(flashcard.doc);
     flashcard.addFlashcard();
-    // console.log(flashcard.lastSavedCard); // doesn't work as expected. empty obj.
+    console.dir(flashcard.lastSavedCard); // doesn't work as expected. empty obj.
     // flashcard.print();
     flashcard.pprint();
 
