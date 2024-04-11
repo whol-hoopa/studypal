@@ -19,8 +19,10 @@ createBtn?.addEventListener('click',function(e){
 
     
     dbIconBtn?.classList.remove('d-none');
+    createBtn.disabled=true;
     setTimeout(() => {
         dbIconBtn?.classList.add('d-none');
+        createBtn.disabled="";
     }, 800);
 
     // const testDB=new Query(db);
