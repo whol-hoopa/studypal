@@ -8,21 +8,52 @@ createBtn?.addEventListener('click',function(e){
     e.preventDefault();
 
     const flashcard = new Flashcard(e.target?.form);
+    flashcard.addFlashcard();
+
+    /* START: development feedback */
     // flashcard.logForm();
     flashcard.logFormData();
     // console.log(flashcard.numInputs);
     // console.log(flashcard.doc);
-    flashcard.addFlashcard();
-    console.dir(flashcard.lastSavedCard); // doesn't work as expected. empty obj.
+    // console.dir(flashcard.lastSavedCard); // doesn't work as expected. empty obj.
     // flashcard.print();
     flashcard.pprint();
-
+    /* END: development feedback */
     
     dbIconBtn?.classList.remove('d-none');
     createBtn.disabled=true;
     setTimeout(() => {
+        // flashcard created feedback
         dbIconBtn?.classList.add('d-none');
         createBtn.disabled="";
+
+        // flashcard input cleanup
+        const iteratorKeys=flashcard.formData.keys();
+        for(let inputId of iteratorKeys){
+            document.getElementById(inputId).value="";
+        }
+        // reset remaining elements
+        cancelBtn_image.click();
+        cancelBtn_audio.click();
+        cancelBtn_video.click();
+        youTubeCancelBtn.click();
+        document.getElementById('tag-confirmation-container').innerHTML='';
+
+
+        fragmentBaseUrlAndNameArray.forEach(function(inputElem){
+            inputElem.value='';
+          });
+        fragmentSubComponentArray.forEach(function(inputElem){ // 1821
+            inputElem.value='';
+            inputElem.classList.remove('d-none');
+        });
+        outputDiv.innerHTML = "";
+        textAreaWebpageElement.value='';
+        answerWebpageContainer.classList.remove('d-none');
+        document.getElementById('inlineRadio-regular')?.click();
+        document.getElementById('inlineRadio-regular').checked=true;
+        document.getElementById('question-tab')?.click();
+        document.getElementById('tags')?.focus();
     }, 800);
 
     // const testDB=new Query(db);

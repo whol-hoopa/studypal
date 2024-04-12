@@ -8,6 +8,8 @@
     <title>StudyPal: Build</title>
     <meta name="description" content="StudyPal flashcard builder page." />
 
+    <link rel="stylesheet" href="/static/css/common.css">
+
     <!-- https://getbootstrap.com/docs/5.3/getting-started/introduction/ -->
     <link
       async
@@ -21,11 +23,7 @@
       /* .bg-theme {
         background-color: var(--bs-dark);
       } */
-      .outlined-text {
-        color:transparent;
-        -webkit-text-stroke-width: 1px;
-        -webkit-text-stroke-color: orange;
-      }
+
       /* information icon for text radio options */
       .bi-info-circle:hover {
         fill:orange;
@@ -62,10 +60,7 @@
         text-align: left !important;
       }
 
-      #search-results li:hover {
-        color: orange;
-        cursor:pointer;
-      }
+
     </style>
 
     <!-- LaTex: feature -->
@@ -1269,7 +1264,7 @@ pie
       const chooseBtn_image = document.getElementById("upload-image-btn");
       chooseBtn_image.onclick = function () {
         fileNameConfirmationText_image.textContent =
-          "You may need to toggle a different file first.";
+          "You may need to toggle a different file first, if you are bobbing around.";
         fileNameConfirmationText_image.classList.add("text-warning");
         fileNameConfirmationText_image.classList.remove("text-success");
 
@@ -1323,7 +1318,7 @@ pie
       const chooseBtn_audio = document.getElementById("upload-audio-btn");
       chooseBtn_audio.onclick = function () {
         fileNameConfirmationText_audio.textContent =
-          "You may need to toggle a different file first.";
+          "You may need to toggle a different file first, if you are bobbing around.";
         fileNameConfirmationText_audio.classList.add("text-warning");
         fileNameConfirmationText_audio.classList.remove("text-success");
 
@@ -1385,7 +1380,7 @@ pie
       const chooseBtn_video = document.getElementById("upload-video-btn");
       chooseBtn_video.onclick = function () {
         fileNameConfirmationText_video.innerHTML =
-          "<span>Supported formats: mp4,webm,ogg.</span><br><span>You may need to toggle a different file first.</span>";
+          "<span>Supported formats: mp4,webm,ogg.</span><br><span>You may need to toggle a different file first, if you are bobbing around.</span>";
         fileNameConfirmationText_video.classList.add("text-warning");
         fileNameConfirmationText_video.classList.remove("text-success");
 

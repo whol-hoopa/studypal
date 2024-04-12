@@ -1,0 +1,10 @@
+.outlined-text {
+    color:transparent;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: orange;
+  }
+
+#search-results li:hover {
+    color: orange;
+    cursor:pointer;
+}
