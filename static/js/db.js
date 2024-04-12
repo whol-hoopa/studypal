@@ -278,5 +278,6 @@ class Query {
     //         console.log(err);
     //     })
     // }
+    // ... db.query(...)
 
 }

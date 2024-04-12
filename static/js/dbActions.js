@@ -20,19 +20,21 @@ createBtn?.addEventListener('click',function(e){
     flashcard.pprint();
     /* END: development feedback */
     
+    // flashcard created feedback: show feedback
     dbIconBtn?.classList.remove('d-none');
     createBtn.disabled=true;
     setTimeout(() => {
-        // flashcard created feedback
+        // flashcard created feedback: remove feedback
         dbIconBtn?.classList.add('d-none');
         createBtn.disabled="";
 
-        // flashcard input cleanup
+        // flashcard input cleanup/reset
         (function resetForm(formDataObject){
             /* Resets form to initial state. 
                 TODO: factor this function out of this eventListener and
                     call the function here and create a button on the 
                     webpage to allow resetting of the form.
+                TODO: input[#tags]:required is not being respected. Validate when btn[#btn-create]:click()
             */
 
             const iteratorKeys=formDataObject.keys();
@@ -57,7 +59,6 @@ createBtn?.addEventListener('click',function(e){
             });
             outputDiv.innerHTML = "";
             textAreaWebpageElement.value='';
-            answerWebpageContainer.classList.remove('d-none');
             document.getElementById('inlineRadio-regular')?.click();
             document.getElementById('inlineRadio-regular').checked=true;
             document.getElementById('question-tab')?.click();
