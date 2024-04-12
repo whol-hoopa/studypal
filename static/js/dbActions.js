@@ -28,36 +28,44 @@ createBtn?.addEventListener('click',function(e){
         createBtn.disabled="";
 
         // flashcard input cleanup
-        const iteratorKeys=flashcard.formData.keys();
-        for(let inputId of iteratorKeys){
-            document.getElementById(inputId).value="";
-        }
-        // reset remaining elements
-        cancelBtn_image.click();
-        cancelBtn_audio.click();
-        cancelBtn_video.click();
-        youTubeCancelBtn.click();
-        document.getElementById('tag-confirmation-container').innerHTML='';
+        (function resetForm(formDataObject){
+            /* Resets form to initial state. 
+                TODO: factor this function out of this eventListener and
+                    call the function here and create a button on the 
+                    webpage to allow resetting of the form.
+            */
 
+            const iteratorKeys=formDataObject.keys();
+            for(let inputId of iteratorKeys){
+                document.getElementById(inputId).value="";
+            }
 
-        fragmentBaseUrlAndNameArray.forEach(function(inputElem){
-            inputElem.value='';
-          });
-        fragmentSubComponentArray.forEach(function(inputElem){ // 1821
-            inputElem.value='';
-            inputElem.classList.remove('d-none');
-        });
-        outputDiv.innerHTML = "";
-        textAreaWebpageElement.value='';
-        answerWebpageContainer.classList.remove('d-none');
-        document.getElementById('inlineRadio-regular')?.click();
-        document.getElementById('inlineRadio-regular').checked=true;
-        document.getElementById('question-tab')?.click();
-        // removes tooltip for dblclick instructions when webpage radio is not active
-        // const clearTextDataBtn=document.getElementById('fragment-clear-btn');
-        const hasBootstrapTooltip=clearTextDataBtn.hasAttribute('data-bs-toggle');
-        if(hasBootstrapTooltip){ destroyBootstrapTooltip(clearTextDataBtn); }
-        document.getElementById('tags')?.focus();
+            // reset remaining elements
+            cancelBtn_image.click();
+            cancelBtn_audio.click();
+            cancelBtn_video.click();
+            youTubeCancelBtn.click();
+            document.getElementById('tag-confirmation-container').innerHTML='';
+    
+    
+            fragmentBaseUrlAndNameArray.forEach(function(inputElem){
+                inputElem.value='';
+              });
+            fragmentSubComponentArray.forEach(function(inputElem){
+                inputElem.value='';
+                inputElem.classList.remove('d-none');
+            });
+            outputDiv.innerHTML = "";
+            textAreaWebpageElement.value='';
+            answerWebpageContainer.classList.remove('d-none');
+            document.getElementById('inlineRadio-regular')?.click();
+            document.getElementById('inlineRadio-regular').checked=true;
+            document.getElementById('question-tab')?.click();
+            // removes tooltip for dblclick instructions when webpage radio is not active
+            const hasBootstrapTooltip=clearTextDataBtn.hasAttribute('data-bs-toggle');
+            if(hasBootstrapTooltip){ destroyBootstrapTooltip(clearTextDataBtn); }
+            document.getElementById('tags')?.focus();
+        })(flashcard.formData);
     }, 800);
 
     // const testDB=new Query(db);
