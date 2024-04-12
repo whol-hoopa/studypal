@@ -53,6 +53,10 @@ createBtn?.addEventListener('click',function(e){
         document.getElementById('inlineRadio-regular')?.click();
         document.getElementById('inlineRadio-regular').checked=true;
         document.getElementById('question-tab')?.click();
+        // removes tooltip for dblclick instructions when webpage radio is not active
+        // const clearTextDataBtn=document.getElementById('fragment-clear-btn');
+        const hasBootstrapTooltip=clearTextDataBtn.hasAttribute('data-bs-toggle');
+        if(hasBootstrapTooltip){ destroyBootstrapTooltip(clearTextDataBtn); }
         document.getElementById('tags')?.focus();
     }, 800);
 
