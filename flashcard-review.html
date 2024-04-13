@@ -25,6 +25,7 @@
     <script defer src="/static/js/darkmode.js" type="text/javascript"></script>
 </head>
 <body>
+  <div class="container d-flex flex-column justify-content-between vh-100 overflow-x-wrap">
     <header class="">
         <h1 class="text-center text-primary mt-5 pt-4 pt-sm-5">Flashcard Review</h1>
 
@@ -133,11 +134,11 @@
                     <ul class="dropdown-menu">
                       <li>
                         <a class="dropdown-item" href="#"
-                         >
-                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                          >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
                           <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5"/>
                         </svg>
-                         <span class="ps-1">Flashcard Statistics</span>
+                          <span class="ps-1">Flashcard Statistics</span>
                         </a>
                       </li>
                       <li>
@@ -201,7 +202,7 @@
                     type="search"
                     id="input-search"
                     name="input-search"
-                    placeholder="Search flashcard question"
+                    placeholder="Search flashcard question (regex)"
                     aria-label="Search flashcard question"
                   />
                   <button class="btn btn-outline-success" type="submit" id="btn-search">
@@ -228,9 +229,61 @@
             </div>
           </div>
         </nav>
-      </header>
+    </header>
 
-    <script
+    <main>
+      <h2>Main block</h2>
+      <button id="getDoc" type="button">get</button>
+      <div id="review-flashcard"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </main>
+
+    <footer class="text-center">
+      <h3 class="my-3 text-secondary fs-6">StudyPal &copy;2024</h3>
+    </footer>
+  </div> <!-- End: outer most container -->
+
+  <script
     async
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

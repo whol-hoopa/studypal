@@ -266,7 +266,7 @@
                     type="search"
                     id="input-search"
                     name="input-search"
-                    placeholder="Search flashcard question"
+                    placeholder="Search flashcard question (regex)"
                     aria-label="Search flashcard question"
                   />
                   <button class="btn btn-outline-success" type="submit" id="btn-search">
@@ -317,7 +317,7 @@
                     role="tab"
                     aria-controls="question-tab-pane"
                     aria-selected="true"
-                  >
+                    >
                     <label for="input-question">Question</label>
                   </button>
                 </li>
@@ -1253,11 +1253,8 @@ pie
     </div>
     <script>document.getElementById('tags').focus();</script>
     <script>
-      // const formData = new FormData(document.forms['builder']);
-      // console.log(formData)
-
       // image file buttons: long file names on mobile causes overflow-x-scroll, so re-implement.
-      // in addition, choose--re-choose leads to no-change thus no event, hence toggle message.
+      // in addition, choose:re-choosing files leads to no-change thus no event, hence toggle message.
       const fileNameConfirmationText_image =
         document.getElementById("file-name-image");
       const inputElement_image = document.getElementById("input-image");

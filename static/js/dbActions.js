@@ -180,3 +180,22 @@ btnSearch?.addEventListener('click',function(e){
     });
 });
 
+
+// Review flashcard
+const reviewOutputDiv=document.getElementById('review-flashcard');
+const getFlashcardBtn=document.getElementById('getDoc');
+getFlashcardBtn?.addEventListener('click',function(e){
+    e.preventDefault();
+    testDB._async_get_record().then(record=>{
+        const flashcard=record.rows[0].doc;
+        // const questionAnswerArray=Object.entries(flashcard);
+        // console.log('num items: ',questionAnswerArray.length);
+        for(const key in flashcard){
+            console.log(`${key}: ${flashcard[key]}`)
+
+        }
+
+        // reviewOutputDiv.textContent=JSON.stringify(record.rows[0].doc);
+    })
+});
+

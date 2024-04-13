@@ -3,11 +3,23 @@ const configDB={
     remoteCouchURL:`http://127.0.0.1:5984/${this.namePouchDB}`,
     syncPouchToCouch:false,
     listenForChanges:true,
+    destroyPouchDB:false,
 };
 
 // where is CORS enabled? in the backend w/python? in couchdb _utils interface?
+// https://github.com/pouchdb/add-cors-to-couchdb
 
 const db=new PouchDB(configDB.namePouchDB);
+
+window.addEventListener('beforeunload',()=>{db.close()});
+if(configDB.destroyPouchDB){
+    db.destroy().then(response=>{
+        console.log(`Was pouchDB destroyed? ${response.ok}`);
+    }).catch(err=>{
+        console.log(err);
+    });
+}
+
 if(configDB.syncPouchToCouch){
     /* 
      * If db.sync() is enabled, any changes made on the client-side 
@@ -48,7 +60,7 @@ if(configDB.syncPouchToCouch){
 
     const syncDb=db.sync(configDB.remoteCouchURL, options
         ).on('change', function(e){
-            console.log(`DB change event detected. What is your event driven response?:\n`,e);
+            console.log(`DB.sync change event detected. What is your event driven response?:\n`,e);
         }).on('error', function(e){
             console.log(`Sync error:\n`,e);
         });
@@ -127,9 +139,10 @@ if(configDB.listenForChanges){
         // retry:true, // check if this option is still available, it's not listed in docs; deprecated?...
         // filter: function(doc){}, 5 examples provided in docs...
     };
+
     const changes = db.changes(options
         ).on('change', function(info){
-            console.log('DB change event detected.\n', info);
+            console.log('DB.changes change event detected.\n', info);
             if(options.include_docs){
                 console.log(`What do you want to do with:\n`,info.doc);
             }
@@ -329,6 +342,47 @@ class Query {
             console.log(err);
         }
     }
+
+
+    async _async_get_record(){
+        /* Get a record from the db to review. */
+
+        try{
+            const queryOptions={
+                include_docs:true,
+                binary:true,
+                descending: true,
+                limit: 1,
+            };
+
+            const record = await db.allDocs(queryOptions);
+
+            
+            // console.log(record.rows);
+            console.log(record);
+            return record; // Assignable w/in promise chain.
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     async _question_async(regex, isCaseSensitive){
         /* Use backslash to escape regex special characters.
