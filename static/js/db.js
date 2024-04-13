@@ -345,7 +345,10 @@ class Query {
 
 
     async _async_get_record(){
-        /* Get a record from the db to review. */
+        /* Get a record from the db to review.
+        
+            USED ONLY FOR DEVELOPMENT.
+        */
 
         try{
             const queryOptions={

@@ -191,11 +191,14 @@ getFlashcardBtn?.addEventListener('click',function(e){
         // const questionAnswerArray=Object.entries(flashcard);
         // console.log('num items: ',questionAnswerArray.length);
         for(const key in flashcard){
-            console.log(`${key}: ${flashcard[key]}`)
+            console.log(`${key}: ${flashcard[key]}`);
 
         }
 
         // reviewOutputDiv.textContent=JSON.stringify(record.rows[0].doc);
     })
 });
+
+// dynamically append flashcard components to slides
+
 

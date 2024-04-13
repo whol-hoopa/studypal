@@ -232,10 +232,93 @@
     </header>
 
     <main>
-      <h2>Main block</h2>
-      <button id="getDoc" type="button">get</button>
-      <div id="review-flashcard"></div>
 
+      <div id="carouselExampleIndicators" class="carousel slide">
+        <!-- Bottom Slide Btns -->
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+
+        
+        <!-- Dynamically append flashcard input components -->
+        <div class="carousel-inner" id="flashcard-components-container"><!-- start Carousel Items -->
+
+          <div class="carousel-item active">
+            <div class="px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores deserunt temporibus officia blanditiis, libero, quibusdam molestias alias culpa aliquid sequi deleniti! Nulla voluptas commodi perferendis asperiores, totam laudantium! Laborum, nam.
+              Quibusdam sequi autem, doloremque delectus vitae fuga ipsa voluptate voluptas minima rem, eveniet totam, accusantium quia consequuntur placeat maiores facilis dicta tempore tenetur rerum magnam suscipit dolores culpa. Culpa, nihil?
+              Et officiis tempora minima excepturi asperiores pariatur, aspernatur necessitatibus eum, dolorem voluptas id voluptate itaque veniam alias iure nisi animi earum recusandae esse ex non facilis ducimus! Nobis, commodi cumque?
+              Accusantium provident tempore quasi modi ducimus, cupiditate nemo in maxime expedita maiores excepturi dolores vel quibusdam similique odio recusandae quos mollitia temporibus. Nesciunt consequatur quo asperiores cumque facere, expedita ut.
+              Fugit quisquam neque repudiandae, consequuntur facere adipisci pariatur officiis animi incidunt deserunt perferendis, dolorum mollitia quam possimus dolore laboriosam. Officia molestiae commodi suscipit repellendus quidem necessitatibus inventore enim repudiandae nobis!
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores deserunt temporibus officia blanditiis, libero, quibusdam molestias alias culpa aliquid sequi deleniti! Nulla voluptas commodi perferendis asperiores, totam laudantium! Laborum, nam.
+              Quibusdam sequi autem, doloremque delectus vitae fuga ipsa voluptate voluptas minima rem, eveniet totam, accusantium quia consequuntur placeat maiores facilis dicta tempore tenetur rerum magnam suscipit dolores culpa. Culpa, nihil?
+              Et officiis tempora minima excepturi asperiores pariatur, aspernatur necessitatibus eum, dolorem voluptas id voluptate itaque veniam alias iure nisi animi earum recusandae esse ex non facilis ducimus! Nobis, commodi cumque?
+              Accusantium provident tempore quasi modi ducimus, cupiditate nemo in maxime expedita maiores excepturi dolores vel quibusdam similique odio recusandae quos mollitia temporibus. Nesciunt consequatur quo asperiores cumque facere, expedita ut.
+              Fugit quisquam neque repudiandae, consequuntur facere adipisci pariatur officiis animi incidunt deserunt perferendis, dolorum mollitia quam possimus dolore laboriosam. Officia molestiae commodi suscipit repellendus quidem necessitatibus inventore enim repudiandae nobis!
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores deserunt temporibus officia blanditiis, libero, quibusdam molestias alias culpa aliquid sequi deleniti! Nulla voluptas commodi perferendis asperiores, totam laudantium! Laborum, nam.
+              Quibusdam sequi autem, doloremque delectus vitae fuga ipsa voluptate voluptas minima rem, eveniet totam, accusantium quia consequuntur placeat maiores facilis dicta tempore tenetur rerum magnam suscipit dolores culpa. Culpa, nihil?
+              Et officiis tempora minima excepturi asperiores pariatur, aspernatur necessitatibus eum, dolorem voluptas id voluptate itaque veniam alias iure nisi animi earum recusandae esse ex non facilis ducimus! Nobis, commodi cumque?
+              Accusantium provident tempore quasi modi ducimus, cupiditate nemo in maxime expedita maiores excepturi dolores vel quibusdam similique odio recusandae quos mollitia temporibus. Nesciunt consequatur quo asperiores cumque facere, expedita ut.
+              Fugit quisquam neque repudiandae, consequuntur facere adipisci pariatur officiis animi incidunt deserunt perferendis, dolorum mollitia quam possimus dolore laboriosam. Officia molestiae commodi suscipit repellendus quidem necessitatibus inventore enim repudiandae nobis!
+            </div>
+            <!-- <img src="..." class="d-block w-100" alt="..."> -->
+          </div>
+
+        </div><!-- End Carousel Items -->
+        
+        <!-- Carosel Buttons -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+
+      </div>
+
+      <!-- Dark Mode Toggler -->
+      <label class="form-check-label ps-1 d-flex justify-content-center" for="darkmode-toggler" aria-label="Dark mode toggler" id="darkmode-toggle-label">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-stars mt-1 me-1" viewBox="0 0 16 16">
+          <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/>
+          <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
+        </svg>
+        Dark mode
+      </label>
+
+      <!-- Grade Button -->
+      <div class="btn-group d-flex justify-content-center m-2 m-sm-4" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio1">A</label>
+      
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio2">B</label>
+      
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio3">C</label>
+
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio4">D</label>
+
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
+        <label class="btn btn-outline-primary" for="btnradio5">F</label>
+      </div>
+
+      <button id="getDoc" class="d-block align-self-center justify-self-center" type="button">get</button>
+      <div id="review-flashcard"></div>
 
 
 
