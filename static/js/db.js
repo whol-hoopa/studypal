@@ -1,5 +1,150 @@
-const db=new PouchDB('test');
-// const remoteCouch=false;
+const configDB={
+    namePouchDB:'test',
+    remoteCouchURL:`http://127.0.0.1:5984/${this.namePouchDB}`,
+    syncPouchToCouch:false,
+    listenForChanges:true,
+};
+
+// where is CORS enabled? in the backend w/python? in couchdb _utils interface?
+
+const db=new PouchDB(configDB.namePouchDB);
+if(configDB.syncPouchToCouch){
+    /* 
+     * If db.sync() is enabled, any changes made on the client-side 
+     *  PouchDB will be synced with the remote CouchDB.
+     * 
+     * When the remote CouchDB gets updated and those changes are 
+     *  synced back to the local PouchDB, db.changes() will pick up 
+     *  these updates as well. So, it can serve as a confirmation 
+     *  that the sync has occurred and the local database is 
+     *  up-to-date with the remote database.
+     * 
+     * The options for db.sync() and db.changes() in PouchDB are not 
+     *  exactly the same, as they serve different purposes and contexts:
+     * 
+     * db.sync(): The options for this function are related to the 
+     *  synchronization process between the local PouchDB instance 
+     *  and a remote CouchDB instance. The options can include details 
+     *  about the documents being replicated, error handling, and more.
+     * 
+     * db.changes(): The options for this function are related to 
+     *  listening for changes to the local PouchDB database. 
+     *  The options can include filters to limit the changes 
+     *  you’re listening for, configuration for how the 
+     *  changes should be ordered, and more.
+     *  
+     * https://youtu.be/-Z7UF2TuSp0?si=Ebvws3h-84TlAop9&t=2029
+     * https://pouchdb.com/api.html#sync
+     * https://pouchdb.com/api.html#replication
+     *  Replication options may have overlap with sync's.
+     *  Sync documentation lacks detail on options.
+     */
+
+
+    const options={
+        live:true, 
+        // retry:true,  // check if this option is still available, it's not listed in docs; deprecated?...
+    };
+
+    const syncDb=db.sync(configDB.remoteCouchURL, options
+        ).on('change', function(e){
+            console.log(`DB change event detected. What is your event driven response?:\n`,e);
+        }).on('error', function(e){
+            console.log(`Sync error:\n`,e);
+        });
+
+    const isCancel=false;
+    if(isCancel){syncDb.cancel();}
+    
+} // end sync
+
+if(configDB.listenForChanges){
+    /*
+     * The db.changes() function in PouchDB is like a feedback system 
+     *  for the client-side. It gets called whenever any changes happen 
+     *  to the local PouchDB database.
+     * 
+     * However, if you want to listen to changes as they happen directly 
+     *  on the remote CouchDB database, you would use the _changes feed 
+     *  provided by CouchDB itself. This would allow you to get real-time 
+     *  updates from the remote CouchDB database.
+     * 
+     * So, in summary, db.changes() in PouchDB primarily listens for 
+     *  local changes, but it can also reflect remote changes after 
+     *  a sync. For real-time updates directly from the remote CouchDB 
+     *  database, you would use CouchDB’s _changes feed.
+     * 
+     * The _changes feed is a feature provided by CouchDB, and it’s 
+     *  typically set up and managed by the backend developer. This 
+     *  feed allows applications to listen for changes to the 
+     *  database in real-time.
+     * 
+     * So, in a typical setup, the backend developer would write code 
+     *  to handle the _changes feed and define what should happen when 
+     *  changes occur in the CouchDB database. This could include syncing 
+     *  changes to connected PouchDB instances, updating application state, 
+     *  triggering notifications, and so on.
+     * 
+     * If the backend developer adds data directly to the CouchDB database 
+     *  and _changes feed is not set up to push these changes in real-time, 
+     *  these changes won’t immediately reflect in the PouchDB database.
+     * 
+     * However, these changes will get reflected in PouchDB during the next 
+     *  sync operation. When you call db.sync() in PouchDB, it communicates 
+     *  with the CouchDB database, pulling any new changes from CouchDB and 
+     *  pushing any local changes to CouchDB. So, even if the changes were 
+     *  made directly on CouchDB and not initially reflected in PouchDB, 
+     *  they will be pulled into PouchDB during the next sync.
+     * 
+     * After this sync, the db.changes() function in PouchDB will pick up 
+     *  these updates from CouchDB, reflecting the current state of the 
+     *  database after the sync. So, in essence, the sync process ensures 
+     *  that PouchDB is kept up-to-date with CouchDB, even if changes 
+     *  are made directly on CouchDB.
+     * 
+     * db.sync().on('change', ...) is about tracking changes as part of 
+     *  the sync process between PouchDB and CouchDB, while 
+     *  db.changes().on('change', ...) is about listening 
+     *  for changes to the local PouchDB database.
+     * 
+     * db.changes().on(‘change’, …) in this context is triggered whenever 
+     *  a change (like a document being added, updated, or deleted) occurs 
+     *  in the local database. This can be useful for updating your 
+     *  application in response to local database changes.
+     * 
+     * https://pouchdb.com/api.html#changes
+     */
+
+    const options={
+        // limit: 10,
+        include_docs: true,
+        binary:true,  // attachments as Blobs/Buffers(buffers for node.js)
+        // attachments:false,  // attachments as base64-encoded strings
+        conflicts:false,  // isInclude
+        descending:false,
+        live:true,
+        since:'now',
+        // retry:true, // check if this option is still available, it's not listed in docs; deprecated?...
+        // filter: function(doc){}, 5 examples provided in docs...
+    };
+    const changes = db.changes(options
+        ).on('change', function(info){
+            console.log('DB change event detected.\n', info);
+            if(options.include_docs){
+                console.log(`What do you want to do with:\n`,info.doc);
+            }
+        // }).on('complete', function(info){}) / /Note: 'complete' event only fires when you aren’t doing live changes.
+        }).on('error', function(err){
+            console.log(err);
+        });
+    
+    const isCancel=false;
+    if(isCancel){changes.cancel();} // call if you don’t want to listen to new changes anymore; unsubscribe to all event listeners.
+}
+
+
+
+
 
 class Flashcard {
     static blobType = ['input-image', 'input-audio', 'input-video'];
