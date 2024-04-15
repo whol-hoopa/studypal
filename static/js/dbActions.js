@@ -208,12 +208,30 @@ getFlashcardBtn?.addEventListener('click',function(e){
         containerFlashcard.innerHTML="";
         const flashcardFrag=document.createDocumentFragment();
         const indicatorBtnFrag=document.createDocumentFragment();
-        console.log(flashcard)
+
         let indicatorBtnNum=0;
         for(const key in flashcard){
 
             if(['_id','_rev'].includes(key)){
                 containerFlashcard?.setAttribute(`data-${key}`,flashcard[key]); // flashcard id/rev
+            }if(key==='tags'){
+                // Hash tag processing
+                const tags=flashcard[key];
+                const tagsArray=tags.split(',');
+                const fragmentElement=document.createDocumentFragment();
+                for(let i=0; i<tagsArray.length; i++){
+                    const item=tagsArray[i];
+                    const div=document.createElement('div');
+                    div.classList.add('rounded','border','border-warning');
+                    div.append(item)
+                    fragmentElement.append(div);
+                    
+                }
+                const tagContainer=document.getElementById('tag-container');
+                tagContainer.innerHTML='';
+                tagContainer?.append(fragmentElement);                
+            }if(key==='_attachments'){
+                console.log('attachments:\n',flashcard[key])
             }else{
                 console.log(`${key}: ${flashcard[key]}`);
                 const divContent=document.createElement('div'),
@@ -231,6 +249,31 @@ getFlashcardBtn?.addEventListener('click',function(e){
                     indicatorBtnNum++;
                 }
                 if(key==='input-answer'){
+                    const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                    indicatorBtnFrag.append(slideBtn);
+                    indicatorBtnNum++;
+                }
+                if(key==='input-answer-markdown'){
+                    const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                    indicatorBtnFrag.append(slideBtn);
+                    indicatorBtnNum++;
+                }
+                if(key==='input-answer-latex'){
+                    const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                    indicatorBtnFrag.append(slideBtn);
+                    indicatorBtnNum++;
+                }
+                if(key==='input-answer-mermaid'){
+                    const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                    indicatorBtnFrag.append(slideBtn);
+                    indicatorBtnNum++;
+                }
+                if(key==='input-answer-webpage-anchor'){
+                    const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                    indicatorBtnFrag.append(slideBtn);
+                    indicatorBtnNum++;
+                }
+                if(key==='input-answer-youtube'){
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
