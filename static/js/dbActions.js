@@ -240,8 +240,9 @@ getFlashcardBtn?.addEventListener('click',function(e){
 
                 if(key==='input-question'){
                     divContent.textContent=flashcard[key]; // flashcard text
+                    divContentContainer.classList.add('active','invisible'); // show question on landing
+                    divContentContainer.setAttribute('id','fc-question');
 
-                    divContentContainer.classList.add('active'); // show question on landing
                     const slideBtn=addIndicatorBtn(indicatorBtnNum,true);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
@@ -255,9 +256,7 @@ getFlashcardBtn?.addEventListener('click',function(e){
                 }
                 if(key==='input-answer-markdown'){
                     const markdownConverter = new showdown.Converter();
-                    divContent.innerHTML=markdownConverter.makeHtml(flashcard[key]);
-
-                    // divContent.textContent=flashcard[key]; // flashcard text
+                    divContent.innerHTML=markdownConverter.makeHtml(flashcard[key]); // flashcard text
                     
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
@@ -265,34 +264,17 @@ getFlashcardBtn?.addEventListener('click',function(e){
                 }
                 if(key==='input-answer-latex'){
                     divContent.textContent=flashcard[key]; // flashcard text
-
+                    
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
                 }
-                /*
-                        <script>
-                            // LaTex, & Mermaid preview output
-                            textAreaLaTexElement.addEventListener("input", function () {
-                                const textAreaContent = this.value;
-                                outputDiv.textContent=textAreaContent;
-                                MathJax.typesetPromise();
-                            });
-                            textAreaMermaidElement.addEventListener("input", function () {
-                                outputDiv.innerHTML = "";
-                                // create new div to ensure mermaid rerenders else no image shown just from inserting text.
-                                const mermaidElem = document.createElement("div");
-                                mermaidElem.className = "mermaid";
-                                mermaidElem.textContent = this.value;
-                                outputDiv.appendChild(mermaidElem);
-                                mermaid.init(undefined, mermaidElem);
-                            });
-                        </script>
-
-                */
                 if(key==='input-answer-mermaid'){
                     divContent.textContent=flashcard[key]; // flashcard text
-
+                    divContent.classList.add('mermaid');
+                    divContentContainer.classList.add('active','invisible'); // must be active to render; active removed below, causes flashing.
+                    divContent.setAttribute('id', 'mermaidElem');
+                    // mermaid.init(undefined, divContent);
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
@@ -354,6 +336,13 @@ getFlashcardBtn?.addEventListener('click',function(e){
         containerIndicatorBtns.innerHTML="";
         containerIndicatorBtns?.append(indicatorBtnFrag)
         MathJax.typesetPromise();
+        const mermaidElem=document.getElementById('mermaidElem');
+        mermaid.init(undefined, mermaidElem);
+        // document.getElementById('fc-question')?.classList.add('active');
+        setTimeout(() => {
+            mermaidElem?.parentElement?.classList.remove('active', 'invisible');
+            document.getElementById('fc-question')?.classList.remove('invisible');
+        }, 0);
         // reviewOutputDiv.textContent=JSON.stringify(record.rows[0].doc);
     })
 });
