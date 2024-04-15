@@ -225,7 +225,6 @@ getFlashcardBtn?.addEventListener('click',function(e){
                     div.classList.add('rounded','border','border-warning');
                     div.append(item)
                     fragmentElement.append(div);
-                    
                 }
                 const tagContainer=document.getElementById('tag-container');
                 tagContainer.innerHTML='';
@@ -238,46 +237,66 @@ getFlashcardBtn?.addEventListener('click',function(e){
                     divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex justify-content-center';
                 const divContentContainer=document.createElement('div'),
                     divContentContainerClass='carousel-item';
-                divContent.textContent=flashcard[key]; // flashcard text
-                divContent.classList.add(...divContentClass.split(' '));
-                divContentContainer.append(divContent);
-                divContentContainer.classList.add(divContentContainerClass);
+
                 if(key==='input-question'){
+                    divContent.textContent=flashcard[key]; // flashcard text
+
                     divContentContainer.classList.add('active'); // show question on landing
                     const slideBtn=addIndicatorBtn(indicatorBtnNum,true);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
                 }
                 if(key==='input-answer'){
+                    divContent.textContent=flashcard[key]; // flashcard text
+
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
                 }
                 if(key==='input-answer-markdown'){
+                    divContent.textContent=flashcard[key]; // flashcard text
+                    
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
                 }
                 if(key==='input-answer-latex'){
+                    divContent.textContent=flashcard[key]; // flashcard text
+
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
                 }
                 if(key==='input-answer-mermaid'){
+                    divContent.textContent=flashcard[key]; // flashcard text
+
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
                 }
                 if(key==='input-answer-webpage-anchor'){
+                    const name_url=flashcard[key].split('@');
+                    const aTag=document.createElement('a');
+                    aTag.setAttribute('href', name_url[1]);
+                    aTag.setAttribute('target','_blank');
+                    aTag.setAttribute('rel','noopener nofollow noreferrer');
+                    aTag.textContent=name_url[0]; // flashcard text
+                    divContent.append(aTag);
+
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
                 }
                 if(key==='input-youtube'){
+                    divContent.textContent=flashcard[key]; // flashcard text
+                    
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
                 }
+                divContent.classList.add(...divContentClass.split(' '));
+                divContentContainer.append(divContent);
+                divContentContainer.classList.add(divContentContainerClass);
                 flashcardFrag.append(divContentContainer);
             }
 
