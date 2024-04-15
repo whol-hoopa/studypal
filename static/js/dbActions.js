@@ -128,7 +128,8 @@ btnSearch?.addEventListener('click',function(e){
                 li.textContent=element.value.question;
                 li.dataset._id=element.id;
                 li.dataset._rev=element.value._rev;
-                li.ondblclick=function(){
+                li.ondblclick=function(e){
+                    e.preventDefault();
                     console.log(this.dataset._id);
                     console.log(this.dataset._rev);
                     const currentURL=window.location.pathname;
@@ -138,8 +139,8 @@ btnSearch?.addEventListener('click',function(e){
                             .getRecordByID(this.dataset._id)
                             .then(flashcard=>{
                                 renderFlashcard(flashcard);
-                                adjustFlashcardHeight();
                             });
+                        adjustFlashcardHeight();
                     }
                     if(currentURL.includes('build')){
                         console.log('Repopulate flashcard builder for editing.');
@@ -346,6 +347,9 @@ function renderFlashcard(flashcard){
                 iframe?.setAttribute('allowfullscreen','');
                 divContent.append(iframe);
 
+                divContentContainer.classList.add('active','invisible'); // must be active to render, set clientHeight, get rendered clientHeight, invisible prevents flashing; these classes removed below.
+                divContentContainer.setAttribute('id', 'youTubeElemContainer');
+
                 const slideBtn=addIndicatorBtn(indicatorBtnNum);
                 indicatorBtnFrag.append(slideBtn);
                 indicatorBtnNum++;
@@ -368,6 +372,7 @@ function renderFlashcard(flashcard){
     setTimeout(() => {
         // goal: remove flashing from rendering mermaid.
         mermaidElem?.parentElement?.classList.remove('active', 'invisible');
+        document.getElementById('youTubeElemContainer')?.classList.remove('active', 'invisible');
         document.getElementById('fc-question')?.classList.remove('invisible');
     }, 0);
 }
@@ -384,6 +389,7 @@ function adjustFlashcardHeight(){
         const cardComponents=document.getElementById('flashcard-components-container');
         let maxHeight=0;
         for(let i of cardComponents?.children){
+            console.log(i)
             maxHeight=i.clientHeight > maxHeight ? i.clientHeight : maxHeight;
         }
         document.getElementById('carouselIndicators')?.setAttribute('style',`min-height: ${maxHeight}px`);
