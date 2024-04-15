@@ -122,6 +122,7 @@ btnSearch?.addEventListener('click',function(e){
         if(records!==null){
             // records set to null when query input === "".
             const frag=document.createDocumentFragment();
+            // CHECK FOR MEMORY LEAKS. li eventlistener leading to leaks? li ref still bound?
             records.rows.forEach(element => {
                 const li = document.createElement('li');
                 li.textContent=element.value.question;
@@ -131,8 +132,19 @@ btnSearch?.addEventListener('click',function(e){
                     console.log(this.dataset._id);
                     console.log(this.dataset._rev);
                     const currentURL=window.location.pathname;
-                    console.log(currentURL);
-                    console.log('Repopulate flashcard builder for editing.');
+                    if(currentURL.includes('review')){
+                        console.log(currentURL)
+                        testDB
+                            .getRecordByID(this.dataset._id)
+                            .then(flashcard=>{
+                                renderFlashcard(flashcard);
+                                adjustFlashcardHeight();
+                            });
+                    }
+                    if(currentURL.includes('build')){
+                        console.log('Repopulate flashcard builder for editing.');
+                        console.log(currentURL)
+                    }
                 };
                 frag.append(li);
             });

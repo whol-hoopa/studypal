@@ -370,7 +370,25 @@ class Query {
     }
 
 
-
+    /**
+     * Retrieves a PouchDB document by its ID.
+     * @param {string} id - The unique identifier for the document. It was derived from new Date().toISOString().
+     * @param {string} [rev] - The _rev identifier for a particular revision version of a document. Omit to get the latest revision. 
+     * @returns {Promise<object>} A promise that resolves with the PouchDB document.
+     */
+    async getRecordByID(id, rev){
+        try {
+            const options={
+                binary:true, // Blob|Buffer(node.js)
+                attachments:false, // base64 hex string
+            };
+            if(rev){options.rev=rev;}
+            const doc = await db.get(id,options);
+            return doc;
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
 
 
@@ -487,7 +505,7 @@ class Query {
 
 
 /* References:
-    https://pouchdb.com/
+    https://pouchdb.com/api.html
     https://nolanlawson.github.io/pouchdb-find/
     https://unpkg.com/browse/pouchdb@8.0.1/dist/pouchdb.find.js
     https://github.com/pouchdb/add-cors-to-couchdb
