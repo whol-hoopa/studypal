@@ -483,3 +483,12 @@ class Query {
     // ... db.query(...)
 
 }
+
+
+
+/* References:
+    https://pouchdb.com/
+    https://nolanlawson.github.io/pouchdb-find/
+    https://unpkg.com/browse/pouchdb@8.0.1/dist/pouchdb.find.js
+    https://github.com/pouchdb/add-cors-to-couchdb
+*/
