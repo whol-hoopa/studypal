@@ -190,10 +190,39 @@ getFlashcardBtn?.addEventListener('click',function(e){
         const flashcard=record.rows[0].doc;
         // const questionAnswerArray=Object.entries(flashcard);
         // console.log('num items: ',questionAnswerArray.length);
+
+        const containerFlashcard=document.getElementById('flashcard-components-container');
+        containerFlashcard.innerHTML="";
+        const frag=document.createDocumentFragment();
+
         for(const key in flashcard){
-            console.log(`${key}: ${flashcard[key]}`);
+
+            if(['_id','_rev'].includes(key)){
+                containerFlashcard?.setAttribute(`data-${key}`,flashcard[key]); // flashcard id/rev
+            }else{
+                console.log(`${key}: ${flashcard[key]}`);
+                const divContent=document.createElement('div'),
+                    divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex justify-content-center';
+                const divContentContainer=document.createElement('div'),
+                    divContentContainerClass='carousel-item';
+                divContent.textContent=flashcard[key]; // flashcard text
+                divContent.classList.add(...divContentClass.split(' '));
+                divContentContainer.append(divContent);
+                divContentContainer.classList.add(divContentContainerClass);
+                if(key==='input-question'){
+                    divContentContainer.classList.add('active'); // show question on landing
+                    // divContent.classList.add('text-center');
+                }
+                if(key==='input-answer'){
+                    // divContent.classList.add('text-center');
+                }
+                frag.append(divContentContainer);
+            }
 
         }
+        
+        // containerFlashcard.innerHTML="";
+        containerFlashcard?.append(frag);
 
         // reviewOutputDiv.textContent=JSON.stringify(record.rows[0].doc);
     })
