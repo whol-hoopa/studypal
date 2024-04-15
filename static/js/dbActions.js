@@ -353,6 +353,7 @@ getFlashcardBtn?.addEventListener('click',function(e){
         const containerIndicatorBtns=document.querySelector('.carousel-indicators');
         containerIndicatorBtns.innerHTML="";
         containerIndicatorBtns?.append(indicatorBtnFrag)
+        MathJax.typesetPromise();
         // reviewOutputDiv.textContent=JSON.stringify(record.rows[0].doc);
     })
 });
