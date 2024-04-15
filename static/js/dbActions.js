@@ -254,7 +254,10 @@ getFlashcardBtn?.addEventListener('click',function(e){
                     indicatorBtnNum++;
                 }
                 if(key==='input-answer-markdown'){
-                    divContent.textContent=flashcard[key]; // flashcard text
+                    const markdownConverter = new showdown.Converter();
+                    divContent.innerHTML=markdownConverter.makeHtml(flashcard[key]);
+
+                    // divContent.textContent=flashcard[key]; // flashcard text
                     
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
@@ -267,6 +270,26 @@ getFlashcardBtn?.addEventListener('click',function(e){
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
                 }
+                /*
+                        <script>
+                            // LaTex, & Mermaid preview output
+                            textAreaLaTexElement.addEventListener("input", function () {
+                                const textAreaContent = this.value;
+                                outputDiv.textContent=textAreaContent;
+                                MathJax.typesetPromise();
+                            });
+                            textAreaMermaidElement.addEventListener("input", function () {
+                                outputDiv.innerHTML = "";
+                                // create new div to ensure mermaid rerenders else no image shown just from inserting text.
+                                const mermaidElem = document.createElement("div");
+                                mermaidElem.className = "mermaid";
+                                mermaidElem.textContent = this.value;
+                                outputDiv.appendChild(mermaidElem);
+                                mermaid.init(undefined, mermaidElem);
+                            });
+                        </script>
+
+                */
                 if(key==='input-answer-mermaid'){
                     divContent.textContent=flashcard[key]; // flashcard text
 
@@ -280,6 +303,7 @@ getFlashcardBtn?.addEventListener('click',function(e){
                     aTag.setAttribute('href', name_url[1]);
                     aTag.setAttribute('target','_blank');
                     aTag.setAttribute('rel','noopener nofollow noreferrer');
+                    aTag.classList.add('fs-1');
                     aTag.textContent=name_url[0]; // flashcard text
                     divContent.append(aTag);
 
@@ -290,8 +314,11 @@ getFlashcardBtn?.addEventListener('click',function(e){
                 if(key==='input-youtube'){
                     
                     const iframe=document.createElement('iframe');
+                    // TODO: make responsive
+                        // on mobile, prev/next btn 'covers' play and fullscreen buttons. 
                     iframe?.setAttribute('width','560');
                     iframe?.setAttribute('height','315');
+
                     iframe?.setAttribute('src',flashcard[key]);
                     iframe?.setAttribute('title','YouTube video player');
                     iframe?.setAttribute('frameborder','0');
@@ -308,8 +335,6 @@ getFlashcardBtn?.addEventListener('click',function(e){
                         //This policy sends a full URL as a referrer when the request is made from the same origin (same domain, protocol, and port), but only sends the origin (scheme, host, and port) when the request is made to a different origin (cross-origin).
                     iframe?.setAttribute('allowfullscreen','');
                     divContent.append(iframe);
-
-                    // divContent.textContent=flashcard[key]; // flashcard text
 
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);

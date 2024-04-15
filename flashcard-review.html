@@ -19,6 +19,21 @@
       crossorigin="anonymous"
     />
 
+    <!-- LaTex: feature -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+
+    <!-- markdown feature: open to XSS attacks!! -->
+    <!-- https://showdownjs.com/docs/xss/ -->
+    <script async src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
+
+    <!-- mermaid feature -->
+    <script async src="https://cdn.jsdelivr.net/npm/mermaid@9/dist/mermaid.min.js"></script>
+
     <script defer src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.js"></script>
     <script defer src="/static/js/db.js" type="text/javascript"></script>
     <script defer src="/static/js/dbActions.js" type="text/javascript"></script>
