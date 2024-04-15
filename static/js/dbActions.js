@@ -234,7 +234,7 @@ getFlashcardBtn?.addEventListener('click',function(e){
             }else{
                 console.log(`${key}: ${flashcard[key]}`);
                 const divContent=document.createElement('div'),
-                    divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex justify-content-center';
+                    divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex justify-content-center align-items-center';
                 const divContentContainer=document.createElement('div'),
                     divContentContainerClass='carousel-item';
 
@@ -327,10 +327,8 @@ getFlashcardBtn?.addEventListener('click',function(e){
                 divContentContainer.classList.add(divContentContainerClass);
                 flashcardFrag.append(divContentContainer);
             }
-
         }
-        
-        // containerFlashcard.innerHTML=""; 
+
         containerFlashcard?.append(flashcardFrag);
         const containerIndicatorBtns=document.querySelector('.carousel-indicators');
         containerIndicatorBtns.innerHTML="";
@@ -338,13 +336,22 @@ getFlashcardBtn?.addEventListener('click',function(e){
         MathJax.typesetPromise();
         const mermaidElem=document.getElementById('mermaidElem');
         mermaid.init(undefined, mermaidElem);
-        // document.getElementById('fc-question')?.classList.add('active');
+
         setTimeout(() => {
+            // goal: remove flashing from rendering mermaid.
             mermaidElem?.parentElement?.classList.remove('active', 'invisible');
             document.getElementById('fc-question')?.classList.remove('invisible');
         }, 0);
-        // reviewOutputDiv.textContent=JSON.stringify(record.rows[0].doc);
-    })
+    });
+    setTimeout(()=>{
+        // set min-height of all containers to height of tallest container; goal: reduce volatility
+        const indicators=document.getElementById('flashcard-components-container');
+        let maxHeight=0;
+        for(let i of indicators?.children){
+            maxHeight=i.clientHeight > maxHeight ? i.clientHeight : maxHeight;
+        }
+        document.getElementById('carouselIndicators')?.setAttribute('style',`min-height: ${maxHeight}px`);
+    },1);
 });
 
 // dynamically append flashcard components to slides
