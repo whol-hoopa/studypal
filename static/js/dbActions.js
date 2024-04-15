@@ -345,9 +345,9 @@ getFlashcardBtn?.addEventListener('click',function(e){
     });
     setTimeout(()=>{
         // set min-height of all containers to height of tallest container; goal: reduce volatility
-        const indicators=document.getElementById('flashcard-components-container');
+        const cardComponents=document.getElementById('flashcard-components-container');
         let maxHeight=0;
-        for(let i of indicators?.children){
+        for(let i of cardComponents?.children){
             maxHeight=i.clientHeight > maxHeight ? i.clientHeight : maxHeight;
         }
         document.getElementById('carouselIndicators')?.setAttribute('style',`min-height: ${maxHeight}px`);
