@@ -221,7 +221,7 @@ getFlashcardBtn?.addEventListener('click',function(e){
 
         }
         
-        // containerFlashcard.innerHTML="";
+        // containerFlashcard.innerHTML=""; 
         containerFlashcard?.append(frag);
 
         // reviewOutputDiv.textContent=JSON.stringify(record.rows[0].doc);
