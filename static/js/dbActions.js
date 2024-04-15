@@ -288,8 +288,29 @@ getFlashcardBtn?.addEventListener('click',function(e){
                     indicatorBtnNum++;
                 }
                 if(key==='input-youtube'){
-                    divContent.textContent=flashcard[key]; // flashcard text
                     
+                    const iframe=document.createElement('iframe');
+                    iframe?.setAttribute('width','560');
+                    iframe?.setAttribute('height','315');
+                    iframe?.setAttribute('src',flashcard[key]);
+                    iframe?.setAttribute('title','YouTube video player');
+                    iframe?.setAttribute('frameborder','0');
+                    iframe?.setAttribute('allow','accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; webshare');
+                    // Firefox:
+                        // Feature Policy: Skipping unsupported feature name “accelerometer”.
+                        // Feature Policy: Skipping unsupported feature name “clipboard-write”.
+                        // Feature Policy: Skipping unsupported feature name “encrypted-media”.
+                        // Feature Policy: Skipping unsupported feature name “gyroscope”.
+                        // Feature Policy: Skipping unsupported feature name “picture-in-picture”.
+                        // Feature Policy: Skipping unsupported feature name “webshare”.
+
+                    // iframe?.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+                        //This policy sends a full URL as a referrer when the request is made from the same origin (same domain, protocol, and port), but only sends the origin (scheme, host, and port) when the request is made to a different origin (cross-origin).
+                    iframe?.setAttribute('allowfullscreen','');
+                    divContent.append(iframe);
+
+                    // divContent.textContent=flashcard[key]; // flashcard text
+
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
