@@ -214,7 +214,7 @@ getFlashcardBtn?.addEventListener('click',function(e){
 
             if(['_id','_rev'].includes(key)){
                 containerFlashcard?.setAttribute(`data-${key}`,flashcard[key]); // flashcard id/rev
-            }if(key==='tags'){
+            }else if(key==='tags'){
                 // Hash tag processing
                 const tags=flashcard[key];
                 const tagsArray=tags.split(',');
@@ -230,7 +230,7 @@ getFlashcardBtn?.addEventListener('click',function(e){
                 const tagContainer=document.getElementById('tag-container');
                 tagContainer.innerHTML='';
                 tagContainer?.append(fragmentElement);                
-            }if(key==='_attachments'){
+            }else if(key==='_attachments'){
                 console.log('attachments:\n',flashcard[key])
             }else{
                 console.log(`${key}: ${flashcard[key]}`);
@@ -273,7 +273,7 @@ getFlashcardBtn?.addEventListener('click',function(e){
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
                 }
-                if(key==='input-answer-youtube'){
+                if(key==='input-youtube'){
                     const slideBtn=addIndicatorBtn(indicatorBtnNum);
                     indicatorBtnFrag.append(slideBtn);
                     indicatorBtnNum++;
