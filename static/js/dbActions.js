@@ -186,6 +186,19 @@ const reviewOutputDiv=document.getElementById('review-flashcard');
 const getFlashcardBtn=document.getElementById('getDoc');
 getFlashcardBtn?.addEventListener('click',function(e){
     e.preventDefault();
+    function addIndicatorBtn(indexNum, isFirstBtn){
+        isFirstBtn=isFirstBtn||false;
+        const slideBtn=document.createElement('button');
+        slideBtn.setAttribute('type','button');
+        slideBtn.setAttribute('data-bs-target','#carouselIndicators');
+        slideBtn.setAttribute('data-bs-slide-to',indexNum);
+        slideBtn.setAttribute('aria-label',`Slide ${indexNum+1}`);
+        if(isFirstBtn){
+            slideBtn.setAttribute('class','active');
+            slideBtn.setAttribute('aria-current','true');
+        }
+        return slideBtn;
+    }
     testDB._async_get_record().then(record=>{
         const flashcard=record.rows[0].doc;
         // const questionAnswerArray=Object.entries(flashcard);
@@ -193,8 +206,10 @@ getFlashcardBtn?.addEventListener('click',function(e){
 
         const containerFlashcard=document.getElementById('flashcard-components-container');
         containerFlashcard.innerHTML="";
-        const frag=document.createDocumentFragment();
-
+        const flashcardFrag=document.createDocumentFragment();
+        const indicatorBtnFrag=document.createDocumentFragment();
+        console.log(flashcard)
+        let indicatorBtnNum=0;
         for(const key in flashcard){
 
             if(['_id','_rev'].includes(key)){
@@ -211,19 +226,25 @@ getFlashcardBtn?.addEventListener('click',function(e){
                 divContentContainer.classList.add(divContentContainerClass);
                 if(key==='input-question'){
                     divContentContainer.classList.add('active'); // show question on landing
-                    // divContent.classList.add('text-center');
+                    const slideBtn=addIndicatorBtn(indicatorBtnNum,true);
+                    indicatorBtnFrag.append(slideBtn);
+                    indicatorBtnNum++;
                 }
                 if(key==='input-answer'){
-                    // divContent.classList.add('text-center');
+                    const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                    indicatorBtnFrag.append(slideBtn);
+                    indicatorBtnNum++;
                 }
-                frag.append(divContentContainer);
+                flashcardFrag.append(divContentContainer);
             }
 
         }
         
         // containerFlashcard.innerHTML=""; 
-        containerFlashcard?.append(frag);
-
+        containerFlashcard?.append(flashcardFrag);
+        const containerIndicatorBtns=document.querySelector('.carousel-indicators');
+        containerIndicatorBtns.innerHTML="";
+        containerIndicatorBtns?.append(indicatorBtnFrag)
         // reviewOutputDiv.textContent=JSON.stringify(record.rows[0].doc);
     })
 });
