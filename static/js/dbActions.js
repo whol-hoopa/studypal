@@ -69,8 +69,8 @@ createBtn?.addEventListener('click',function(e){
         })(flashcard.formData);
     }, 800);
 
-    // const testDB=new Query(db);
-    // testDB.getAll(); // doesn't show currently saved flashcard here, but does when manually doing so in console. May not have refreshed yet.
+    // const dbQuery=new Query(db);
+    // dbQuery.getAll(); // doesn't show currently saved flashcard here, but does when manually doing so in console. May not have refreshed yet.
 
     // Memory clean up:
     revokeImageURL();
@@ -78,8 +78,8 @@ createBtn?.addEventListener('click',function(e){
     revokeVideoURL();
 });
 
-const testDB=new Query(db);
-// testDB._question_sync('what'); // only prints result.
+const dbQuery=new Query(db);
+// dbQuery._question_sync('what'); // only prints result.
 
 const btnSearch=document.getElementById('btn-search');
 const searchElement=document.getElementById('input-search');
@@ -118,7 +118,7 @@ btnSearch?.addEventListener('click',function(e){
     const lastId=searchResultsContainer?.lastElementChild?.dataset._id;
     const isDescending=descendingToggler?.checked;
     let totalRecords=null;
-    testDB._question_async_page(queryString,lastId,isDescending).then(records=>{
+    dbQuery._question_async_page(queryString,lastId,isDescending).then(records=>{
         if(records!==null){
             // records set to null when query input === "".
             const frag=document.createDocumentFragment();
@@ -134,13 +134,7 @@ btnSearch?.addEventListener('click',function(e){
                     console.log(this.dataset._rev);
                     const currentURL=window.location.pathname;
                     if(currentURL.includes('review')){
-                        console.log(currentURL)
-                        testDB
-                            .getRecordByID(this.dataset._id)
-                            .then(flashcard=>{
-                                renderFlashcard(flashcard);
-                            });
-                        adjustFlashcardHeight();
+                        renderOptimizedFlashcard(dbQuery, this.dataset._id);
                     }
                     if(currentURL.includes('build')){
                         console.log('Repopulate flashcard builder for editing.');
@@ -172,7 +166,7 @@ btnSearch?.addEventListener('click',function(e){
 
 
     /* // working, but no pagination.
-    testDB._question_async(e.target?.value).then(res=>{
+    dbQuery._question_async(e.target?.value).then(res=>{
         if(res!==null){
             const frag=document.createDocumentFragment();
             res.forEach(element => {
@@ -201,15 +195,23 @@ const reviewOutputDiv=document.getElementById('review-flashcard'); // developmen
 const getFlashcardBtn=document.getElementById('getDoc');
 getFlashcardBtn?.addEventListener('click',function(e){
     e.preventDefault();
-
-    testDB._async_get_record().then(record=>{
-        const flashcard=record.rows[0].doc;
-        // const questionAnswerArray=Object.entries(flashcard);
-        // console.log('num items: ',questionAnswerArray.length);
-        renderFlashcard(flashcard);
-    });
-    // flashcard must be rendered first in order to read clientHeight
+    dbQuery
+        .getRandomFlashcard()
+        .then(flashcard=>{
+            renderFlashcard(flashcard);
+        }).catch(err=>{
+            console.error(err);
+        })
     adjustFlashcardHeight();
+
+    // dbQuery._async_get_record().then(record=>{
+    //     const flashcard=record.rows[0].doc;
+    //     // const questionAnswerArray=Object.entries(flashcard);
+    //     // console.log('num items: ',questionAnswerArray.length);
+    //     renderFlashcard(flashcard);
+    // });
+    // // flashcard must be rendered first in order to read clientHeight
+    // adjustFlashcardHeight();
 });
 
 function addIndicatorBtn(indexNum, isFirstBtn){
@@ -301,7 +303,7 @@ function renderFlashcard(flashcard){
             if(key==='input-answer-mermaid'){
                 divContent.textContent=flashcard[key]; // flashcard text
                 divContent.classList.add('mermaid');
-                divContentContainer.classList.add('active','invisible'); // must be active to render; active removed below, causes flashing.
+                divContentContainer.classList.add('active','invisible'); // must be active to render, set clientHeight, get rendered clientHeight; active removed below, causes flashing.
                 divContent.setAttribute('id', 'mermaidElem');
                 // mermaid.init(undefined, divContent);
                 const slideBtn=addIndicatorBtn(indicatorBtnNum);
@@ -389,9 +391,24 @@ function adjustFlashcardHeight(){
         const cardComponents=document.getElementById('flashcard-components-container');
         let maxHeight=0;
         for(let i of cardComponents?.children){
-            console.log(i)
             maxHeight=i.clientHeight > maxHeight ? i.clientHeight : maxHeight;
         }
         document.getElementById('carouselIndicators')?.setAttribute('style',`min-height: ${maxHeight}px`);
     },1);
+}
+
+
+/**
+ * Renders flashcard by injecting carousel slides in #flashcard-components-container.
+ * It also sets min-height to tallest of question, mermaid, or YouTube height.
+ * @param {Query} queryObject - Custom Query class instance used to query a PouchDB instance.
+ * @param {string} _id - The unique identifier for the flashcard document. It was originally derived from new Date().toISOString() upon flashcard creation.
+ */
+function renderOptimizedFlashcard(queryObject, _id){
+    queryObject
+        .getRecordByID(_id)
+        .then(flashcard=>{
+            renderFlashcard(flashcard);
+        });
+        adjustFlashcardHeight();
 }

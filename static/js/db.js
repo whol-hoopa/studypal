@@ -158,7 +158,10 @@ if(configDB.listenForChanges){
 
 
 
-
+/**
+ * Flashcard class that processes input form data and provides a method
+ * to add the data as a flashcard object to a PouchDB instance.
+ */
 class Flashcard {
     static blobType = ['input-image', 'input-audio', 'input-video'];
 
@@ -261,7 +264,14 @@ class Flashcard {
     }
 };
 
+/**
+ * Query class that wraps a PouchDB instance.
+ */
 class Query {
+    /**
+     * Create a new Query class object.
+     * @param {PouchDB} pouchDatabase - An instance of PouchDB.
+     */
     constructor(pouchDatabase){
         this.db=pouchDatabase;
     }
@@ -282,14 +292,46 @@ class Query {
         /** @type {Boolean} */
         mostRecentFirst=mostRecentFirst||true; // show most recent first by default
 
-        this.db.allDocs({
+        return this.db.allDocs({
             include_docs:!justMetaData,
             binary:includeBlobs,
             descending:mostRecentFirst,
         }).then(docs=>{
-            console.log(docs);
+            // console.log(docs);
             return docs;
-        }).catch(err=>console.log(err));
+        }).catch(err=>console.error(err));
+    }
+
+    async getRandomFlashcard(){
+        try{
+            const flashcardMetadata = await this.getAll(true);
+            const totalRecords=flashcardMetadata?.total_rows;
+            const randomIndex=Math.floor(Math.random() * totalRecords);
+            const randomId=flashcardMetadata?.rows[randomIndex]?.id;
+            return await this.getRecordByID(randomId);
+        }catch(err){
+            console.error(err);
+        }
+    }
+
+    /**
+     * Retrieves a PouchDB document by its ID.
+     * @param {string} id - The unique identifier for the document. It was derived from new Date().toISOString().
+     * @param {string} [rev] - The _rev identifier for a particular revision version of a document. Omit to get the latest revision. 
+     * @returns {Promise<object>} A promise that resolves with the PouchDB document.
+     */
+    async getRecordByID(id, rev){
+        try {
+            const options={
+                binary:true, // Blob|Buffer(node.js)
+                attachments:false, // base64 hex string
+            };
+            if(rev){options.rev=rev;}
+            const doc = await db.get(id,options);
+            return doc;
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     /* Temporary-Development query */
@@ -370,25 +412,7 @@ class Query {
     }
 
 
-    /**
-     * Retrieves a PouchDB document by its ID.
-     * @param {string} id - The unique identifier for the document. It was derived from new Date().toISOString().
-     * @param {string} [rev] - The _rev identifier for a particular revision version of a document. Omit to get the latest revision. 
-     * @returns {Promise<object>} A promise that resolves with the PouchDB document.
-     */
-    async getRecordByID(id, rev){
-        try {
-            const options={
-                binary:true, // Blob|Buffer(node.js)
-                attachments:false, // base64 hex string
-            };
-            if(rev){options.rev=rev;}
-            const doc = await db.get(id,options);
-            return doc;
-        } catch (err) {
-            console.log(err);
-        }
-    }
+
 
 
 
