@@ -191,9 +191,19 @@ btnSearch?.addEventListener('click',function(e){
 
 
 // Review flashcard
-const reviewOutputDiv=document.getElementById('review-flashcard'); // development only
-const getFlashcardBtn=document.getElementById('getDoc');
-getFlashcardBtn?.addEventListener('click',function(e){
+const getLastCreatedFlashcardBtn=document.getElementById('btn-last-created');
+getLastCreatedFlashcardBtn?.addEventListener('click',function(e){
+    e.preventDefault();
+
+    dbQuery.getLastCreatedFlashcard().then(record=>{
+        const flashcard=record.rows[0].doc;
+        renderFlashcard(flashcard);
+    });
+    // flashcard must be rendered first in order to read clientHeight
+    adjustFlashcardHeight();
+});
+const getRandomFlashcardBtn=document.getElementById('btn-random');
+getRandomFlashcardBtn?.addEventListener('click',function(e){
     e.preventDefault();
     dbQuery
         .getRandomFlashcard()
@@ -203,15 +213,6 @@ getFlashcardBtn?.addEventListener('click',function(e){
             console.error(err);
         })
     adjustFlashcardHeight();
-
-    // dbQuery._async_get_record().then(record=>{
-    //     const flashcard=record.rows[0].doc;
-    //     // const questionAnswerArray=Object.entries(flashcard);
-    //     // console.log('num items: ',questionAnswerArray.length);
-    //     renderFlashcard(flashcard);
-    // });
-    // // flashcard must be rendered first in order to read clientHeight
-    // adjustFlashcardHeight();
 });
 
 function addIndicatorBtn(indexNum, isFirstBtn){

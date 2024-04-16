@@ -302,6 +302,22 @@ class Query {
         }).catch(err=>console.error(err));
     }
 
+    async getLastCreatedFlashcard(){
+        try{
+            const queryOptions={
+                include_docs:true,
+                binary:true,
+                descending: true,
+                limit: 1,
+            };
+
+            const record = await db.allDocs(queryOptions);
+            return record;
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     async getRandomFlashcard(){
         try{
             const flashcardMetadata = await this.getAll(true);
@@ -379,37 +395,15 @@ class Query {
             
             // console.log(records.rows);
             console.log(records);
-            return records; // Assignable w/in promise chain.
+            return records;
         }catch(err){
             console.log(err);
         }
     }
 
 
-    async _async_get_record(){
-        /* Get a record from the db to review.
-        
-            USED ONLY FOR DEVELOPMENT.
-        */
 
-        try{
-            const queryOptions={
-                include_docs:true,
-                binary:true,
-                descending: true,
-                limit: 1,
-            };
-
-            const record = await db.allDocs(queryOptions);
-
-            
-            // console.log(record.rows);
-            console.log(record);
-            return record; // Assignable w/in promise chain.
-        }catch(err){
-            console.log(err);
-        }
-    }
+    
 
 
 
