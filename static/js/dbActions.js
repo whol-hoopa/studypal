@@ -1,17 +1,29 @@
 const dbQuery=new Query(db);
 
-
-// TODO: why min-height not being rendered/respected?
-dbQuery
-    .getRandomFlashcard()
-    .then(flashcard=>{
-        renderFlashcard(flashcard);
-    }).catch(err=>{
-        console.error(err);
-    })
-adjustFlashcardHeight();
-
-
+if(true){
+    setTimeout(()=>{
+        dbQuery
+            .getLastCreatedFlashcard()
+            .then(flashcard=>{
+                renderFlashcard(flashcard);
+            }).catch(err=>{
+                console.error(err);
+            });
+        // flashcard must be rendered first in order to read clientHeight
+        adjustFlashcardHeight();
+    },60);
+}else{
+    setTimeout(()=>{
+        dbQuery
+            .getRandomFlashcard()
+            .then(flashcard=>{
+                renderFlashcard(flashcard);
+            }).catch(err=>{
+                console.error(err);
+            });
+        adjustFlashcardHeight();
+    },60);
+}
 
 
 
@@ -211,8 +223,7 @@ const getLastCreatedFlashcardBtn=document.getElementById('btn-last-created');
 getLastCreatedFlashcardBtn?.addEventListener('click',function(e){
     e.preventDefault();
 
-    dbQuery.getLastCreatedFlashcard().then(record=>{
-        const flashcard=record.rows[0].doc;
+    dbQuery.getLastCreatedFlashcard().then(flashcard=>{
         renderFlashcard(flashcard);
     });
     // flashcard must be rendered first in order to read clientHeight

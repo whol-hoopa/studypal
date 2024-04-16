@@ -312,7 +312,7 @@ class Query {
             };
 
             const record = await db.allDocs(queryOptions);
-            return record;
+            return record.rows[0].doc;
         }catch(err){
             console.log(err);
         }
