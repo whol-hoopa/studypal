@@ -1,3 +1,17 @@
+const dbQuery=new Query(db);
+
+dbQuery
+    .getRandomFlashcard()
+    .then(flashcard=>{
+        renderFlashcard(flashcard);
+    }).catch(err=>{
+        console.error(err);
+    })
+adjustFlashcardHeight();
+
+
+
+
 
 // Create flashcard
 const createBtn=document.getElementById('create-btn');
@@ -78,9 +92,9 @@ createBtn?.addEventListener('click',function(e){
     revokeVideoURL();
 });
 
-const dbQuery=new Query(db);
-// dbQuery._question_sync('what'); // only prints result.
 
+
+// sidebar search feature
 const btnSearch=document.getElementById('btn-search');
 const searchElement=document.getElementById('input-search');
 const searchResultsContainer=document.getElementById('search-results');
@@ -118,7 +132,7 @@ btnSearch?.addEventListener('click',function(e){
     const lastId=searchResultsContainer?.lastElementChild?.dataset._id;
     const isDescending=descendingToggler?.checked;
     let totalRecords=null;
-    dbQuery._question_async_page(queryString,lastId,isDescending).then(records=>{
+    dbQuery.searchWithPagination(queryString,lastId,isDescending).then(records=>{
         if(records!==null){
             // records set to null when query input === "".
             const frag=document.createDocumentFragment();

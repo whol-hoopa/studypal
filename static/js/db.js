@@ -350,8 +350,7 @@ class Query {
         }
     }
 
-    /* Temporary-Development query */
-    async _question_async_page(regex, lastId, isDescending, isCaseSensitive){
+    async searchWithPagination(regex, lastId, isDescending, isCaseSensitive){
         /* Use backslash to escape regex special characters.
             e.g. `h\.t`
 
@@ -421,8 +420,7 @@ class Query {
 
 
 
-
-
+    /* Old Development versions. Purpose: Mistake reminders. */
     async _question_async(regex, isCaseSensitive){
         /* Use backslash to escape regex special characters.
             e.g. `h\.t`
