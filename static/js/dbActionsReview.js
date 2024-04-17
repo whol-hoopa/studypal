@@ -121,10 +121,27 @@ function renderFlashcard(flashcard){
                 indicatorBtnNum++;
             }
             if(key==='input-answer-markdown'){
+                const tasklistExtension = {
+                    type: 'lang', // Specify that it's a language extension
+                    filter: function(text) {
+                        // Regular expression to match task list items
+                        const taskListRegex = /- \[( |x)\] (.*)/g;
+                        
+                        // Replace task list syntax with HTML checkboxes
+                        return text.replace(taskListRegex, function(match, checked, label) {
+                            const isChecked = checked.trim() === 'x' ? 'checked' : ''; // Check if task is completed
+                            return '<label><input type="checkbox" ' + isChecked + '> ' + label + `</label><br>`;
+                        });
+                    }
+                };
+                // const markdownTextExample = `
+                //   - [x] Task 1  
+                //   - [ ] Task 2
+                //   `;
                 const markdownConverter = new showdown.Converter({
+                    extensions: [tasklistExtension],
                     tables:true,
                     strikethrough:true,
-                    tasklist:true,
                   });
                 divContent.innerHTML=markdownConverter.makeHtml(flashcard[key]); // flashcard text
                 
@@ -206,9 +223,9 @@ function renderFlashcard(flashcard){
     const containerIndicatorBtns=document.querySelector('.carousel-indicators');
     containerIndicatorBtns.innerHTML="";
     containerIndicatorBtns?.append(indicatorBtnFrag)
-    MathJax.typesetPromise();
     const mermaidElem=document.getElementById('mermaidElem');
     mermaid.init(undefined, mermaidElem);
+    MathJax.typesetPromise();
 
     setTimeout(() => {
         // goal: remove flashing from rendering mermaid.

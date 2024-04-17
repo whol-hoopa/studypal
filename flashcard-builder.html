@@ -665,6 +665,24 @@
 - Fourth item
                                     </pre>
                                   </div>
+                                  <div>
+                                    <h5>Try Me</h5>
+                                    <pre class="mb-0">
+| Fruit  | Quantity |
+|--------|----------|
+| Apple  | 10       |
+| Banana | 15       |
+| Orange | 20       |               
+                                    </pre>
+                                  </div>
+                                  <div>
+                                    <h5>Try Me</h5>
+                                    <pre class="mb-0">
+### Using LaTex in markdown
+Add additional backward slash on bracket escape.  
+\\[\int_a^b f(\mu) \, d\mu\\]     
+                                    </pre>
+                                  </div>
 
                                   <div class="text-warning mb-2">
                                     Not all markdown features are supported.
@@ -1881,15 +1899,33 @@ pie
 
 
     <script>
+      const tasklistExtension = {
+          type: 'lang', // Specify that it's a language extension
+          filter: function(text) {
+              // Regular expression to match task list items
+              const taskListRegex = /- \[( |x)\] (.*)/g;
+              
+              // Replace task list syntax with HTML checkboxes
+              return text.replace(taskListRegex, function(match, checked, label) {
+                  const isChecked = checked.trim() === 'x' ? 'checked' : ''; // Check if task is completed
+                  return '<label><input type="checkbox" ' + isChecked + '> ' + label + `</label><br>`;
+              });
+          }
+      };
+      // const markdownTextExample = `
+      //   - [x] Task 1  
+      //   - [ ] Task 2
+      //   `;
       // Markdown, LaTex, & Mermaid preview output
       const markdownConverter = new showdown.Converter({
+        extensions: [tasklistExtension],
         tables:true,
         strikethrough:true,
-        tasklist:true,
       });
       textAreaMarkdownElement.addEventListener("input", function () {
         const textAreaContent = this.value;
         outputDiv.innerHTML=markdownConverter.makeHtml(textAreaContent);
+        MathJax.typesetPromise();
       });
       textAreaLaTexElement.addEventListener("input", function () {
         const textAreaContent = this.value;
