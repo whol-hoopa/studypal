@@ -100,7 +100,7 @@ function renderFlashcard(flashcard){
         }else{
             console.log(`${key}: ${flashcard[key]}`);
             const divContent=document.createElement('div'),
-                divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex justify-content-center align-items-center';
+                divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // flex-column else elements will display horizontally, not desired here.
             const divContentContainer=document.createElement('div'),
                 divContentContainerClass='carousel-item';
 

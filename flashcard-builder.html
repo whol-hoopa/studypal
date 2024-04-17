@@ -1884,7 +1884,11 @@ pie
 
     <script>
       // Markdown, LaTex, & Mermaid preview output
-      const markdownConverter = new showdown.Converter();
+      const markdownConverter = new showdown.Converter({
+        tables:true,
+        strikethrough:true,
+        tasklist:true,
+      });
       textAreaMarkdownElement.addEventListener("input", function () {
         const textAreaContent = this.value;
         outputDiv.innerHTML=markdownConverter.makeHtml(textAreaContent);

@@ -5,8 +5,6 @@ Frontend:
 
 Backend:
 - Anthony Mei
-- Joshua Perez
-
 
 # Backend setup
 
