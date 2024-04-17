@@ -121,7 +121,11 @@ function renderFlashcard(flashcard){
                 indicatorBtnNum++;
             }
             if(key==='input-answer-markdown'){
-                const markdownConverter = new showdown.Converter();
+                const markdownConverter = new showdown.Converter({
+                    tables:true,
+                    strikethrough:true,
+                    tasklist:true,
+                  });
                 divContent.innerHTML=markdownConverter.makeHtml(flashcard[key]); // flashcard text
                 
                 const slideBtn=addIndicatorBtn(indicatorBtnNum);
