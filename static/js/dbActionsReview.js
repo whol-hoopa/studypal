@@ -244,12 +244,18 @@ function adjustFlashcardHeight(){
         clientHeight property can be set by browser and thus read, else it's 0.
     */
     setTimeout(()=>{
-        const cardComponents=document.getElementById('flashcard-components-container');
         let maxHeight=0;
-        for(let i of cardComponents?.children){
-            maxHeight=i.clientHeight > maxHeight ? i.clientHeight : maxHeight;
+        const setByMarkdownOrYouTube=false;
+        if(setByMarkdownOrYouTube){
+            const cardComponents=document.getElementById('flashcard-components-container');
+            for(let i of cardComponents?.children){
+                maxHeight=i.clientHeight > maxHeight ? i.clientHeight : maxHeight;
+            }
+            document.getElementById('carouselIndicators')?.setAttribute('style',`min-height: ${maxHeight}px`);
         }
-        document.getElementById('carouselIndicators')?.setAttribute('style',`min-height: ${maxHeight}px`);
+        else{
+            document.getElementById('carouselIndicators')?.setAttribute('style',`min-height: 25vh;`);
+        }
     },1);
 }
 

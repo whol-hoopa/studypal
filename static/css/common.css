@@ -41,6 +41,10 @@ tr:hover:not(thead tr) {
   padding: 0 8px 2px;
 }
 .context-menu-option:hover {
-  background-color:#d3d3d359;
+  background-color:#d3d3d318;
   border-radius:2px;
+}
+
+code {
+  color: rgb(255, 25, 25) !important;
 }

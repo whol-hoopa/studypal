@@ -163,7 +163,7 @@ function handleRightClick(event) {
     // Create the delete option
     const deleteOption = document.createElement("div");
     deleteOption.textContent = "Delete from Database";
-    deleteOption.className = "context-menu-option";
+    deleteOption.className = "context-menu-option text-danger";
     deleteOption.addEventListener("dblclick", function() {
   
         // Remove flashcard from database.
@@ -208,8 +208,8 @@ function handleRightClick(event) {
     });
   
     // Append the delete option to the context menu
-    contextMenu.appendChild(deleteOption);
     contextMenu.appendChild(editOption);
+    contextMenu.appendChild(deleteOption);
     
     // Position the context menu
     contextMenu.style.top = event.clientY + "px";
