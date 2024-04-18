@@ -48,3 +48,8 @@ tr:hover:not(thead tr) {
 code {
   color: rgb(255, 25, 25) !important;
 }
+
+/* .overflow-management, pre, code, p { */
+.overflow-management {
+  overflow-x: scroll !important;
+}

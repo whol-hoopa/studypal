@@ -25,6 +25,7 @@ createBtn?.addEventListener('click',function(e){
     dbIconBtn?.classList.remove('d-none');
     createBtn.disabled=true;
     setTimeout(() => {
+        // setTimout upon creation of flashcard does two things: 1) prevents dblclick duplicates. 2) spaces out _id by timeout. 
         // flashcard created feedback: remove feedback
         dbIconBtn?.classList.add('d-none');
         createBtn.disabled="";

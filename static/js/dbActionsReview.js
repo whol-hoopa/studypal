@@ -1,7 +1,35 @@
+const readClientHeightOnload=false;
+const setTimeoutTimeOnload=60;
+const getLastCreatedFlashcard=true;
 
+if(readClientHeightOnload){
+    if(getLastCreatedFlashcard){
+        setTimeout(()=>{
+            dbQuery
+                .getLastCreatedFlashcard()
+                .then(flashcard=>{
+                    renderFlashcard(flashcard);
+                }).catch(err=>{
+                    console.error(err);
+                });
+            // flashcard must be rendered first in order to read clientHeight
+            adjustFlashcardHeight();
+        },setTimeoutTimeOnload);
+    }else if(!getLastCreatedFlashcard){
+        setTimeout(()=>{
+            dbQuery
+                .getRandomFlashcard()
+                .then(flashcard=>{
+                    renderFlashcard(flashcard);
+                }).catch(err=>{
+                    console.error(err);
+                });
+            adjustFlashcardHeight();
+        },setTimeoutTimeOnload);
+    }
+}else if(!readClientHeightOnload){
+    if(getLastCreatedFlashcard){
 
-if(true){
-    setTimeout(()=>{
         dbQuery
             .getLastCreatedFlashcard()
             .then(flashcard=>{
@@ -11,9 +39,9 @@ if(true){
             });
         // flashcard must be rendered first in order to read clientHeight
         adjustFlashcardHeight();
-    },60);
-}else{
-    setTimeout(()=>{
+
+    }else if(!getLastCreatedFlashcard){
+
         dbQuery
             .getRandomFlashcard()
             .then(flashcard=>{
@@ -22,8 +50,10 @@ if(true){
                 console.error(err);
             });
         adjustFlashcardHeight();
-    },60);
+
+    }
 }
+
 
 // Review flashcard
 const getLastCreatedFlashcardBtn=document.getElementById('btn-last-created');
@@ -99,8 +129,12 @@ function renderFlashcard(flashcard){
             console.log('attachments:\n',flashcard[key])
         }else{
             console.log(`${key}: ${flashcard[key]}`);
+            // MARK: Overflow container
             const divContent=document.createElement('div'),
-                divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // flex-column else elements will display horizontally, not desired here.
+                  divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center';
+                //   divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column overflow-management';
+                    // flex-column else elements will display horizontally, not desired here.
+                    // justify-content-center align-items-center: this inhibits overflow-management from working; led to non-viewable content on overflow-x.
             const divContentContainer=document.createElement('div'),
                 divContentContainerClass='carousel-item';
 
@@ -274,3 +308,71 @@ function renderOptimizedFlashcard(queryObject, _id){
         });
         adjustFlashcardHeight();
 }
+
+// Monitoring an element for overflow and managing it. --chatGPT
+
+
+
+// document.addEventListener("DOMContentLoaded", function() {
+    // Your MutationObserver code here
+    // Create a new instance of MutationObserver and specify a callback function
+    const observer = new MutationObserver(function(mutationsList, observer) {
+        // Iterate through the list of mutations
+        mutationsList.forEach(function(mutation) {
+            // console.log("mutation:", mutation);
+            // Check if a class was added or removed
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                console.log('Class change detected:', mutation.target.className);
+                // Perform actions based on the class change
+                if(mutation.target.className.includes('active')){
+                    const firstChild=mutation.target.firstChild;
+                    if(firstChild.scrollWidth > firstChild.clientWidth){
+                        // MARK: Overflow handler
+                        console.log('is overflowing')
+                        firstChild.classList.remove('justify-content-center', 'align-items-center');
+                    }
+                    // else{
+                    //     // this will just reverse the removal bc the loop runs more than once due to other 
+                    //       // bootstrap class manipulations on the element eg next&previous button className toggling.
+                    //     // this is kind of ok, bc the next loaded fc will come with the justify & align set, so
+                    //       // if the overflow was temporary due to browser resizing, it will reset.
+                    //       // However, for mobile, this observer will run for each new card.
+                    //     firstChild.classList.add('justify-content-center', 'align-items-center');
+                    // }
+
+                }
+            }
+        });
+    });
+
+
+
+        // // Select the target node
+        // const targetNodes = document.querySelectorAll('.carousel-item');
+
+        // // Configure the MutationObserver to watch for changes to attributes
+        // const config = { attributes: true, subtree: true };
+
+        // targetNodes.forEach(targetNode=>{
+        //     // Start observing the target node for changes
+        //     observer.observe(targetNode, config);
+        // });
+
+        // console.log(targetNodes)
+
+    setTimeout(() => {
+        // Select the target node
+        const targetNodes = document.querySelectorAll('.carousel-item');
+
+        // Configure the MutationObserver to watch for changes to attributes
+        const config = { attributes: true, subtree: true };
+
+        targetNodes.forEach(targetNode=>{
+            // Start observing the target node for changes
+            observer.observe(targetNode, config);
+        });
+
+        // console.log(targetNodes)
+    }, setTimeoutTimeOnload); // needed 30ms on my machine for nodes to load and log, else nodeList.len==0.
+
+// });
