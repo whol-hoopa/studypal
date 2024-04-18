@@ -155,26 +155,37 @@ function handleRightClick(event) {
     const contextMenu = document.createElement("div");
     contextMenu.className = "context-menu"; // to add styles
 
-    // add evListener to handle blur
-
-
+    // Get flashcard id to delete.
+    const currentListItem=event.target; // the <li> representing the target flashcard.
+    const _id=currentListItem.dataset._id;
+    const _rev=currentListItem.dataset._rev;
     
     // Create the delete option
     const deleteOption = document.createElement("div");
     deleteOption.textContent = "Delete from Database";
     deleteOption.className = "context-menu-option";
-    deleteOption.addEventListener("dblclick", function(event) {
+    deleteOption.addEventListener("dblclick", function() {
   
-      // TODO: remove from database.
-  
-  
-      // Delete the clicked <li> element
-      event.target.remove();
-  
-  
-  
-      // Remove the context menu after deleting
-      contextMenu.remove();
+        // Remove flashcard from database.
+        // dbQuery is Query class instantiated at top of this file to query PouchDB.
+        dbQuery.deleteFlashcard(_id,_rev);
+
+        // Delete the clicked <li> element representing the flashcard deleted.
+        currentListItem.remove();
+
+        // update search btn pagination status
+        const paginationStatusText=paginationStatus?.textContent; // global variable from top of file: paginationStatus 
+        const paginationValues = paginationStatusText?.split('/');
+        if(paginationStatus && paginationValues && paginationValues?.length>1){
+            let numerator = parseInt(paginationValues[0]);
+            let denominator = parseInt(paginationValues[1]);
+            numerator--;
+            denominator--;
+            paginationStatus.textContent=`${numerator}/${denominator}`;
+        }
+
+        // Remove the context menu after deleting.
+        contextMenu.remove();
     });
   
     // TODO: Add an Edit option

@@ -401,8 +401,22 @@ class Query {
     }
 
 
-
-    
+    /**
+     * Deletion of flashcard from PouchDB by it's PouchDB document id.
+     * @param {string} id - Document id for flashcard. The UTC date string assigned when created. 
+     * @param {string} rev - Document revision id for flashcard. 
+     */
+    async deleteFlashcard(id,rev){
+        try{
+            // const flashcard=await db.get(id); // must get first if rev is not supplied.
+            // console.log(flashcard);
+            // const response=await db.remove(flashcard);
+            const response=await db.remove(id,rev);
+            console.log('Flashcard deletion request status:\n',response);
+        }catch(err){
+            console.error(err);
+        }
+    }
 
 
 
