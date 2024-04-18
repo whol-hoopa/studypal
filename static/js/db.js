@@ -533,11 +533,6 @@ class Query {
 }
 
 
-/* Context menu for removing flashcard from database from search list in sidebar
- * Coded here bc will be using Query class obj.
-*/
-
-
 
 
 

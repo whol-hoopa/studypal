@@ -136,7 +136,6 @@ function handleLeftClickOutsideContextMenu(event) {
 function handleRightClickOutsideContextMenu(event) {
     const contextMenu=document.querySelector('.context-menu');
     const contextMenus=document.querySelectorAll('.context-menu');
-    console.log(event.target)
     if (contextMenu && !contextMenu.contains(event.target)) {
         // is triggering element a descendent of contextMenu
         // has custom contextmenu open & user clicks right btn outside of the existing opened contextmenu; leading to multiple rendered menus
@@ -157,9 +156,9 @@ function handleRightClick(event) {
     contextMenu.className = "context-menu"; // to add styles and as selector for managing context menu instance(s)
 
     // Get flashcard id to delete.
-    const currentListItem=event.target; // the <li> representing the target flashcard.
-    const _id=currentListItem.dataset._id;
-    const _rev=currentListItem.dataset._rev;
+    let currentListItem=event.target; // the <li> representing the target flashcard.
+    let _id=currentListItem.dataset._id;
+    let _rev=currentListItem.dataset._rev;
     
     // Create the delete option
     const deleteOption = document.createElement("div");
@@ -170,12 +169,16 @@ function handleRightClick(event) {
         // Remove flashcard from database.
         // dbQuery is Query class instantiated at top of this file to query PouchDB.
         dbQuery.deleteFlashcard(_id,_rev);
-
+        // cleave variable reference to allow garbage collection, given closure holding onto state.
+        _id=null;
+        _rev=null;
         // Delete the clicked <li> element representing the flashcard deleted.
         currentListItem.remove();
+        currentListItem=null;
 
         // update search btn pagination status
-        const paginationStatusText=paginationStatus?.textContent; // global variable from top of file: paginationStatus 
+        const paginationStatus=document.getElementById('record-count'); // don't use the global version. Garbage collection issue.
+        const paginationStatusText=paginationStatus?.textContent;
         const paginationValues = paginationStatusText?.split('/');
         if(paginationStatus && paginationValues && paginationValues?.length>1){
             let numerator = parseInt(paginationValues[0]);
