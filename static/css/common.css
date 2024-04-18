@@ -49,7 +49,7 @@ code {
   color: rgb(255, 25, 25) !important;
 }
 
-/* .overflow-management, pre, code, p { */
+/* may not be need after all, dynamic removal of flex centering rules took care of adding scroll-x
 .overflow-management {
   overflow-x: scroll !important;
-}
+} */
