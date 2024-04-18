@@ -68,6 +68,12 @@ btnSearch?.addEventListener('click',function(e){
             searchResultsContainer.innerHTML="";
             searchResultsContainer?.append(frag);
 
+            // add evListener for contextmenu to modify flashcard state (edit/delete)
+            var listItems = document.querySelectorAll("#search-results li");
+            listItems.forEach(function(item) {
+                item.addEventListener("contextmenu", handleRightClick);
+            });
+
             const previousCount = parseInt(paginationStatus?.dataset.count);
             totalRecords=records.total_rows;
             const currentCount = previousCount+records.rows.length;
@@ -112,3 +118,87 @@ btnSearch?.addEventListener('click',function(e){
 });
 
 
+/* Search results editing optionality via custom context menu */
+// remove sidebar search result context menu when user left clicks away after displaying context menu
+document.addEventListener('click', handleLeftClickOutsideContextMenu);
+
+// remove sidebar search result context menu when user right clicks away after displaying context menu
+document.addEventListener('contextmenu', handleRightClickOutsideContextMenu);
+
+function handleLeftClickOutsideContextMenu(event) {
+    const contextMenu=document.querySelector('.context-menu');
+
+    if (contextMenu && !contextMenu?.contains(event.target)) {
+        // Left click occurred outside of the context menu
+        contextMenu.remove();
+    }
+}
+function handleRightClickOutsideContextMenu(event) {
+    const contextMenu=document.querySelector('.context-menu');
+    const contextMenus=document.querySelectorAll('.context-menu');
+
+    if (contextMenu && !contextMenu?.contains(event.target)) {
+        // has custom contextmenu open & user clicks right btn outside of the existing opened contextmenu; leading to multiple rendered menus
+        if(contextMenus.length>1 || !event.target.dataset._id){
+            //  remove previously opened custom contextmenu; keep last opened.
+            //  user right clicks outside, but only one context menu open; remove the single context menu.
+            contextMenus[0].remove();
+        }
+    }
+}
+
+// sidebar flashcard search result editing|deleting feature via context menu
+// Function to handle the right-click event on search result li element; show custom context menu.
+function handleRightClick(event) {
+    event.preventDefault(); // Prevent the default context menu from appearing
+    // Create the context menu
+    const contextMenu = document.createElement("div");
+    contextMenu.className = "context-menu"; // to add styles
+
+    // add evListener to handle blur
+
+
+    
+    // Create the delete option
+    const deleteOption = document.createElement("div");
+    deleteOption.textContent = "Delete from Database";
+    deleteOption.className = "context-menu-option";
+    deleteOption.addEventListener("dblclick", function(event) {
+  
+      // TODO: remove from database.
+  
+  
+      // Delete the clicked <li> element
+      event.target.remove();
+  
+  
+  
+      // Remove the context menu after deleting
+      contextMenu.remove();
+    });
+  
+    // TODO: Add an Edit option
+    const editOption = document.createElement("div");
+    editOption.textContent="Edit Flashcard";
+    editOption.className="context-menu-option"; // to add css cursor:pointer
+    editOption.addEventListener('dblclick', function(event){
+  
+      // handle edit event...
+  
+      
+  
+      // remove context menu after event
+      contextMenu.remove();
+    });
+  
+    // Append the delete option to the context menu
+    contextMenu.appendChild(deleteOption);
+    contextMenu.appendChild(editOption);
+    
+    // Position the context menu
+    contextMenu.style.top = event.clientY + "px";
+    contextMenu.style.left = event.clientX + "px";
+    
+    // Append the context menu to the body
+    document.body.appendChild(contextMenu);
+}

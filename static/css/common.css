@@ -25,3 +25,22 @@ tr:hover:not(thead tr) {
   background-color: rgba(255, 166, 0, 0.7);
   color:#000 !important;
 }
+
+
+.context-menu {
+  position: absolute;
+  background: #2e2e2e;
+  color:#fff;
+  border: 1px solid #ccc;
+  border-radius:4px;
+  padding: 5px;
+  z-index: 10000; /* Ensure it appears above other elements */
+}
+.context-menu-option {
+  cursor: pointer;
+  padding: 0 8px 2px;
+}
+.context-menu-option:hover {
+  background-color:#d3d3d359;
+  border-radius:2px;
+}

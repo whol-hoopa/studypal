@@ -1925,7 +1925,7 @@ pie
       textAreaMarkdownElement.addEventListener("input", function () {
         const textAreaContent = this.value;
         outputDiv.innerHTML=markdownConverter.makeHtml(textAreaContent);
-        MathJax.typesetPromise();
+        MathJax.typesetPromise(); // enables rendering of LaTex with markdown; non-global to avoid call when no LaTex content.
       });
       textAreaLaTexElement.addEventListener("input", function () {
         const textAreaContent = this.value;
