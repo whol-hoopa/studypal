@@ -119,16 +119,16 @@ btnSearch?.addEventListener('click',function(e){
 
 
 /* Search results editing optionality via custom context menu */
-// remove sidebar search result context menu when user left clicks away after displaying context menu
+// remove context menu from sidebar when user left clicks away after displaying context menu
 document.addEventListener('click', handleLeftClickOutsideContextMenu);
 
-// remove sidebar search result context menu when user right clicks away after displaying context menu
+// remove context menu from sidebar when user right clicks away after displaying context menu
 document.addEventListener('contextmenu', handleRightClickOutsideContextMenu);
 
 function handleLeftClickOutsideContextMenu(event) {
     const contextMenu=document.querySelector('.context-menu');
 
-    if (contextMenu && !contextMenu?.contains(event.target)) {
+    if (contextMenu && !contextMenu.contains(event.target)) {
         // Left click occurred outside of the context menu
         contextMenu.remove();
     }
@@ -136,8 +136,9 @@ function handleLeftClickOutsideContextMenu(event) {
 function handleRightClickOutsideContextMenu(event) {
     const contextMenu=document.querySelector('.context-menu');
     const contextMenus=document.querySelectorAll('.context-menu');
-
-    if (contextMenu && !contextMenu?.contains(event.target)) {
+    console.log(event.target)
+    if (contextMenu && !contextMenu.contains(event.target)) {
+        // is triggering element a descendent of contextMenu
         // has custom contextmenu open & user clicks right btn outside of the existing opened contextmenu; leading to multiple rendered menus
         if(contextMenus.length>1 || !event.target.dataset._id){
             //  remove previously opened custom contextmenu; keep last opened.
@@ -153,7 +154,7 @@ function handleRightClick(event) {
     event.preventDefault(); // Prevent the default context menu from appearing
     // Create the context menu
     const contextMenu = document.createElement("div");
-    contextMenu.className = "context-menu"; // to add styles
+    contextMenu.className = "context-menu"; // to add styles and as selector for managing context menu instance(s)
 
     // Get flashcard id to delete.
     const currentListItem=event.target; // the <li> representing the target flashcard.
@@ -182,6 +183,7 @@ function handleRightClick(event) {
             numerator--;
             denominator--;
             paginationStatus.textContent=`${numerator}/${denominator}`;
+            paginationStatus.dataset.count=numerator.toString();
         }
 
         // Remove the context menu after deleting.
