@@ -309,69 +309,89 @@ function renderOptimizedFlashcard(queryObject, _id){
         adjustFlashcardHeight();
 }
 
-// Monitoring an element for overflow and managing it.
-// Create a new instance of MutationObserver and specify a callback function
-function observeCarouselItems(){
 
+// MARK: Overflow handler
+// Monitoring an element for overflow and managing it. Done bc certain elements were not responsive in mobile and needed scroll-x on overflow.
+// Create a new instance of MutationObserver and specify a callback function
+/**
+ * Observes element(s) for change and responds according to code written.
+ * @param {function} mutationHandler - callback function to handle mutation event.
+ * @returns {MutationObserver} The Created MutationObserver.
+ */
+function mutationObserver(mutationHandler, observerToDisconnect){
+    return new MutationObserver(function(mutationsList, thisObserver){
+        mutationsList.forEach(function(mutation){
+            mutationHandler(mutation, thisObserver, observerToDisconnect);
+        });
+    });
 }
 
-var observer = new MutationObserver(function(mutationsList, observer) {
-    // Iterate through the list of mutations
-    mutationsList.forEach(function(mutation) {
-        // Check if a class was added or removed
-        if (mutation.type === 'attributes') {
-            if(mutation.attributeName?.includes('_id')){
-                if(mutation.target.dataset._id!==mutation.oldValue){
-                    // observe new fc components for overflow. Old fc already removed from DOM.
 
-                    const config = { attributes: true };
-                    mutation.target.childNodes.forEach(targetNode=>{
-                        // Start observing the target node for changes
-                        observer.observe(targetNode, config);
-                    });
-                }
-            }
-
-            if(mutation.attributeName==='class'){
-                // console.log('Class change detected:', mutation.target.className);
-                // Perform actions based on the class change
-                if(mutation.target.className.includes('active')){
-                    const firstChild=mutation.target.firstChild;
-                    if(firstChild.scrollWidth > firstChild.clientWidth){
-                        // MARK: Overflow handler
-                        // console.log('is overflowing')
-                        firstChild.classList.remove('justify-content-center', 'align-items-center');
-                    }
-                    // else{
-                    //     // this will just reverse the removal bc the loop runs more than once due to other 
-                    //       // bootstrap class manipulations on the element eg next&previous button className toggling.
-                    //     // this is kind of ok, bc the next loaded fc will come with the justify & align set, so
-                    //       // if the overflow was temporary due to browser resizing, it will reset.
-                    //       // However, for mobile, this observer will run for each new card.
-                    //     firstChild.classList.add('justify-content-center', 'align-items-center');
-                    // }
-    
-                }
-            }
+function carouselItemsObserverHandler(mutation, thisObserver, observerToDisconnect){
+    if (mutation.type === 'attributes' && mutation.attributeName === 'class' && mutation.target.className.includes('active')) {
+        // Perform actions based on the class change
+        if(observerToDisconnect){
+            observerToDisconnect.disconnect();
         }
-    });
-});
 
+        const firstChild=mutation.target.firstChild;
+        if(firstChild.scrollWidth > firstChild.clientWidth){
+            // console.log('is overflowing');
+            firstChild.classList.remove('justify-content-center', 'align-items-center');
+        }
+        // else{
+        //     // this will just reverse the removal bc the loop runs more than once due to other 
+        //       // bootstrap class manipulations on the element eg next&previous button className toggling.
+        //     // this is kind of ok, bc the next loaded fc will come with the justify & align set, so
+        //       // if the overflow was temporary due to browser resizing, it will reset.
+        //       // However, for mobile, this observer will run for each new card.
+        //     firstChild.classList.add('justify-content-center', 'align-items-center');
+        // }
+    }
+}
+
+function carouselInnerContainerHandler(mutation, thisObserver, observerToDisconnect){
+    if (mutation.type === 'attributes' && mutation.attributeName?.includes('_id') && mutation.target.dataset._id!==mutation.oldValue) {            
+        // observe new fc components for overflow. Old fc already removed from DOM.
+
+        if(observerToDisconnect){
+            // initially designed to disconnect observer for removed flashcard; container.innerHTML=''; To un-inhibit garbage collection.
+            observerToDisconnect.disconnect();
+        }
+
+        const flashcardComponentObserver=mutationObserver(carouselItemsObserverHandler, observerToDisconnect);
+        const configFlashcardComponents = { attributes: true };
+        mutation.target.childNodes.forEach(targetNode=>{
+            // Start observing the target node for changes
+            flashcardComponentObserver.observe(targetNode, configFlashcardComponents);
+        });
+    }
+}
 
 setTimeout(() => {
-    // Select the target node
-    const targetNodes = document.querySelectorAll('.carousel-item');
-
-    // Configure the MutationObserver to watch for changes to attributes
     // const config = { attributes: true, subtree: true };
-    const config = { attributes: true, attributeOldValue:true }; // oldValue for _id observation
 
+    // observe flashcard components for overflow-x
+    const flashcardComponentObserver= mutationObserver(carouselItemsObserverHandler,null);
+    
+    const targetNodes= document.querySelectorAll('.carousel-item');
+    const configFlashcardComponents= { attributes: true };
     targetNodes.forEach(targetNode=>{
         // Start observing the target node for changes
-        observer.observe(targetNode, config);
+        flashcardComponentObserver.observe(targetNode, configFlashcardComponents);
     });
+
+    // observe flashcard container for new flashcards
+    const newFlashcardObserver= mutationObserver(carouselInnerContainerHandler,flashcardComponentObserver);
+    const configNewFlashcard= { attributes: true, attributeOldValue:true }; // oldValue for _id observation
     // observe container for a change in flashcard; when true, set childNodes ie new fc components to be observed for overflow.
-    const flashcardContainer=document.getElementById('flashcard-components-container');
-    observer.observe(flashcardContainer, config)
+    const flashcardContainer= document.getElementById('flashcard-components-container');
+    if(flashcardContainer){
+        // IDE complaining about potential illegal null value, so if'd it.
+        newFlashcardObserver.observe(flashcardContainer, configNewFlashcard);
+        window.addEventListener('beforeunload', ()=>{
+            newFlashcardObserver.disconnect();
+        })
+    }
 }, setTimeoutTimeOnload); // needed 30ms on my machine for nodes to load and log, else nodeList.len==0.
 
