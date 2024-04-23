@@ -1,7 +1,9 @@
 const readClientHeightOnload=false; // else min-height statically set to 25vh; recall this is done to reduce volatility between slide heights and thus content jumping/jerking
-const setTimeoutTimeOnload=60; // need time for node to load in order to read clientHeight, else dynamic setting of min-height won't work
-const getLastCreatedFlashcard=true;  // else random fc
+// MARK: TODO
+const setTimeoutTimeOnload=60; // need time for node to load in order to read clientHeight, else dynamic setting of min-height won't work; TODO: mutation observer may work well here; 60ms is specific to my machine... and sometimes that wasn't long enough...
+const getLastCreatedFlashcard=true;  // else random fc onLoad
 
+// Development: whether to set fixed min-height on flashcard or allow YouTube or mermaid to dictate min-height. purpose: to reduce height volatility on fc slide 'pagination'
 if(readClientHeightOnload){
     if(getLastCreatedFlashcard){
         setTimeout(()=>{
@@ -78,6 +80,22 @@ getRandomFlashcardBtn?.addEventListener('click',function(e){
         })
     adjustFlashcardHeight();
 });
+
+// MARK: flashcard grading/scoring
+const btnGradesContainer= document.getElementById('btn-grades-container');
+btnGradesContainer?.addEventListener('click',event=>{
+    const target=event.target;
+    if(target && target.id){
+        const score=target.id.split('-');
+        const scoreMap={};
+        scoreMap[score[0]]=parseInt(score[1]);
+        scoreMap['lastReviewed']= (new Date().toISOString());
+        console.log(scoreMap)
+    }
+});
+
+
+
 
 /**
  * Add indicator button at bottom of carousel slides. Actually, it returns a button; you need to add it separately.
@@ -428,6 +446,7 @@ function adjustFlashcardHeight(){
  * @param {string} _id - The unique identifier for the flashcard document. It was originally derived from new Date().toISOString() upon flashcard creation.
  */
 function renderOptimizedFlashcard(queryObject, _id){
+    // used in btnSearch listener in dbQuery.searchWithPagination() in dbActions.js
     queryObject
         .getRecordByID(_id)
         .then(flashcard=>{
