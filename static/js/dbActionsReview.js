@@ -120,7 +120,6 @@ function renderFlashcard(flashcard){
 
     let indicatorBtnNum=0;
     for(const key in flashcard){
-        console.log('key:',key)
         if(['_id','_rev'].includes(key)){
             containerFlashcard?.setAttribute(`data-${key}`,flashcard[key]); // flashcard id/rev
         }
@@ -292,97 +291,99 @@ function renderFlashcard(flashcard){
 // EDGE: audio & video is truncated. firefox audio ok, video no work.
 async function renderAttachments(flashcard){
     // blob attachments ie image, audio, video files
-     const objectKeys = Object.keys(flashcard._attachments);
+    if(flashcard._attachments){
+        const objectKeys = Object.keys(flashcard._attachments);
+   
+        for(let i=0; i<objectKeys.length; i++){
+            const divContent=document.createElement('div'),
+                divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center';
+            divContent.classList.add(...divContentClass.split(' ')); // bootstrap classes
+            const divContentContainer=document.createElement('div'),
+                divContentContainerClass='carousel-item';
+            divContentContainer.classList.add(divContentContainerClass);
 
-    for(let i=0; i<objectKeys.length; i++){
-        const divContent=document.createElement('div'),
-              divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center';
-        divContent.classList.add(...divContentClass.split(' ')); // bootstrap classes
-        const divContentContainer=document.createElement('div'),
-              divContentContainerClass='carousel-item';
-        divContentContainer.classList.add(divContentContainerClass);
+            const containerIndicatorBtns=document.querySelector('.carousel-indicators');
+            const containerFlashcard= document.getElementById('flashcard-components-container');
 
-        const containerIndicatorBtns=document.querySelector('.carousel-indicators');
-        const containerFlashcard= document.getElementById('flashcard-components-container');
+            if(objectKeys[i].startsWith('image')){
+                const imageBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
+                    
+                const imgTag= document.createElement('img');
+                imgTag.alt='flashcard image you saved.';
+                imgTag.src=imageBlob;
 
-        if(objectKeys[i].startsWith('image')){
-            const imageBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
+                // Add event listener to revoke the URL after the image has loaded
+                imgTag.addEventListener('load', function() {
+                    URL.revokeObjectURL(imageBlob);
+                }, false);
+
+                // add image to container
+                divContent.append(imgTag);
+                divContentContainer.append(divContent);
+                containerFlashcard?.append(divContentContainer);
                 
-            const imgTag= document.createElement('img');
-            imgTag.alt='flashcard image you saved.';
-            imgTag.src=imageBlob;
-
-            // Add event listener to revoke the URL after the image has loaded
-            imgTag.addEventListener('load', function() {
-                URL.revokeObjectURL(imageBlob);
-            }, false);
-
-            // add image to container
-            divContent.append(imgTag);
-            divContentContainer.append(divContent);
-            containerFlashcard?.append(divContentContainer);
-            
-            // add indicator btn
-            if(containerIndicatorBtns){
-                const btnIndexPosition=containerIndicatorBtns.childElementCount;
-                const slideBtn=addIndicatorBtn(btnIndexPosition,false);
-                containerIndicatorBtns.append(slideBtn);
-            }     
-        }
-        if(objectKeys[i].startsWith('audio')){
-            const audioBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
-
-            const audioTag= document.createElement('audio');
-            audioTag.setAttribute('controls','true');
-
-            // Add event listener to revoke the URL after the audio has loaded
-            audioTag.addEventListener('canplaythrough', function() {
-                URL.revokeObjectURL(audioBlob);
-            }, false);
-
-            const sourceTag=document.createElement('source');
-            const mimeType=flashcard._attachments[objectKeys[i]].content_type;
-            sourceTag.type=mimeType;
-            sourceTag.src=audioBlob;
-
-            audioTag.append(sourceTag, "Your browser does not support the audio element. Upgrade to a modern browser.");
-
-            divContent.append(audioTag);
-            divContentContainer.append(divContent);
-            containerFlashcard?.append(divContentContainer);
-
-            if(containerIndicatorBtns){
-                const btnIndexPosition=containerIndicatorBtns.childElementCount;
-                const slideBtn=addIndicatorBtn(btnIndexPosition,false);
-                containerIndicatorBtns.append(slideBtn);
+                // add indicator btn
+                if(containerIndicatorBtns){
+                    const btnIndexPosition=containerIndicatorBtns.childElementCount;
+                    const slideBtn=addIndicatorBtn(btnIndexPosition,false);
+                    containerIndicatorBtns.append(slideBtn);
+                }     
             }
-        }
-        if(objectKeys[i].startsWith('video')){
-            const videoBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
+            if(objectKeys[i].startsWith('audio')){
+                const audioBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
 
-            const videoTag= document.createElement('video');
-            videoTag.setAttribute('controls','true');
+                const audioTag= document.createElement('audio');
+                audioTag.setAttribute('controls','true');
 
-            // Add event listener to revoke the URL after the audio has loaded
-            videoTag.addEventListener('canplaythrough', function() {
-                URL.revokeObjectURL(videoBlob);
-            }, false);
+                // Add event listener to revoke the URL after the audio has loaded
+                audioTag.addEventListener('canplaythrough', function() {
+                    URL.revokeObjectURL(audioBlob);
+                }, false);
 
-            const sourceTag=document.createElement('source');
-            const mimeType=flashcard._attachments[objectKeys[i]].content_type;
-            sourceTag.type=mimeType;
-            sourceTag.src=videoBlob;
+                const sourceTag=document.createElement('source');
+                const mimeType=flashcard._attachments[objectKeys[i]].content_type;
+                sourceTag.type=mimeType;
+                sourceTag.src=audioBlob;
 
-            videoTag.append(sourceTag, "Your browser does not support the video element. Upgrade to a modern browser.");
+                audioTag.append(sourceTag, "Your browser does not support the audio element. Upgrade to a modern browser.");
 
-            divContent.append(videoTag);
-            divContentContainer.append(divContent);
-            containerFlashcard?.append(divContentContainer);
+                divContent.append(audioTag);
+                divContentContainer.append(divContent);
+                containerFlashcard?.append(divContentContainer);
 
-            if(containerIndicatorBtns){
-                const btnIndexPosition=containerIndicatorBtns.childElementCount;
-                const slideBtn=addIndicatorBtn(btnIndexPosition,false);
-                containerIndicatorBtns.append(slideBtn);
+                if(containerIndicatorBtns){
+                    const btnIndexPosition=containerIndicatorBtns.childElementCount;
+                    const slideBtn=addIndicatorBtn(btnIndexPosition,false);
+                    containerIndicatorBtns.append(slideBtn);
+                }
+            }
+            if(objectKeys[i].startsWith('video')){
+                const videoBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
+
+                const videoTag= document.createElement('video');
+                videoTag.setAttribute('controls','true');
+
+                // Add event listener to revoke the URL after the audio has loaded
+                videoTag.addEventListener('canplaythrough', function() {
+                    URL.revokeObjectURL(videoBlob);
+                }, false);
+
+                const sourceTag=document.createElement('source');
+                const mimeType=flashcard._attachments[objectKeys[i]].content_type;
+                sourceTag.type=mimeType;
+                sourceTag.src=videoBlob;
+
+                videoTag.append(sourceTag, "Your browser does not support the video element. Upgrade to a modern browser.");
+
+                divContent.append(videoTag);
+                divContentContainer.append(divContent);
+                containerFlashcard?.append(divContentContainer);
+
+                if(containerIndicatorBtns){
+                    const btnIndexPosition=containerIndicatorBtns.childElementCount;
+                    const slideBtn=addIndicatorBtn(btnIndexPosition,false);
+                    containerIndicatorBtns.append(slideBtn);
+                }
             }
         }
     }
