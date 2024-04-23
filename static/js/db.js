@@ -253,7 +253,7 @@ class Flashcard {
 
     _constructFlashcardDocument(data){
         /* Finalize a single flashCard document from the data entered in Flashcard Builder form
-        *   by adding `_id` property to input dataset.
+        *   by adding `_id` and 'score' properties to input dataset.
         */
 
         /** @type {Object} */
@@ -263,6 +263,7 @@ class Flashcard {
         }
         // NOTE: .toISOString() => returns UTC time, as indicated by the `Z` at the end of stamp.
         const flashCardID={_id: new Date().toISOString()};
+        flashCardID['score']=0; // base score representing un-viewed flashcards. Grades mapped from A:5 thru F:1, base 0.
         const flashCardObject=Object.assign(data,flashCardID);
         return flashCardObject;
     }

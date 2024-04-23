@@ -287,8 +287,8 @@ function renderFlashcard(flashcard){
 
     renderAttachments(flashcard);
 }
-// MARK: BUG: audio video
-// EDGE: audio & video is truncated. firefox audio ok, video no work.
+// MARK: ADD revokeURL to grades
+// EDGE: audio & video is truncates, bc strict with revokeObjectURL; add toggle btn. firefox audio ok, video no work.
 async function renderAttachments(flashcard){
     // blob attachments ie image, audio, video files
     if(flashcard._attachments){
@@ -336,9 +336,9 @@ async function renderAttachments(flashcard){
                 audioTag.setAttribute('controls','true');
 
                 // Add event listener to revoke the URL after the audio has loaded
-                audioTag.addEventListener('canplaythrough', function() {
-                    URL.revokeObjectURL(audioBlob);
-                }, false);
+                // audioTag.addEventListener('canplaythrough', function() {
+                //     URL.revokeObjectURL(audioBlob);
+                // }, false);
 
                 const sourceTag=document.createElement('source');
                 const mimeType=flashcard._attachments[objectKeys[i]].content_type;
@@ -364,9 +364,9 @@ async function renderAttachments(flashcard){
                 videoTag.setAttribute('controls','true');
 
                 // Add event listener to revoke the URL after the audio has loaded
-                videoTag.addEventListener('canplaythrough', function() {
-                    URL.revokeObjectURL(videoBlob);
-                }, false);
+                // videoTag.addEventListener('canplaythrough', function() {
+                //     URL.revokeObjectURL(videoBlob);
+                // }, false);
 
                 const sourceTag=document.createElement('source');
                 const mimeType=flashcard._attachments[objectKeys[i]].content_type;
