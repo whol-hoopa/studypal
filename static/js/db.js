@@ -1,5 +1,28 @@
+const userAgent = window.navigator.userAgent;
+let ACTIVE_BROWSER=null;
+if (userAgent.indexOf("Firefox") > -1) {
+    console.log("You're using Firefox");
+    ACTIVE_BROWSER='test';
+} else if (userAgent.indexOf("Edg") > -1) {
+    console.log("You're using Microsoft Edge");
+    ACTIVE_BROWSER='myPouchDB';
+} else if (userAgent.indexOf("Chrome") > -1) {
+    console.log("You're using Chrome");
+    ACTIVE_BROWSER='myPouchDB';
+} else if (userAgent.indexOf("Safari") > -1) {
+    console.log("You're using Safari");
+    ACTIVE_BROWSER='test';
+} else {
+    console.log("Browser not recognized");
+    ACTIVE_BROWSER='test';
+}
+
+
+
+
 const configDB={
-    namePouchDB:'test',
+    // namePouchDB:'test',
+    namePouchDB: ACTIVE_BROWSER,
     remoteCouchURL:`http://127.0.0.1:5984/${this.namePouchDB}`,
     syncPouchToCouch:false,
     listenForChanges:true,
@@ -419,8 +442,17 @@ class Query {
     }
 
 
-
-
+    /**
+     * Returns a promise that resolves to a blob url, which can be assigned to img[ src=blobURL ] for example.
+     * @param {string} _id - PouchDB _id for flashcard document.
+     * @param {string} attachmentName - Developer defined Object key mapped to Blob object representing binary object e.g. "video.mp4", "foo", etc for image, audio, video file.
+     * @returns {Promise<string>} Returns a promise to resolve a document_id and attachment_name with a blob url.
+     */
+    async getAttachmentBlobURL(_id, attachmentName){
+        const blob= await this.db.getAttachment(_id, attachmentName);
+        const blobURL= URL.createObjectURL(blob);
+        return blobURL;
+    }
 
 
 

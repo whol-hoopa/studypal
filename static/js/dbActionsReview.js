@@ -79,13 +79,19 @@ getRandomFlashcardBtn?.addEventListener('click',function(e){
     adjustFlashcardHeight();
 });
 
+/**
+ * Add indicator button at bottom of carousel slides.
+ * @param {number} indexNum - Index to position the carousel indicator button. 
+ * @param {boolean} isFirstBtn - Set to true for the first instance of an added button.
+ * @returns
+ */
 function addIndicatorBtn(indexNum, isFirstBtn){
     /* add indicator button at bottom of carousel slides. */
     isFirstBtn=isFirstBtn||false;
     const slideBtn=document.createElement('button');
     slideBtn.setAttribute('type','button');
     slideBtn.setAttribute('data-bs-target','#carouselIndicators');
-    slideBtn.setAttribute('data-bs-slide-to',indexNum);
+    slideBtn.setAttribute('data-bs-slide-to',indexNum.toString());
     slideBtn.setAttribute('aria-label',`Slide ${indexNum+1}`);
     if(isFirstBtn){
         slideBtn.setAttribute('class','active');
@@ -104,10 +110,10 @@ function renderFlashcard(flashcard){
     containerFlashcard.innerHTML="";
     const flashcardFrag=document.createDocumentFragment();
     const indicatorBtnFrag=document.createDocumentFragment();
-
+    console.log(flashcard)
     let indicatorBtnNum=0;
     for(const key in flashcard){
-
+        
         if(['_id','_rev'].includes(key)){
             containerFlashcard?.setAttribute(`data-${key}`,flashcard[key]); // flashcard id/rev
         }else if(key==='tags'){
@@ -125,13 +131,64 @@ function renderFlashcard(flashcard){
             const tagContainer=document.getElementById('tag-container');
             tagContainer.innerHTML='';
             tagContainer?.append(fragmentElement);                
-        }else if(key==='_attachments'){
-            console.log('attachments:\n',flashcard[key])
-        }else{
+        }
+        // else if(key==='_attachments'){
+        //     // blob attachments ie image, audio, video files
+
+        //     // WET:
+        //     const divContent=document.createElement('div'),
+        //     divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // bootstrap classes on element
+        //         //   divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column overflow-management';
+        //             // flex-column else elements will display horizontally, not desired here.
+        //             // justify-content-center align-items-center: this inhibits overflow-management from working; led to non-viewable content on overflow-x. dynamic removal of those rules added scroll-x
+        //     const divContentContainer=document.createElement('div'),
+        //           divContentContainerClass='carousel-item';
+        //     console.log('attachments:\n',flashcard[key])
+        //     const attachmentObject=flashcard[key];
+        //     const objectKeys = Object.keys(flashcard[key]);
+
+        //     for(let i=0; i<objectKeys.length; i++){
+        //         if(objectKeys[i].startsWith('image')){
+        //             
+        //             // create blob url
+        //             const imageObject=attachmentObject[objectKeys[i]];
+        //             const mimeType= imageObject.content_type;
+        //             const imageBlob= new Blob([imageObject],{type: mimeType});
+        //             const IMAGE_URL= URL.createObjectURL(imageBlob);
+
+        //             // populate image
+        //             const imgTag= document.createElement('img');
+        //             imgTag.alt='flashcard image you saved.';
+        //             imgTag.src=IMAGE_URL;
+                    
+        //             // add to DOM
+        //             divContentContainerClass.append(divContent,imgTag);
+
+        //             // clean-up
+        //             URL.revokeObjectURL(IMAGE_URL);
+        //             console.log(divContent)
+
+        //         }
+        //         if(objectKeys[i].startsWith('audio')){
+        //             const audioObject=attachmentObject[objectKeys[i]];
+        //             console.log(audioObject.content_type)
+        //         }
+        //         if(objectKeys[i].startsWith('video')){
+        //             const videoObject=attachmentObject[objectKeys[i]];
+        //             console.log(videoObject.content_type)
+        //         }
+        //     }
+        //     // WET:
+        //         // re-creating/populating/setting bootstrap classes on element
+        //         divContent.classList.add(...divContentClass.split(' '));
+        //         divContentContainer.append(divContent);
+        //         divContentContainer.classList.add(divContentContainerClass);
+        // }
+        else{
             console.log(`${key}: ${flashcard[key]}`);
             // MARK: Overflow container
             const divContent=document.createElement('div'),
-                  divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center';
+                  divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // bootstrap classes on element
                 //   divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column overflow-management';
                     // flex-column else elements will display horizontally, not desired here.
                     // justify-content-center align-items-center: this inhibits overflow-management from working; led to non-viewable content on overflow-x. dynamic removal of those rules added scroll-x
@@ -150,7 +207,7 @@ function renderFlashcard(flashcard){
             if(key==='input-answer'){
                 divContent.textContent=flashcard[key]; // flashcard text
 
-                const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                const slideBtn=addIndicatorBtn(indicatorBtnNum,false);
                 indicatorBtnFrag.append(slideBtn);
                 indicatorBtnNum++;
             }
@@ -179,14 +236,14 @@ function renderFlashcard(flashcard){
                   });
                 divContent.innerHTML=markdownConverter.makeHtml(flashcard[key]); // flashcard text
                 
-                const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                const slideBtn=addIndicatorBtn(indicatorBtnNum,false);
                 indicatorBtnFrag.append(slideBtn);
                 indicatorBtnNum++;
             }
             if(key==='input-answer-latex'){
                 divContent.textContent=flashcard[key]; // flashcard text
                 
-                const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                const slideBtn=addIndicatorBtn(indicatorBtnNum,false);
                 indicatorBtnFrag.append(slideBtn);
                 indicatorBtnNum++;
             }
@@ -196,7 +253,7 @@ function renderFlashcard(flashcard){
                 divContentContainer.classList.add('active','invisible'); // must be active to render, set clientHeight, get rendered clientHeight; active removed below, causes flashing.
                 divContent.setAttribute('id', 'mermaidElem');
                 // mermaid.init(undefined, divContent);
-                const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                const slideBtn=addIndicatorBtn(indicatorBtnNum,false);
                 indicatorBtnFrag.append(slideBtn);
                 indicatorBtnNum++;
             }
@@ -210,7 +267,7 @@ function renderFlashcard(flashcard){
                 aTag.textContent=name_url[0]; // flashcard text
                 divContent.append(aTag);
 
-                const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                const slideBtn=addIndicatorBtn(indicatorBtnNum,false);
                 indicatorBtnFrag.append(slideBtn);
                 indicatorBtnNum++;
             }
@@ -242,10 +299,155 @@ function renderFlashcard(flashcard){
                 divContentContainer.classList.add('active','invisible'); // must be active to render, set clientHeight, get rendered clientHeight, invisible prevents flashing; these classes removed below.
                 divContentContainer.setAttribute('id', 'youTubeElemContainer');
 
-                const slideBtn=addIndicatorBtn(indicatorBtnNum);
+                const slideBtn=addIndicatorBtn(indicatorBtnNum,false);
                 indicatorBtnFrag.append(slideBtn);
                 indicatorBtnNum++;
+            }       
+            if(key==='_attachments'){
+                // blob attachments ie image, audio, video files
+                console.log(flashcard)
+                // WET:
+                // const divContent=document.createElement('div'),
+                // divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // bootstrap classes on element
+                //     //   divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column overflow-management';
+                //         // flex-column else elements will display horizontally, not desired here.
+                //         // justify-content-center align-items-center: this inhibits overflow-management from working; led to non-viewable content on overflow-x. dynamic removal of those rules added scroll-x
+                // const divContentContainer=document.createElement('div'),
+                //       divContentContainerClass='carousel-item';
+
+                console.log('attachments:\n',flashcard[key])
+                const attachmentObject=flashcard[key];
+                const objectKeys = Object.keys(flashcard[key]);
+    
+                for(let i=0; i<objectKeys.length; i++){
+                    if(objectKeys[i].startsWith('image')){
+
+                        dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i])
+                            .then(blobURL=>{
+                                // populate image
+                                const imgTag= document.createElement('img');
+                                imgTag.alt='flashcard image you saved.';
+                                imgTag.src=blobURL;
+                                // console.log(imgTag)
+
+                                
+
+                                const slideBtn=addIndicatorBtn(indicatorBtnNum,false);
+                                indicatorBtnFrag.append(slideBtn);
+                                indicatorBtnNum++;
+                                const containerIndicatorBtns=document.querySelector('.carousel-indicators');
+                                containerIndicatorBtns?.append(indicatorBtnFrag)
+            
+                                // Add event listener to revoke the URL after the image has loaded
+                                imgTag.addEventListener('load', function() {
+                                    URL.revokeObjectURL(blobURL);
+                                }, false);
+
+                                divContent.append(imgTag);
+                            });    
+                    }
+                    if(objectKeys[i].startsWith('audio')){
+                        dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i])
+                            .then(blobURL=>{
+                                // populate audio
+                                console.log('pop audio')
+                                const audioTag= document.createElement('audio');
+                                audioTag.setAttribute('controls','true');
+
+                                const sourceTag=document.createElement('source');
+                                const mimeType=attachmentObject[objectKeys[i]].content_type;
+                                sourceTag.type=mimeType;
+                                sourceTag.src=blobURL;
+
+                                audioTag.append(sourceTag, "Your browser does not support the audio element. Upgrade to a modern browser.");
+
+                                const divContent=document.createElement('div'),
+                                      divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // bootstrap classes on element
+                                divContent.classList.add(...divContentClass.split(' '));
+
+                                // MARK: BUG
+                                // when audio is the only answer, this div is extraneous and breaks ui.
+                                // when including multi answer, ui breaks if divContentContainer commented out
+                                // using getAttachmentBlobURL() maybe causing this issue bc it's async; cant use external var to append as a unit.
+                                // try to renaming all var in this block did not fix. 
+
+                                const divContentContainer=document.createElement('div'),
+                                      divContentContainerClass='carousel-item';
+                                divContentContainer.classList.add(divContentContainerClass);
+
+                                divContent.append(audioTag);
+                                divContentContainer.append(divContent);
+                                const containerFlashcard= document.getElementById('flashcard-components-container');
+                                containerFlashcard?.append(divContentContainer);
+
+                                const containerIndicatorBtns=document.querySelector('.carousel-indicators');
+                                if(containerIndicatorBtns){
+                                    console.log(containerIndicatorBtns)
+                                    console.log(containerIndicatorBtns.childElementCount)
+                                    const btnIndexPosition=containerIndicatorBtns.childElementCount;
+                                    const slideBtn=addIndicatorBtn(btnIndexPosition,false);
+                                    containerIndicatorBtns.append(slideBtn);
+                                }
+            
+                                // Add event listener to revoke the URL after the audio has loaded
+                                audioTag.addEventListener('canplaythrough', function() {
+                                    URL.revokeObjectURL(blobURL);
+                                }, false);
+                            });
+                    }
+                    if(objectKeys[i].startsWith('video')){
+                        dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i])
+                            .then(blobURL=>{
+                                // populate video
+                                const videoTag= document.createElement('video');
+                                videoTag.setAttribute('controls','true');
+
+                                const sourceTag=document.createElement('source');
+                                const mimeType=attachmentObject[objectKeys[i]].content_type;
+                                sourceTag.type=mimeType;
+                                sourceTag.src=blobURL;
+
+                                videoTag.append(sourceTag, "Your browser does not support the video element. Upgrade to a modern browser.");
+
+                                const divContent=document.createElement('div'),
+                                      divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // bootstrap classes on element
+                                divContent.classList.add(...divContentClass.split(' '));
+
+                                // MARK: BUG
+                                // EDGE: audio & video is truncated. firefox audio ok.
+
+                                const divContentContainer=document.createElement('div'),
+                                      divContentContainerClass='carousel-item';
+                                divContentContainer.classList.add(divContentContainerClass);
+
+                                divContent.append(videoTag);
+                                divContentContainer.append(divContent);
+                                const containerFlashcard= document.getElementById('flashcard-components-container');
+                                containerFlashcard?.append(divContentContainer);
+
+                                const containerIndicatorBtns=document.querySelector('.carousel-indicators');
+                                if(containerIndicatorBtns){
+                                    const btnIndexPosition=containerIndicatorBtns.childElementCount;
+                                    const slideBtn=addIndicatorBtn(btnIndexPosition,false);
+                                    containerIndicatorBtns.append(slideBtn);
+                                }
+            
+                                // Add event listener to revoke the URL after the audio has loaded
+                                videoTag.addEventListener('canplaythrough', function() {
+                                    URL.revokeObjectURL(blobURL);
+                                }, false);
+                            });
+                    }
+                }
+
+                // WET:
+                    // re-creating/populating/setting bootstrap classes on element
+                    // divContent.classList.add(...divContentClass.split(' '));
+                    // divContentContainer.append(divContent);
+                    // divContentContainer.classList.add(divContentContainerClass);
             }
+
+            // re-creating/populating/setting bootstrap classes on element
             divContent.classList.add(...divContentClass.split(' '));
             divContentContainer.append(divContent);
             divContentContainer.classList.add(divContentContainerClass);
@@ -274,20 +476,26 @@ function adjustFlashcardHeight(){
             and thus rendered content volatility.
         Centering with flexBox didn't solve centering; volatility remains.
 
+        Current code observe's YouTube and mermaid slides to set maxHeight when not hard coded.
+            Visibility is set in renderFlashcard(); card must be visible to read rendered height.
+
         Setting timeout required to allow time for rendering so
         clientHeight property can be set by browser and thus read, else it's 0.
     */
     setTimeout(()=>{
         let maxHeight=0;
-        const setByMarkdownOrYouTube=false;
-        if(setByMarkdownOrYouTube){
+        const setByMermaidOrYouTube=false;
+        if(setByMermaidOrYouTube){
             const cardComponents=document.getElementById('flashcard-components-container');
-            for(let i of cardComponents?.children){
-                maxHeight=i.clientHeight > maxHeight ? i.clientHeight : maxHeight;
+            if(cardComponents){
+                for(let i of cardComponents.children){
+                    maxHeight=i.clientHeight > maxHeight ? i.clientHeight : maxHeight;
+                }
+                document.getElementById('carouselIndicators')?.setAttribute('style',`min-height: ${maxHeight}px`);
             }
-            document.getElementById('carouselIndicators')?.setAttribute('style',`min-height: ${maxHeight}px`);
         }
         else{
+            // hard coded height rather than arbitrary maxHeight of observed fc component slide.
             document.getElementById('carouselIndicators')?.setAttribute('style',`min-height: 25vh;`);
         }
     },1);
@@ -316,6 +524,7 @@ function renderOptimizedFlashcard(queryObject, _id){
 /**
  * Observes element(s) for change and responds according to code written.
  * @param {function} mutationHandler - callback function to handle mutation event.
+ * @param {MutationObserver|null} observerToDisconnect - An instance of any mutation observer to disconnect, or null if not applicable.
  * @returns {MutationObserver} The Created MutationObserver.
  */
 function mutationObserver(mutationHandler, observerToDisconnect){
@@ -360,7 +569,7 @@ function carouselInnerContainerHandler(mutation, thisObserver, observerToDisconn
         }
 
         const flashcardComponentObserver=mutationObserver(carouselItemsObserverHandler, observerToDisconnect);
-        const configFlashcardComponents = { attributes: true };
+        const configFlashcardComponents = { attributes: true }; // observing element's attr
         mutation.target.childNodes.forEach(targetNode=>{
             // Start observing the target node for changes
             flashcardComponentObserver.observe(targetNode, configFlashcardComponents);
@@ -375,7 +584,7 @@ setTimeout(() => {
     const flashcardComponentObserver= mutationObserver(carouselItemsObserverHandler,null);
     
     const targetNodes= document.querySelectorAll('.carousel-item');
-    const configFlashcardComponents= { attributes: true };
+    const configFlashcardComponents= { attributes: true }; // observing element's attr
     targetNodes.forEach(targetNode=>{
         // Start observing the target node for changes
         flashcardComponentObserver.observe(targetNode, configFlashcardComponents);
