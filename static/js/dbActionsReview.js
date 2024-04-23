@@ -80,7 +80,7 @@ getRandomFlashcardBtn?.addEventListener('click',function(e){
 });
 
 /**
- * Add indicator button at bottom of carousel slides.
+ * Add indicator button at bottom of carousel slides. Actually, it returns a button; you need to add it separately.
  * @param {number} indexNum - Index to position the carousel indicator button. 
  * @param {boolean} isFirstBtn - Set to true for the first instance of an added button.
  * @returns
@@ -106,17 +106,25 @@ function renderFlashcard(flashcard){
             DOM must be rendered first in order to read element's
                 clientHeight property to get current height.
     */
+    const allowableIdsToRender=[
+        'input-question', 'input-answer', 'input-answer-markdown',
+        'input-answer-latex', 'input-answer-mermaid', 
+        'input-answer-webpage-anchor', 'input-youtube'
+    ];
     const containerFlashcard=document.getElementById('flashcard-components-container');
-    containerFlashcard.innerHTML="";
+    if(containerFlashcard){
+        containerFlashcard.innerHTML="";
+    }
     const flashcardFrag=document.createDocumentFragment();
     const indicatorBtnFrag=document.createDocumentFragment();
-    console.log(flashcard)
+
     let indicatorBtnNum=0;
     for(const key in flashcard){
-        
+        console.log('key:',key)
         if(['_id','_rev'].includes(key)){
             containerFlashcard?.setAttribute(`data-${key}`,flashcard[key]); // flashcard id/rev
-        }else if(key==='tags'){
+        }
+        if(key==='tags'){
             // Hash tag processing
             const tags=flashcard[key];
             const tagsArray=tags.split(',');
@@ -129,71 +137,20 @@ function renderFlashcard(flashcard){
                 fragmentElement.append(div);
             }
             const tagContainer=document.getElementById('tag-container');
-            tagContainer.innerHTML='';
+            if(tagContainer){
+                tagContainer.innerHTML='';
+            }
             tagContainer?.append(fragmentElement);                
         }
-        // else if(key==='_attachments'){
-        //     // blob attachments ie image, audio, video files
-
-        //     // WET:
-        //     const divContent=document.createElement('div'),
-        //     divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // bootstrap classes on element
-        //         //   divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column overflow-management';
-        //             // flex-column else elements will display horizontally, not desired here.
-        //             // justify-content-center align-items-center: this inhibits overflow-management from working; led to non-viewable content on overflow-x. dynamic removal of those rules added scroll-x
-        //     const divContentContainer=document.createElement('div'),
-        //           divContentContainerClass='carousel-item';
-        //     console.log('attachments:\n',flashcard[key])
-        //     const attachmentObject=flashcard[key];
-        //     const objectKeys = Object.keys(flashcard[key]);
-
-        //     for(let i=0; i<objectKeys.length; i++){
-        //         if(objectKeys[i].startsWith('image')){
-        //             
-        //             // create blob url
-        //             const imageObject=attachmentObject[objectKeys[i]];
-        //             const mimeType= imageObject.content_type;
-        //             const imageBlob= new Blob([imageObject],{type: mimeType});
-        //             const IMAGE_URL= URL.createObjectURL(imageBlob);
-
-        //             // populate image
-        //             const imgTag= document.createElement('img');
-        //             imgTag.alt='flashcard image you saved.';
-        //             imgTag.src=IMAGE_URL;
-                    
-        //             // add to DOM
-        //             divContentContainerClass.append(divContent,imgTag);
-
-        //             // clean-up
-        //             URL.revokeObjectURL(IMAGE_URL);
-        //             console.log(divContent)
-
-        //         }
-        //         if(objectKeys[i].startsWith('audio')){
-        //             const audioObject=attachmentObject[objectKeys[i]];
-        //             console.log(audioObject.content_type)
-        //         }
-        //         if(objectKeys[i].startsWith('video')){
-        //             const videoObject=attachmentObject[objectKeys[i]];
-        //             console.log(videoObject.content_type)
-        //         }
-        //     }
-        //     // WET:
-        //         // re-creating/populating/setting bootstrap classes on element
-        //         divContent.classList.add(...divContentClass.split(' '));
-        //         divContentContainer.append(divContent);
-        //         divContentContainer.classList.add(divContentContainerClass);
-        // }
-        else{
-            console.log(`${key}: ${flashcard[key]}`);
+        if(allowableIdsToRender.includes(key)){
+            console.log(`${key}:`, flashcard[key]);
             // MARK: Overflow container
             const divContent=document.createElement('div'),
                   divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // bootstrap classes on element
-                //   divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column overflow-management';
                     // flex-column else elements will display horizontally, not desired here.
                     // justify-content-center align-items-center: this inhibits overflow-management from working; led to non-viewable content on overflow-x. dynamic removal of those rules added scroll-x
             const divContentContainer=document.createElement('div'),
-                divContentContainerClass='carousel-item';
+                  divContentContainerClass='carousel-item';
 
             if(key==='input-question'){
                 divContent.textContent=flashcard[key]; // flashcard text
@@ -242,7 +199,7 @@ function renderFlashcard(flashcard){
             }
             if(key==='input-answer-latex'){
                 divContent.textContent=flashcard[key]; // flashcard text
-                
+                console.log('latex')
                 const slideBtn=addIndicatorBtn(indicatorBtnNum,false);
                 indicatorBtnFrag.append(slideBtn);
                 indicatorBtnNum++;
@@ -252,7 +209,7 @@ function renderFlashcard(flashcard){
                 divContent.classList.add('mermaid');
                 divContentContainer.classList.add('active','invisible'); // must be active to render, set clientHeight, get rendered clientHeight; active removed below, causes flashing.
                 divContent.setAttribute('id', 'mermaidElem');
-                // mermaid.init(undefined, divContent);
+ 
                 const slideBtn=addIndicatorBtn(indicatorBtnNum,false);
                 indicatorBtnFrag.append(slideBtn);
                 indicatorBtnNum++;
@@ -303,149 +260,6 @@ function renderFlashcard(flashcard){
                 indicatorBtnFrag.append(slideBtn);
                 indicatorBtnNum++;
             }       
-            if(key==='_attachments'){
-                // blob attachments ie image, audio, video files
-                console.log(flashcard)
-                // WET:
-                // const divContent=document.createElement('div'),
-                // divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // bootstrap classes on element
-                //     //   divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column overflow-management';
-                //         // flex-column else elements will display horizontally, not desired here.
-                //         // justify-content-center align-items-center: this inhibits overflow-management from working; led to non-viewable content on overflow-x. dynamic removal of those rules added scroll-x
-                // const divContentContainer=document.createElement('div'),
-                //       divContentContainerClass='carousel-item';
-
-                console.log('attachments:\n',flashcard[key])
-                const attachmentObject=flashcard[key];
-                const objectKeys = Object.keys(flashcard[key]);
-    
-                for(let i=0; i<objectKeys.length; i++){
-                    if(objectKeys[i].startsWith('image')){
-
-                        dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i])
-                            .then(blobURL=>{
-                                // populate image
-                                const imgTag= document.createElement('img');
-                                imgTag.alt='flashcard image you saved.';
-                                imgTag.src=blobURL;
-                                // console.log(imgTag)
-
-                                
-
-                                const slideBtn=addIndicatorBtn(indicatorBtnNum,false);
-                                indicatorBtnFrag.append(slideBtn);
-                                indicatorBtnNum++;
-                                const containerIndicatorBtns=document.querySelector('.carousel-indicators');
-                                containerIndicatorBtns?.append(indicatorBtnFrag)
-            
-                                // Add event listener to revoke the URL after the image has loaded
-                                imgTag.addEventListener('load', function() {
-                                    URL.revokeObjectURL(blobURL);
-                                }, false);
-
-                                divContent.append(imgTag);
-                            });    
-                    }
-                    if(objectKeys[i].startsWith('audio')){
-                        dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i])
-                            .then(blobURL=>{
-                                // populate audio
-                                console.log('pop audio')
-                                const audioTag= document.createElement('audio');
-                                audioTag.setAttribute('controls','true');
-
-                                const sourceTag=document.createElement('source');
-                                const mimeType=attachmentObject[objectKeys[i]].content_type;
-                                sourceTag.type=mimeType;
-                                sourceTag.src=blobURL;
-
-                                audioTag.append(sourceTag, "Your browser does not support the audio element. Upgrade to a modern browser.");
-
-                                const divContent=document.createElement('div'),
-                                      divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // bootstrap classes on element
-                                divContent.classList.add(...divContentClass.split(' '));
-
-                                // MARK: BUG
-                                // when audio is the only answer, this div is extraneous and breaks ui.
-                                // when including multi answer, ui breaks if divContentContainer commented out
-                                // using getAttachmentBlobURL() maybe causing this issue bc it's async; cant use external var to append as a unit.
-                                // try to renaming all var in this block did not fix. 
-
-                                const divContentContainer=document.createElement('div'),
-                                      divContentContainerClass='carousel-item';
-                                divContentContainer.classList.add(divContentContainerClass);
-
-                                divContent.append(audioTag);
-                                divContentContainer.append(divContent);
-                                const containerFlashcard= document.getElementById('flashcard-components-container');
-                                containerFlashcard?.append(divContentContainer);
-
-                                const containerIndicatorBtns=document.querySelector('.carousel-indicators');
-                                if(containerIndicatorBtns){
-                                    console.log(containerIndicatorBtns)
-                                    console.log(containerIndicatorBtns.childElementCount)
-                                    const btnIndexPosition=containerIndicatorBtns.childElementCount;
-                                    const slideBtn=addIndicatorBtn(btnIndexPosition,false);
-                                    containerIndicatorBtns.append(slideBtn);
-                                }
-            
-                                // Add event listener to revoke the URL after the audio has loaded
-                                audioTag.addEventListener('canplaythrough', function() {
-                                    URL.revokeObjectURL(blobURL);
-                                }, false);
-                            });
-                    }
-                    if(objectKeys[i].startsWith('video')){
-                        dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i])
-                            .then(blobURL=>{
-                                // populate video
-                                const videoTag= document.createElement('video');
-                                videoTag.setAttribute('controls','true');
-
-                                const sourceTag=document.createElement('source');
-                                const mimeType=attachmentObject[objectKeys[i]].content_type;
-                                sourceTag.type=mimeType;
-                                sourceTag.src=blobURL;
-
-                                videoTag.append(sourceTag, "Your browser does not support the video element. Upgrade to a modern browser.");
-
-                                const divContent=document.createElement('div'),
-                                      divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // bootstrap classes on element
-                                divContent.classList.add(...divContentClass.split(' '));
-
-                                // MARK: BUG
-                                // EDGE: audio & video is truncated. firefox audio ok.
-
-                                const divContentContainer=document.createElement('div'),
-                                      divContentContainerClass='carousel-item';
-                                divContentContainer.classList.add(divContentContainerClass);
-
-                                divContent.append(videoTag);
-                                divContentContainer.append(divContent);
-                                const containerFlashcard= document.getElementById('flashcard-components-container');
-                                containerFlashcard?.append(divContentContainer);
-
-                                const containerIndicatorBtns=document.querySelector('.carousel-indicators');
-                                if(containerIndicatorBtns){
-                                    const btnIndexPosition=containerIndicatorBtns.childElementCount;
-                                    const slideBtn=addIndicatorBtn(btnIndexPosition,false);
-                                    containerIndicatorBtns.append(slideBtn);
-                                }
-            
-                                // Add event listener to revoke the URL after the audio has loaded
-                                videoTag.addEventListener('canplaythrough', function() {
-                                    URL.revokeObjectURL(blobURL);
-                                }, false);
-                            });
-                    }
-                }
-
-                // WET:
-                    // re-creating/populating/setting bootstrap classes on element
-                    // divContent.classList.add(...divContentClass.split(' '));
-                    // divContentContainer.append(divContent);
-                    // divContentContainer.classList.add(divContentContainerClass);
-            }
 
             // re-creating/populating/setting bootstrap classes on element
             divContent.classList.add(...divContentClass.split(' '));
@@ -457,7 +271,9 @@ function renderFlashcard(flashcard){
 
     containerFlashcard?.append(flashcardFrag);
     const containerIndicatorBtns=document.querySelector('.carousel-indicators');
-    containerIndicatorBtns.innerHTML="";
+    if(containerIndicatorBtns){
+        containerIndicatorBtns.innerHTML="";
+    }
     containerIndicatorBtns?.append(indicatorBtnFrag)
     const mermaidElem=document.getElementById('mermaidElem');
     mermaid.init(undefined, mermaidElem);
@@ -469,7 +285,109 @@ function renderFlashcard(flashcard){
         document.getElementById('youTubeElemContainer')?.classList.remove('active', 'invisible');
         document.getElementById('fc-question')?.classList.remove('invisible');
     }, 0);
+
+    renderAttachments(flashcard);
 }
+// MARK: BUG: audio video
+// EDGE: audio & video is truncated. firefox audio ok, video no work.
+async function renderAttachments(flashcard){
+    // blob attachments ie image, audio, video files
+     const objectKeys = Object.keys(flashcard._attachments);
+
+    for(let i=0; i<objectKeys.length; i++){
+        const divContent=document.createElement('div'),
+              divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center';
+        divContent.classList.add(...divContentClass.split(' ')); // bootstrap classes
+        const divContentContainer=document.createElement('div'),
+              divContentContainerClass='carousel-item';
+        divContentContainer.classList.add(divContentContainerClass);
+
+        const containerIndicatorBtns=document.querySelector('.carousel-indicators');
+        const containerFlashcard= document.getElementById('flashcard-components-container');
+
+        if(objectKeys[i].startsWith('image')){
+            const imageBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
+                
+            const imgTag= document.createElement('img');
+            imgTag.alt='flashcard image you saved.';
+            imgTag.src=imageBlob;
+
+            // Add event listener to revoke the URL after the image has loaded
+            imgTag.addEventListener('load', function() {
+                URL.revokeObjectURL(imageBlob);
+            }, false);
+
+            // add image to container
+            divContent.append(imgTag);
+            divContentContainer.append(divContent);
+            containerFlashcard?.append(divContentContainer);
+            
+            // add indicator btn
+            if(containerIndicatorBtns){
+                const btnIndexPosition=containerIndicatorBtns.childElementCount;
+                const slideBtn=addIndicatorBtn(btnIndexPosition,false);
+                containerIndicatorBtns.append(slideBtn);
+            }     
+        }
+        if(objectKeys[i].startsWith('audio')){
+            const audioBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
+
+            const audioTag= document.createElement('audio');
+            audioTag.setAttribute('controls','true');
+
+            // Add event listener to revoke the URL after the audio has loaded
+            audioTag.addEventListener('canplaythrough', function() {
+                URL.revokeObjectURL(audioBlob);
+            }, false);
+
+            const sourceTag=document.createElement('source');
+            const mimeType=flashcard._attachments[objectKeys[i]].content_type;
+            sourceTag.type=mimeType;
+            sourceTag.src=audioBlob;
+
+            audioTag.append(sourceTag, "Your browser does not support the audio element. Upgrade to a modern browser.");
+
+            divContent.append(audioTag);
+            divContentContainer.append(divContent);
+            containerFlashcard?.append(divContentContainer);
+
+            if(containerIndicatorBtns){
+                const btnIndexPosition=containerIndicatorBtns.childElementCount;
+                const slideBtn=addIndicatorBtn(btnIndexPosition,false);
+                containerIndicatorBtns.append(slideBtn);
+            }
+        }
+        if(objectKeys[i].startsWith('video')){
+            const videoBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
+
+            const videoTag= document.createElement('video');
+            videoTag.setAttribute('controls','true');
+
+            // Add event listener to revoke the URL after the audio has loaded
+            videoTag.addEventListener('canplaythrough', function() {
+                URL.revokeObjectURL(videoBlob);
+            }, false);
+
+            const sourceTag=document.createElement('source');
+            const mimeType=flashcard._attachments[objectKeys[i]].content_type;
+            sourceTag.type=mimeType;
+            sourceTag.src=videoBlob;
+
+            videoTag.append(sourceTag, "Your browser does not support the video element. Upgrade to a modern browser.");
+
+            divContent.append(videoTag);
+            divContentContainer.append(divContent);
+            containerFlashcard?.append(divContentContainer);
+
+            if(containerIndicatorBtns){
+                const btnIndexPosition=containerIndicatorBtns.childElementCount;
+                const slideBtn=addIndicatorBtn(btnIndexPosition,false);
+                containerIndicatorBtns.append(slideBtn);
+            }
+        }
+    }
+}
+
 function adjustFlashcardHeight(){
     /* set min-height of all containers to tallest container height.
         purpose: reduce height volatility between slides,
