@@ -374,6 +374,29 @@ class Query {
         }
     }
 
+    /**
+     * This method updates the flashcard with a current score and a last reviewed date.
+     * @param {string} _id - The PouchDB document ID assigned when flashcard was first created. It is a UTC isoSting.
+     * @param {string} _rev - The revision ID for the flashcard provided by PouchDB to track the document's version for reconciliation.
+     * @param {Object} scoreLastReviewedObject - The object containing the score and last reviewed date of the flashcard.
+     * @param {number} scoreLastReviewedObject.score - The score the user gave themselves on the their performance on the flashcard.
+     * @param {string} scoreLastReviewedObject.lastReviewed - The isoString date when the user last graded themselves on their review of the flashcard.
+     */
+    async updateScoreAndLastReviewedDate(_id, _rev, scoreLastReviewedObject){
+        try{
+            const options={"rev": _rev};
+            const flashcard= await this.db.get(_id, options);
+
+            const updatedFlashcard= Object.assign(flashcard, scoreLastReviewedObject);
+            
+            const updateStatus= await this.db.put(updatedFlashcard);
+            console.log('Flashcard update status:\n', updateStatus);
+        }
+        catch(err){
+            console.error('Error updating score and last reviewed fields', err);
+        }
+    }
+
     async searchWithPagination(regex, lastId, isDescending, isCaseSensitive){
         /* Use backslash to escape regex special characters.
             e.g. `h\.t`
@@ -542,6 +565,7 @@ class Query {
     }
 
     /* Persistent query */
+    // creating an index doesn't work well with sidebar search functionality that uses regex, I don't think.
     // _indexForQuestion(){
     //     const designDoc ={
     //         _id: '_design_docs/questions',

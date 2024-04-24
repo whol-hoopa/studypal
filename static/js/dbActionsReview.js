@@ -56,6 +56,20 @@ if(readClientHeightOnload){
     }
 }
 
+// ObjectURLs must be revoked when no longer used to avoid memory leaks. Especially for large files like video|audio.
+let global_AUDIO_OBJECT_URL=null;
+let global_VIDEO_OBJECT_URL=null;
+function revokeObjectURLs(){
+    if(global_AUDIO_OBJECT_URL){
+        URL.revokeObjectURL(global_AUDIO_OBJECT_URL);
+        global_AUDIO_OBJECT_URL=null;
+    }
+    if(global_VIDEO_OBJECT_URL){
+        URL.revokeObjectURL(global_VIDEO_OBJECT_URL);
+        global_VIDEO_OBJECT_URL=null;
+    }
+}
+
 
 // Review flashcard
 const getLastCreatedFlashcardBtn=document.getElementById('btn-last-created');
@@ -81,16 +95,27 @@ getRandomFlashcardBtn?.addEventListener('click',function(e){
     adjustFlashcardHeight();
 });
 
-// MARK: flashcard grading/scoring
+
 const btnGradesContainer= document.getElementById('btn-grades-container');
 btnGradesContainer?.addEventListener('click',event=>{
-    const target=event.target;
-    if(target && target.id){
-        const score=target.id.split('-');
+    const gradeBtn=event.target;
+    if(gradeBtn && gradeBtn.id){
+        const score=gradeBtn.id.split('-');
         const scoreMap={};
         scoreMap[score[0]]=parseInt(score[1]);
         scoreMap['lastReviewed']= (new Date().toISOString());
-        console.log(scoreMap)
+
+        const cardContainer= document.getElementById('flashcard-components-container');
+        const _id= cardContainer?.dataset._id;
+        const _rev= cardContainer?.dataset._rev;
+
+        // ADD moving average grade field/function
+        if(_id && _rev && scoreMap){
+
+            dbQuery.updateScoreAndLastReviewedDate(_id, _rev, scoreMap);
+        }
+
+        revokeObjectURLs(); // to avoid memory leaks from audio|video content
     }
 });
 
@@ -305,8 +330,7 @@ function renderFlashcard(flashcard){
 
     renderAttachments(flashcard);
 }
-// MARK: ADD revokeURL to grades
-// EDGE: audio & video is truncates, bc strict with revokeObjectURL; add toggle btn. firefox audio ok, video no work.
+
 async function renderAttachments(flashcard){
     // blob attachments ie image, audio, video files
     if(flashcard._attachments){
@@ -325,6 +349,7 @@ async function renderAttachments(flashcard){
 
             if(objectKeys[i].startsWith('image')){
                 const imageBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
+                    // global imageBlob not needed bc image behaves well when revoked here.
                     
                 const imgTag= document.createElement('img');
                 imgTag.alt='flashcard image you saved.';
@@ -348,20 +373,19 @@ async function renderAttachments(flashcard){
                 }     
             }
             if(objectKeys[i].startsWith('audio')){
-                const audioBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
-
+                global_AUDIO_OBJECT_URL= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
                 const audioTag= document.createElement('audio');
                 audioTag.setAttribute('controls','true');
 
-                // Add event listener to revoke the URL after the audio has loaded
+                // Add event listener to revoke the URL after the audio has loaded; doesn't work as expected on chromium; too strict.
                 // audioTag.addEventListener('canplaythrough', function() {
-                //     URL.revokeObjectURL(audioBlob);
+                //     URL.revokeObjectURL(global_AUDIO_OBJECT_URL);
                 // }, false);
 
                 const sourceTag=document.createElement('source');
                 const mimeType=flashcard._attachments[objectKeys[i]].content_type;
                 sourceTag.type=mimeType;
-                sourceTag.src=audioBlob;
+                sourceTag.src=global_AUDIO_OBJECT_URL;
 
                 audioTag.append(sourceTag, "Your browser does not support the audio element. Upgrade to a modern browser.");
 
@@ -376,20 +400,20 @@ async function renderAttachments(flashcard){
                 }
             }
             if(objectKeys[i].startsWith('video')){
-                const videoBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
+                global_AUDIO_OBJECT_URL= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
 
                 const videoTag= document.createElement('video');
                 videoTag.setAttribute('controls','true');
 
                 // Add event listener to revoke the URL after the audio has loaded
                 // videoTag.addEventListener('canplaythrough', function() {
-                //     URL.revokeObjectURL(videoBlob);
+                //     URL.revokeObjectURL(global_AUDIO_OBJECT_URL);
                 // }, false);
 
                 const sourceTag=document.createElement('source');
                 const mimeType=flashcard._attachments[objectKeys[i]].content_type;
                 sourceTag.type=mimeType;
-                sourceTag.src=videoBlob;
+                sourceTag.src=global_AUDIO_OBJECT_URL;
 
                 videoTag.append(sourceTag, "Your browser does not support the video element. Upgrade to a modern browser.");
 
