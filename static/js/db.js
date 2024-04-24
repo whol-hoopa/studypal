@@ -3,21 +3,23 @@ let ACTIVE_BROWSER=null;
 if (userAgent.indexOf("Firefox") > -1) {
     console.log("You're using Firefox");
     ACTIVE_BROWSER='studyPal';
-} else if (userAgent.indexOf("Edg") > -1) {
+} 
+else if (userAgent.indexOf("Edg") > -1) {
     console.log("You're using Microsoft Edge");
     ACTIVE_BROWSER='studyPal';
-} else if (userAgent.indexOf("Chrome") > -1) {
+} 
+else if (userAgent.indexOf("Chrome") > -1) {
     console.log("You're using Chrome");
     ACTIVE_BROWSER='studyPal';
-} else if (userAgent.indexOf("Safari") > -1) {
+} 
+else if (userAgent.indexOf("Safari") > -1) {
     console.log("You're using Safari");
     ACTIVE_BROWSER='studyPal';
-} else {
+} 
+else {
     console.log("Browser not recognized");
     ACTIVE_BROWSER='studyPal';
 }
-
-
 
 
 const configDB={
@@ -28,6 +30,7 @@ const configDB={
     listenForChanges:true,
     destroyPouchDB:false,
 };
+
 
 // where is CORS enabled? in the backend w/python? in couchdb _utils interface?
 // https://github.com/pouchdb/add-cors-to-couchdb
