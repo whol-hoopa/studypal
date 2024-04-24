@@ -572,19 +572,6 @@
                     <input required class="form-control w-50" type="text" id="fragment-textStart" placeholder="textStart" spellcheck="true">
                     <label for="fragment-textEnd" class="position-absolute aria-visible-only">textEnd [optional]</label>
                     <input class="form-control w-50" type="text" id="fragment-textEnd" placeholder="textEnd [optional]" spellcheck="true">
-
-                    <!-- <label for="fragment-domain" class="position-absolute aria-visible-only">Webpage URL</label>
-                    <input required class="form-control w-50" type="text" name="fragment-domain" id="fragment-domain" placeholder="Source URL" spellcheck="true">
-                    <label for="fragment-name" class="position-absolute aria-visible-only">Name link [optional]</label>
-                    <input class="form-control w-50" type="text" name="fragment-name" id="fragment-name" placeholder="Name link [optional]" spellcheck="true">
-                    <label for="fragment-prefix" class="position-absolute aria-visible-only">Prefix [optional]</label>
-                    <input class="form-control w-50" type="text" name="fragment-prefix" id="fragment-prefix" placeholder="prefix [optional]" spellcheck="true">
-                    <label for="fragment-suffix" class="position-absolute aria-visible-only">Suffix [optional]</label>
-                    <input class="form-control w-50" type="text" name="fragment-suffix" id="fragment-suffix" placeholder="suffix [optional]" spellcheck="true">
-                    <label for="fragment-textStart" class="position-absolute aria-visible-only">textStart</label>
-                    <input required class="form-control w-50" type="text" name="fragment-textStart" id="fragment-textStart" placeholder="textStart" spellcheck="true">
-                    <label for="fragment-textEnd" class="position-absolute aria-visible-only">textEnd [optional]</label>
-                    <input class="form-control w-50" type="text" name="fragment-textEnd" id="fragment-textEnd" placeholder="textEnd [optional]" spellcheck="true"> -->
                   </div>
 
 
@@ -1363,17 +1350,11 @@ pie
         const file = e.target.files;
         if (file && file[0]) {
           // adds file name below 'Choose file' btn
-          // const AUDIO_FILE = file[0];
-          // console.log(typeof AUDIO_FILE);
-          // console.log(AUDIO_FILE);
-          // console.log(new Blob([AUDIO_FILE], {type: AUDIO_FILE.type}));
-
           fileNameConfirmationText_audio.textContent = file[0].name;
           fileNameConfirmationText_audio.classList.add("text-success");
           fileNameConfirmationText_audio.classList.remove("text-warning");
 
           // audio preview
-          // AUDIO_URL=file[0].name; // this works if the audio file is a sibling to flashcard-builder.html
           AUDIO_URL = URL.createObjectURL(file[0]); // this creates a one-time unique URL that points to the local audio file.
           sourceElement_audio.src = AUDIO_URL;
           const mimeType = file[0].type;
@@ -1445,7 +1426,8 @@ pie
             width *= 0.3;
           }
           document.getElementById("video-element").setAttribute("width", width);
-          document.getElementById("video-element").load();
+          document.getElementById("video-element");
+          // document.getElementById("video-element").load();
           // get dimensions
           // const videoElement=document.createElement('video');
           // videoElement.src=VIDEO_URL;
@@ -1470,20 +1452,6 @@ pie
         fileNameConfirmationText_video.classList.remove("text-warning");
         revokeVideoURL();
       };
-
-      // Create flashcard button
-      // const createBtn = document.getElementById("create-btn");
-      // createBtn.addEventListener("click", function (e) {
-      //   e.preventDefault();
-
-      //   // const blob = inputElement_audio.files[0];
-      //   // console.log(blob);
-
-      //   // Memory clean up:
-      //   revokeImageURL();
-      //   revokeAudioURL();
-      //   revokeVideoURL();
-      // });
 
       window.addEventListener("beforeunload", () => {
         // Memory clean up:
@@ -1944,20 +1912,6 @@ pie
       });
     </script>
 
-    <!-- <script>
-      // dark mode toggler
-
-      const darkModeSwitch=document.getElementById('darkmode-toggler');
-      darkModeSwitch.onchange=function(){
-        const html = document.documentElement;
-        if(this.checked){
-          html.setAttribute('data-bs-theme','dark');
-          return;
-        }
-        html.setAttribute('data-bs-theme','light');
-      }
-    </script> -->
-
     <script>
       // dark mode toggler for textarea confirmation content
 
@@ -2018,36 +1972,5 @@ pie
       src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"
     ></script> -->
 
-    <script>
-      
-                
-
-      /*
-                // Assuming you have an <input type="file" id="myFileInput">
-                document.getElementById('myFileInput').addEventListener('change', function(e) {
-                    const file = e.target.files[0]; // This is a Blob object
-
-                    // Create a new PouchDB database
-                    const db = new PouchDB('my_database');
-
-                    // Create a new document with the Blob
-                    db.put({
-                        _id: 'my_document',
-                        _attachments: {
-                            'file': {
-                                content_type: file.type,
-                                data: file
-                            }
-                        }
-                    }).then(function(response) {
-                        console.log('Document created successfully');
-                    }).catch(function(error) {
-                        console.error('Error creating document:', error);
-                    });
-                });
-            */
-
-    
-    </script>
   </body>
 </html>
