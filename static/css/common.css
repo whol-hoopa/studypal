@@ -46,7 +46,10 @@ tr:hover:not(thead tr) {
 }
 
 code {
-  color: rgb(255, 25, 25) !important;
+  /* color: rgb(255, 25, 25) !important; */
+  /* color: var(--bs-primary) !important; */
+  /* color: var(--bs-secondary-text-emphasis) !important; */
+  color: var(--bs-primary-text-emphasis) !important;
 }
 
 /* may not be need after all, dynamic removal of flex centering rules took care of adding scroll-x

@@ -59,16 +59,17 @@ if(readClientHeightOnload){
 // ObjectURLs must be revoked when no longer used to avoid memory leaks. Especially for large files like video|audio.
 let global_AUDIO_OBJECT_URL=null;
 let global_VIDEO_OBJECT_URL=null;
-function revokeObjectURLs(){
-    if(global_AUDIO_OBJECT_URL){
-        URL.revokeObjectURL(global_AUDIO_OBJECT_URL);
-        global_AUDIO_OBJECT_URL=null;
-    }
-    if(global_VIDEO_OBJECT_URL){
-        URL.revokeObjectURL(global_VIDEO_OBJECT_URL);
-        global_VIDEO_OBJECT_URL=null;
-    }
-}
+// coded in class Query:
+// function revokeObjectURLs(){
+//     if(global_AUDIO_OBJECT_URL){
+//         URL.revokeObjectURL(global_AUDIO_OBJECT_URL);
+//         global_AUDIO_OBJECT_URL=null;
+//     }
+//     if(global_VIDEO_OBJECT_URL){
+//         URL.revokeObjectURL(global_VIDEO_OBJECT_URL);
+//         global_VIDEO_OBJECT_URL=null;
+//     }
+// }
 
 
 // Review flashcard
@@ -115,7 +116,7 @@ btnGradesContainer?.addEventListener('click',event=>{
             dbQuery.updateScoreAndLastReviewedDate(_id, _rev, scoreMap);
         }
 
-        revokeObjectURLs(); // to avoid memory leaks from audio|video content
+        dbQuery.revokeObjectURLs(global_AUDIO_OBJECT_URL, global_VIDEO_OBJECT_URL); // to avoid memory leaks from audio|video content
     }
 });
 
@@ -281,7 +282,7 @@ function renderFlashcard(flashcard){
                 iframe?.setAttribute('src',flashcard[key]);
                 iframe?.setAttribute('title','YouTube video player');
                 iframe?.setAttribute('frameborder','0');
-                iframe?.setAttribute('allow','accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; webshare');
+                iframe?.setAttribute('allow','accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
                 // Firefox:
                     // Feature Policy: Skipping unsupported feature name “accelerometer”.
                     // Feature Policy: Skipping unsupported feature name “clipboard-write”.
@@ -289,6 +290,8 @@ function renderFlashcard(flashcard){
                     // Feature Policy: Skipping unsupported feature name “gyroscope”.
                     // Feature Policy: Skipping unsupported feature name “picture-in-picture”.
                     // Feature Policy: Skipping unsupported feature name “webshare”.
+                //Edge:
+                    // Unrecognized feature: 'webshare'.
 
                 // iframe?.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
                     //This policy sends a full URL as a referrer when the request is made from the same origin (same domain, protocol, and port), but only sends the origin (scheme, host, and port) when the request is made to a different origin (cross-origin).
@@ -333,7 +336,7 @@ function renderFlashcard(flashcard){
 
 async function renderAttachments(flashcard){
     // blob attachments ie image, audio, video files
-    if(flashcard._attachments){
+    if(flashcard?._attachments){
         const objectKeys = Object.keys(flashcard._attachments);
    
         for(let i=0; i<objectKeys.length; i++){

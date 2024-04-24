@@ -1,24 +1,33 @@
 const userAgent = window.navigator.userAgent;
 let ACTIVE_BROWSER=null;
+
+/** 
+ * All Browsers will have the default name if name string is set.
+ * If set to null or empty string, it will default to the mapped else value, say testDB for example.
+ * By setting defaultNameDB to null, you can specify the name of each pouchDB instance name for given browser in the else clause. 
+ * The order of the conditional browser check matters.
+ * @type {String|null}
+ */
+const defaultNameDB='studyPal';
 if (userAgent.indexOf("Firefox") > -1) {
     console.log("You're using Firefox");
-    ACTIVE_BROWSER='studyPal';
+    ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB'; // defaultName else ".*"
 } 
 else if (userAgent.indexOf("Edg") > -1) {
     console.log("You're using Microsoft Edge");
-    ACTIVE_BROWSER='studyPal';
+    ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'studyPal';
 } 
 else if (userAgent.indexOf("Chrome") > -1) {
     console.log("You're using Chrome");
-    ACTIVE_BROWSER='studyPal';
+    ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB';
 } 
 else if (userAgent.indexOf("Safari") > -1) {
     console.log("You're using Safari");
-    ACTIVE_BROWSER='studyPal';
+    ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB';
 } 
 else {
     console.log("Browser not recognized");
-    ACTIVE_BROWSER='studyPal';
+    ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB';;
 }
 
 
@@ -27,7 +36,8 @@ const configDB={
     remoteCouchURL:`http://127.0.0.1:5984/${this.namePouchDB}`,
     syncPouchToCouch:false,
     listenForChanges:true,
-    destroyPouchDB:false,
+    // Development: close any ACTIVE_BROWSER you don't want (db) destroyed before switching to true.
+    destroyPouchDB:false, // MARK: TODO: add UI destroy
 };
 
 
@@ -340,7 +350,7 @@ class Query {
             const record = await db.allDocs(queryOptions);
             return record.rows[0].doc;
         }catch(err){
-            console.log(err);
+            console.error(`There are no saved flashcards to retrieve.\n`,err);
         }
     }
 
@@ -352,7 +362,7 @@ class Query {
             const randomId=flashcardMetadata?.rows[randomIndex]?.id;
             return await this.getRecordByID(randomId);
         }catch(err){
-            console.error(err);
+            console.error(`There are no saved flashcards to retrieve.\n`,err);
         }
     }
 
@@ -481,7 +491,22 @@ class Query {
         return blobURL;
     }
 
-
+    /**
+     * Revokes ObjectURLs. BlobObjectURLs must be revoked when no longer used to avoid memory leaks. Especially for large files like video|audio.
+     * The reference must be the original unique reference to the blob, hence the global variable designation.
+     * @param {String|null} global_AUDIO_OBJECT_URL - Global variable referencing the object URL for a file. It doesn't have to be an audio blobURL.
+     * @param {String|null} global_VIDEO_OBJECT_URL - Global variable referencing the object URL for a file. It doesn't have to be a video blobURL.
+     */
+    revokeObjectURLs(global_AUDIO_OBJECT_URL, global_VIDEO_OBJECT_URL){
+        if(global_AUDIO_OBJECT_URL){
+            URL.revokeObjectURL(global_AUDIO_OBJECT_URL);
+            global_AUDIO_OBJECT_URL=null;
+        }
+        if(global_VIDEO_OBJECT_URL){
+            URL.revokeObjectURL(global_VIDEO_OBJECT_URL);
+            global_VIDEO_OBJECT_URL=null;
+        }
+    }
 
 
 
