@@ -23,7 +23,6 @@ else {
 
 
 const configDB={
-    // namePouchDB:'test',
     namePouchDB: ACTIVE_BROWSER,
     remoteCouchURL:`http://127.0.0.1:5984/${this.namePouchDB}`,
     syncPouchToCouch:false,
@@ -476,6 +475,7 @@ class Query {
      * @returns {Promise<string>} Returns a promise to resolve a document_id and attachment_name with a blob url.
      */
     async getAttachmentBlobURL(_id, attachmentName){
+        // https://github.com/nolanlawson/blob-util
         const blob= await this.db.getAttachment(_id, attachmentName);
         const blobURL= URL.createObjectURL(blob);
         return blobURL;
