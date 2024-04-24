@@ -2,19 +2,19 @@ const userAgent = window.navigator.userAgent;
 let ACTIVE_BROWSER=null;
 if (userAgent.indexOf("Firefox") > -1) {
     console.log("You're using Firefox");
-    ACTIVE_BROWSER='test';
+    ACTIVE_BROWSER='studyPal';
 } else if (userAgent.indexOf("Edg") > -1) {
     console.log("You're using Microsoft Edge");
-    ACTIVE_BROWSER='myPouchDB';
+    ACTIVE_BROWSER='studyPal';
 } else if (userAgent.indexOf("Chrome") > -1) {
     console.log("You're using Chrome");
-    ACTIVE_BROWSER='myPouchDB';
+    ACTIVE_BROWSER='studyPal';
 } else if (userAgent.indexOf("Safari") > -1) {
     console.log("You're using Safari");
-    ACTIVE_BROWSER='test';
+    ACTIVE_BROWSER='studyPal';
 } else {
     console.log("Browser not recognized");
-    ACTIVE_BROWSER='test';
+    ACTIVE_BROWSER='studyPal';
 }
 
 
