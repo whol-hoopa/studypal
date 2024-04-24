@@ -1,5 +1,6 @@
 const userAgent = window.navigator.userAgent;
 let ACTIVE_BROWSER=null;
+let DESTROY_DB=false;
 
 /** 
  * All Browsers will have the default name if name string is set.
@@ -12,22 +13,27 @@ const defaultNameDB='studyPal';
 if (userAgent.indexOf("Firefox") > -1) {
     console.log("You're using Firefox");
     ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB'; // defaultName else ".*"
+    DESTROY_DB=false;
 } 
 else if (userAgent.indexOf("Edg") > -1) {
     console.log("You're using Microsoft Edge");
     ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'studyPal';
+    DESTROY_DB=false;
 } 
 else if (userAgent.indexOf("Chrome") > -1) {
     console.log("You're using Chrome");
     ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB';
+    DESTROY_DB=false;
 } 
 else if (userAgent.indexOf("Safari") > -1) {
     console.log("You're using Safari");
     ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB';
+    DESTROY_DB=false;
 } 
 else {
     console.log("Browser not recognized");
-    ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB';;
+    ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB';
+    DESTROY_DB=false;
 }
 
 
@@ -35,10 +41,10 @@ const configDB={
     namePouchDB: ACTIVE_BROWSER,
     remoteCouchURL:`http://127.0.0.1:5984/${this.namePouchDB}`,
     syncPouchToCouch:false,
-    listenForChanges:true,
-    // Development: close any ACTIVE_BROWSER you don't want (db) destroyed before switching to true.
-    destroyPouchDB:false, // MARK: TODO: add UI destroy
+    listenForChanges:true
 };
+configDB.destroyPouchDB=DESTROY_DB; // MARK: TODO: add UI destroy
+
 
 
 // where is CORS enabled? in the backend w/python? in couchdb _utils interface?
