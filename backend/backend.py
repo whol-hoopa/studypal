@@ -17,7 +17,10 @@ pwd = os.path.dirname(__file__) # /backend
 cd_to_parent_dir = os.path.join(pwd, "..") # /backend/..
 root_dir = os.path.abspath(cd_to_parent_dir) # C:\Users\User\Desktop\studypal
 studypal_backend.mount("/", StaticFiles(directory=root_dir), name="root") # works to send all files mounted under path.
-
+# functional routes:
+# http://localhost:8080/studypal.html # was index.html; http://localhost:8080/ didn't work, http://localhost:8080/index.html is not desireable. 
+# http://localhost:8080/flashcard-builder.html
+# http://localhost:8080/flashcard-review.html
 
 CouchdbErrorMessage = lambda message: '{\"error\": Bad CouchDb Connection at \"' + message + '\"}'
 # CouchdbErrorMessage = lambda message: '{' + '{\"error\": Bad CouchDb Connection at \"{}\"'.format(message) + '}'
