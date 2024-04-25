@@ -43,9 +43,11 @@ const configDB={
     syncPouchToCouch:false,
     listenForChanges:true
 };
-configDB.destroyPouchDB=DESTROY_DB; // MARK: TODO: add UI destroy
-
-
+configDB.destroyPouchDB=DESTROY_DB; 
+// MARK: TODO: add UI destroy
+// TODO: sync PouchDB instances from various browsers together
+    // Is this a bad idea... This means you'll have duplicate data on each browser, killing system resources.
+    // maybe if window.location.hostname=='127.0.0.1', ignore local pouchDB and sync with couchDB instead?
 
 // where is CORS enabled? in the backend w/python? in couchdb _utils interface?
 // https://github.com/pouchdb/add-cors-to-couchdb

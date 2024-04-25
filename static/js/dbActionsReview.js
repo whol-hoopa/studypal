@@ -102,9 +102,12 @@ btnGradesContainer?.addEventListener('click',event=>{
     const gradeBtn=event.target;
     if(gradeBtn && gradeBtn.id){
         const score=gradeBtn.id.split('-');
-        const scoreMap={};
-        scoreMap[score[0]]=parseInt(score[1]);
-        scoreMap['lastReviewed']= (new Date().toISOString());
+        const scoreMap={
+            [score[0]]: parseInt(score[1]), // using square brackets [] to create a dynamic `computed property` name at runtime, else propName error.
+            lastReviewed: new Date().toISOString()
+        };
+        // scoreMap[score[0]]=parseInt(score[1]);
+        // scoreMap['lastReviewed']= (new Date().toISOString());
 
         const cardContainer= document.getElementById('flashcard-components-container');
         const _id= cardContainer?.dataset._id;
