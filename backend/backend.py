@@ -22,6 +22,9 @@ studypal_backend.mount("/", StaticFiles(directory=root_dir), name="root") # work
 # http://localhost:8080/flashcard-builder.html
 # http://localhost:8080/flashcard-review.html
 
+# import frontend_routes
+# studypal_backend.include_router(frontend_routes.router)
+
 CouchdbErrorMessage = lambda message: '{\"error\": Bad CouchDb Connection at \"' + message + '\"}'
 # CouchdbErrorMessage = lambda message: '{' + '{\"error\": Bad CouchDb Connection at \"{}\"'.format(message) + '}'
 global Valid_Operators, valid_Conditionals, NoQuote
