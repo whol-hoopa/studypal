@@ -2,11 +2,23 @@ from typing import List
 from pydantic import BaseModel
 from collections import defaultdict
 from fastapi import FastAPI , Request
+from fastapi.staticfiles import StaticFiles
+
+import os
+
 from couchdb_requests import post_find, putDB, putDoc, deleteDB, deleteDoc, _getDocInfo, _getUUID, _toStringJSON
 
 
 # > uvicorn backend:studypal_backend --reload --port 8080
 studypal_backend = FastAPI()
+
+# serve static files: html, css, js
+pwd = os.path.dirname(__file__) # /backend
+cd_to_parent_dir = os.path.join(pwd, "..") # /backend/..
+root_dir = os.path.abspath(cd_to_parent_dir) # C:\Users\User\Desktop\studypal
+studypal_backend.mount("/", StaticFiles(directory=root_dir), name="root") # works to send all files mounted under path.
+
+
 CouchdbErrorMessage = lambda message: '{\"error\": Bad CouchDb Connection at \"' + message + '\"}'
 # CouchdbErrorMessage = lambda message: '{' + '{\"error\": Bad CouchDb Connection at \"{}\"'.format(message) + '}'
 global Valid_Operators, valid_Conditionals, NoQuote
@@ -28,9 +40,6 @@ class GroupSelector(BaseModel):
     condition: str
     selectorOps: List[BaseSelector]
 
-@studypal_backend.get('/')
-async def root():
-    return 'Studypal backend working'
 
 # Test command: curl -X DELETE "http://127.0.0.1:8080/couchdb/albums"
 #
