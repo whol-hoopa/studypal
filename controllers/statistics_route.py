@@ -12,7 +12,7 @@ html_dir = os.path.abspath(cd_to_html_dir)
 
 
 @router_stats.get('/', tags=['stats']) # http://localhost:8080/stats/
-def statistics():
+async def statistics():
     stats_page = os.path.join(html_dir, "statistics.html")
     print(stats_page)
     return FileResponse(stats_page)

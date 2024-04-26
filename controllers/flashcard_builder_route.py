@@ -14,6 +14,6 @@ html_dir = os.path.abspath(cd_to_html_dir)
 # @router.get('/', tags=['flashcard/build']) # http://localhost:8080/flashcard/build/
 
 @router_builder.get('/', tags=['build']) # http://localhost:8080/build/
-def flashcard_build():
+async def flashcard_build():
     build_page = os.path.join(html_dir, "flashcard-builder.html")
     return FileResponse(build_page)

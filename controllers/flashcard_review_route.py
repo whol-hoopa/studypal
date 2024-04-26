@@ -16,7 +16,7 @@ print(static_dir)
 # @router.get('/', tags=['flashcard/review']) # http://localhost:8080/flashcard/review/
 
 @router_review.get('/', tags=['review']) # http://localhost:8080/review/
-def flashcard_review():
+async def flashcard_review():
     review_page = os.path.join(html_dir, "flashcard-review.html")
     return FileResponse(review_page)
 

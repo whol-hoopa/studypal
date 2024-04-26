@@ -12,7 +12,7 @@ html_dir = os.path.abspath(cd_to_html_dir)
 
 
 @router_category.get('/', tags=['category']) # http://localhost:8080/category/
-def category():
+async def category():
     category_page = os.path.join(html_dir, "tags.html")
     print(category_page)
     return FileResponse(category_page)

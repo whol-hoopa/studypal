@@ -37,10 +37,10 @@ app.include_router(statistics_page, prefix='/stats')
 app.include_router(category_page, prefix='/category')
 app.include_router(settings_page, prefix='/settings')
 
-app.mount("/static", StaticFiles(directory=static_dir), name="static") # serves css & js in html[href]
+app.mount("/static", StaticFiles(directory=static_dir), name="static") # serves css & js in html[href] && html[src]
 
 
 
 
 
-# app.include_router(couchdb_router)
+app.include_router(couchdb_router, prefix='/couchdb')
