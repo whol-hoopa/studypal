@@ -38,7 +38,7 @@ class GroupSelector(BaseModel):
 # status should be 200
 # Example Response:
 # {"status": 200, "response": {"ok": true }}
-@router.delete('/{nameDB}')
+@router.delete('/{nameDB}', tags=['database'])
 async def removeDB(nameDB: str):
     try:
         res = deleteDB(nameDB)
@@ -52,7 +52,7 @@ async def removeDB(nameDB: str):
 # status should be 201
 # Example Response:
 # {"status":201,"response":{"ok":true}}
-@router.put('/{nameDB}')
+@router.put('/{nameDB}', tags=['database'])
 async def newDB(nameDB: str):
     try:
         res = putDB(nameDB)
@@ -66,7 +66,7 @@ async def newDB(nameDB: str):
 # status should be 200
 # Example Response:
 # {"status":200,"response":{"ok":true,"id":"d2a67fb89dec2825560d4e8cb500d6ee","rev":"4-6e74ca79854efea96730a06d165ee3d0"}}
-@router.delete('/{nameDB}/removeDoc')
+@router.delete('/{nameDB}/removeDoc', tags=['documents'])
 async def removeDoc(nameDB: str, request: Request):
     doc_ID = request.headers.get('doc_ID')
     # print(doc_ID)
@@ -96,7 +96,7 @@ async def removeDoc(nameDB: str, request: Request):
 # status should be 201
 # Example Response:
 # {"status":201,"response":{"ok":true,"id":"d2a67fb89dec2825560d4e8cb500e5b5","rev":"1-547ffc1b5059b80ef163ca2817cc0e90"}}
-@router.put('/{nameDB}/newDoc')
+@router.put('/{nameDB}/newDoc', tags=['documents'])
 async def addDoc(nameDB: str, request: Request):
     data = _toStringJSON(await request.json())
 
@@ -117,7 +117,7 @@ async def addDoc(nameDB: str, request: Request):
 # Example Response:
 # {"status":201,"response":{"ok":true,"id":"d2a67fb89dec2825560d4e8cb500d6ee","rev":"2-3496805ed57e50a11a7ec8402c7a0ebf"}}
 # {"status":201,"response":{"ok":true,"id":"d2a67fb89dec2825560d4e8cb500d6ee","rev":"3-074d0b9c6b895b2389f2d2e5bfdf25d0"}}
-@router.put('/{nameDB}/editDoc')
+@router.put('/{nameDB}/editDoc', tags=['documents'])
 async def editDoc(nameDB: str, request: Request):
     doc_ID = request.headers.get('doc_ID')
     if doc_ID == None:
@@ -163,7 +163,7 @@ async def editDoc(nameDB: str, request: Request):
     # response = requests.request("POST", "http://127.0.0.1:8080/couchdb/albums/search", json=payload, headers={"Content-Type": "application/json"}) 
     # print(response.json())
 
-@router.post('/{nameDB}/search')
+@router.post('/{nameDB}/search', tags=['documents'])
 async def searchDB(nameDB: str,
                    selectorOps: GroupSelector):
     def IfValids(opsList, condition):
