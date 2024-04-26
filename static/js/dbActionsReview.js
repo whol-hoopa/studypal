@@ -189,7 +189,7 @@ function renderFlashcard(flashcard){
             tagContainer?.append(fragmentElement);                
         }
         if(allowableIdsToRender.includes(key)){
-            console.log(`${key}:`, flashcard[key]);
+            log(`${key}: ${flashcard[key]}`);
             // MARK: Overflow container
             const divContent=document.createElement('div'),
                   divContentClass='px-1 pt-2 pb-5 px-sm-5 pt-sm-3 pb-sm-5 d-flex flex-column justify-content-center align-items-center'; // bootstrap classes on element
@@ -245,7 +245,7 @@ function renderFlashcard(flashcard){
             }
             if(key==='input-answer-latex'){
                 divContent.textContent=flashcard[key]; // flashcard text
-                console.log('latex')
+                log('latex');
                 const slideBtn=addIndicatorBtn(indicatorBtnNum,false);
                 indicatorBtnFrag.append(slideBtn);
                 indicatorBtnNum++;
@@ -356,8 +356,9 @@ async function renderAttachments(flashcard){
             if(objectKeys[i].startsWith('image')){
                 const imageBlob= await dbQuery.getAttachmentBlobURL(flashcard._id, objectKeys[i]);
                     // global imageBlob not needed bc image behaves well when revoked here.
-                    
+                
                 const imgTag= document.createElement('img');
+                // MARK: TODO: add alt attr Input
                 imgTag.alt='flashcard image you saved.';
                 imgTag.src=imageBlob;
 

@@ -52,15 +52,15 @@ btnSearch?.addEventListener('click',function(e){
                 li.dataset._rev=element.value._rev;
                 li.ondblclick=function(e){
                     e.preventDefault();
-                    console.log(this.dataset._id);
-                    console.log(this.dataset._rev);
+                    log(this.dataset._id);
+                    log(this.dataset._rev);
                     const currentURL=window.location.pathname;
                     if(currentURL.includes('review')){
                         renderOptimizedFlashcard(dbQuery, this.dataset._id);
                     }
                     if(currentURL.includes('build')){
-                        console.log('Repopulate flashcard builder for editing.');
-                        console.log(currentURL)
+                        log('Repopulate flashcard builder for editing.');
+                        log(currentURL)
                     }
                 };
                 frag.append(li);

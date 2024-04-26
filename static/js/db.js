@@ -11,27 +11,27 @@ let DESTROY_DB=false;
  */
 const defaultNameDB='studyPal';
 if (userAgent.indexOf("Firefox") > -1) {
-    console.log("You're using Firefox");
+    log("You're using Firefox");
     ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB'; // defaultName else ".*"
     DESTROY_DB=false;
 } 
 else if (userAgent.indexOf("Edg") > -1) {
-    console.log("You're using Microsoft Edge");
+    log("You're using Microsoft Edge");
     ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'studyPal';
     DESTROY_DB=false;
 } 
 else if (userAgent.indexOf("Chrome") > -1) {
-    console.log("You're using Chrome");
+    log("You're using Chrome");
     ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB';
     DESTROY_DB=false;
 } 
 else if (userAgent.indexOf("Safari") > -1) {
-    console.log("You're using Safari");
+    log("You're using Safari");
     ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB';
     DESTROY_DB=false;
 } 
 else {
-    console.log("Browser not recognized");
+    log("Browser not recognized");
     ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB';
     DESTROY_DB=false;
 }
@@ -59,7 +59,7 @@ if(configDB.destroyPouchDB){
     db.destroy().then(response=>{
         console.log(`Was pouchDB destroyed? ${response.ok}`);
     }).catch(err=>{
-        console.log(err);
+        console.error(err);
     });
 }
 
@@ -103,9 +103,11 @@ if(configDB.syncPouchToCouch){
 
     const syncDb=db.sync(configDB.remoteCouchURL, options
         ).on('change', function(e){
-            console.log(`DB.sync change event detected. What is your event driven response?:\n`,e);
+            log(`DB.sync change event detected. What is your event driven response?:`);
+            log(e);
         }).on('error', function(e){
-            console.log(`Sync error:\n`,e);
+            log(`Sync error:`);
+            log(e);
         });
 
     const isCancel=false;
@@ -185,13 +187,15 @@ if(configDB.listenForChanges){
 
     const changes = db.changes(options
         ).on('change', function(info){
-            console.log('DB.changes change event detected.\n', info);
+            log('DB.changes change event detected.');
+            log(info);
             if(options.include_docs){
-                console.log(`What do you want to do with:\n`,info.doc);
+                log(`What do you want to do with:`);
+                log(info.doc);
             }
         // }).on('complete', function(info){}) / /Note: 'complete' event only fires when you aren’t doing live changes.
         }).on('error', function(err){
-            console.log(err);
+            console.error(err);
         });
     
     const isCancel=false;
@@ -263,7 +267,8 @@ class Flashcard {
                     this.lastSavedCard=res;
                     
                     // just in case we need _rev, _id
-                    console.log(`Flashcard was saved to database: "${this.formData.get('input-question')}"`, this.lastSavedCard);
+                    log(`Flashcard was saved to database: "${this.formData.get('input-question')}"`);
+                    log(this.lastSavedCard);
                 })
                 .catch(err=>console.error(err));
             return;
@@ -390,7 +395,7 @@ class Query {
             const doc = await db.get(id,options);
             return doc;
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
 
@@ -410,7 +415,8 @@ class Query {
             const updatedFlashcard= Object.assign(flashcard, scoreLastReviewedObject);
             
             const updateStatus= await this.db.put(updatedFlashcard);
-            console.log('Flashcard update status:\n', updateStatus);
+            log('Flashcard update status:');
+            log(updateStatus);
         }
         catch(err){
             console.error('Error updating score and last reviewed fields', err);
@@ -459,11 +465,11 @@ class Query {
             }, queryOptions);
 
             
-            // console.log(records.rows);
-            console.log(records);
+            // log(records.rows);
+            log(records);
             return records;
         }catch(err){
-            console.log(err);
+            console.error(err);
         }
     }
 
@@ -479,7 +485,8 @@ class Query {
             // console.log(flashcard);
             // const response=await db.remove(flashcard);
             const response=await db.remove(id,rev);
-            console.log('Flashcard deletion request status:\n',response);
+            log('Flashcard deletion request status:');
+            log(response);
         }catch(err){
             console.error(err);
         }
@@ -543,7 +550,8 @@ class Query {
         isCaseSensitive=isCaseSensitive||false;
         /** @type {String} */
         regex=isCaseSensitive?new RegExp(regex):new RegExp(regex,'i');
-        console.log("regex:", regex);
+        log("regex:");
+        log(regex);
         try{
             const queryOptions={
                 include_docs:true,
@@ -558,11 +566,11 @@ class Query {
                 }
             }, queryOptions);
 
-            console.log(result.rows);
-            console.log(result);
+            log(result.rows);
+            log(result);
             return result.rows; // Assignable w/in promise chain.
         }catch(err){
-            console.log(err);
+            console.error(err);
         }
     }
 
@@ -592,11 +600,11 @@ class Query {
                 descending:true,
             }
         ).then(res=>{
-            console.log(res.rows);
-            console.log(res);
+            log(res.rows);
+            log(res);
             // return res; => undefined bc db.query is async and unresolved @time of assignment.
         }).catch(err=>{
-            console.log(err);
+            console.error(err);
         });
     }
 
