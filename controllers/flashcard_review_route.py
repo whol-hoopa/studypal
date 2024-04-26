@@ -10,7 +10,6 @@ cd_to_static_dir = os.path.join(pwd, r"..\static")
 static_dir = os.path.abspath(cd_to_static_dir)
 cd_to_html_dir = os.path.join(pwd, r"..\static\html")
 html_dir = os.path.abspath(cd_to_html_dir)
-print(static_dir)
 
 
 # @router.get('/', tags=['flashcard/review']) # http://localhost:8080/flashcard/review/

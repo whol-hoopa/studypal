@@ -14,5 +14,4 @@ html_dir = os.path.abspath(cd_to_html_dir)
 @router_settings.get('/', tags=['settings']) # http://localhost:8080/stats/
 async def settings():
     settings_page = os.path.join(html_dir, "settings.html")
-    print(settings_page)
     return FileResponse(settings_page)

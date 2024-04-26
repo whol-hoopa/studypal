@@ -14,13 +14,10 @@ from fastapi.responses import FileResponse
 # > uvicorn main:app --reload --port 8080
 app = FastAPI()
 
-pwd = os.path.dirname(__file__) # .../controllers
+pwd = os.path.dirname(__file__) # .../studypal
 static_dir = os.path.join(pwd, "static") # C:\Users\User\Desktop\studypal\static
 html_dir = os.path.join(static_dir, "html")
-templates_dir = os.path.join(pwd, "templates")
-# print(static_dir)
-# print(html_dir)
-# print(templates_dir)
+# templates_dir = os.path.join(pwd, "templates")
 
 # StudyPal webpage routes
 @app.get("/") # defined in main to allow: # http://localhost:8080 to render studypal.html, else requires /path_name.
