@@ -1,30 +1,38 @@
-import fastapi
-from fastapi.responses import HTMLResponse
-from fastapi import Request
-from fastapi.staticfiles import StaticFiles
 import os
+from fastapi import APIRouter
+from fastapi.responses import FileResponse
+# from fastapi import Request
+# from fastapi.responses import HTMLResponse
 
-# from fastapi.responses import FileResponse # METHOD 1
-# from fastapi.responses import HTMLResponse # METHOD 2
+router_review = APIRouter()
+pwd = os.path.dirname(__file__)
+cd_to_static_dir = os.path.join(pwd, r"..\static")
+static_dir = os.path.abspath(cd_to_static_dir)
+cd_to_html_dir = os.path.join(pwd, r"..\static\html")
+html_dir = os.path.abspath(cd_to_html_dir)
+print(static_dir)
 
 
-router = fastapi.APIRouter()
+# @router.get('/', tags=['flashcard/review']) # http://localhost:8080/flashcard/review/
 
+@router_review.get('/', tags=['review']) # http://localhost:8080/review/
+def flashcard_review():
+    review_page = os.path.join(html_dir, "flashcard-review.html")
+    return FileResponse(review_page)
 
-
-@router.get('/', response_class=HTMLResponse, include_in_schema=False)
-def form(request:Request):
-    return "<h1>Form Response</h1>"
 
 
 
 
 
 # serve static files: html, css, js
-pwd = os.path.dirname(__file__) # /backend
-cd_to_parent_dir = os.path.join(pwd, "..") # /backend/..
-root_dir = os.path.abspath(cd_to_parent_dir) # C:\Users\User\Desktop\studypal
-studypal_backend.mount("/", StaticFiles(directory=root_dir), name="root") # works to send all files mounted under path.
+# pwd = os.path.dirname(__file__) # .../controllers
+# cd_to_parent_dir = os.path.join(pwd, r"..\static") # ...\controllers\..\static
+# root_dir = os.path.abspath(cd_to_parent_dir) # C:\Users\User\Desktop\studypal\static
+# router.mount("/static", StaticFiles(directory=root_dir), name="static") # works to send all files mounted under path.
+# print(pwd)
+# print(root_dir)
+
 # functional routes:
 # http://localhost:8080/studypal.html # was index.html; http://localhost:8080/ didn't work, http://localhost:8080/index.html is not desireable. 
 # http://localhost:8080/flashcard-builder.html
@@ -79,29 +87,8 @@ studypal_backend.mount("/", StaticFiles(directory=root_dir), name="root") # work
 #         homepage = file.read()
 #     return HTMLResponse(content=homepage, status_code=200)
 
-# @studypal_backend.get('/flashcard-builder.html')
-# async def build(request: Request):
-#     with open('./../flashcard-builder.html', 'r') as file:
-#         builder_page = file.read()
-#         return HTMLResponse(content=builder_page, status_code=200)
     
-# @studypal_backend.get('/flashcard-review.html')
-# async def review(request: Request):
-#     with open('./../flashcard-review.html', 'r') as file:
-#         review_page = file.read()
-#         return HTMLResponse(content=review_page, status_code=200)
-    
-# @studypal_backend.get('/statistics.html')
-# async def statistics(request: Request):
-#     with open('./../statistics.html', 'r') as file:
-#         stats_page = file.read()
-#         return HTMLResponse(content=stats_page, status_code=200)
-    
-# @studypal_backend.get('/settings.html')
-# async def settings(request: Request):
-#     with open('./../settings.html', 'r') as file:
-#         settings_page = file.read()
-#         return HTMLResponse(content=settings_page, status_code=200)
+
     
 # @studypal_backend.get('/tags.html')
 # async def tags(request: Request):
