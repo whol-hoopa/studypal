@@ -18,14 +18,12 @@ pwd = os.path.dirname(__file__) # .../controllers
 static_dir = os.path.join(pwd, "static") # C:\Users\User\Desktop\studypal\static
 html_dir = os.path.join(static_dir, "html")
 templates_dir = os.path.join(pwd, "templates")
-# homepage = os.path.join(static_dir, "\html\studypal.html")
 # print(static_dir)
 # print(html_dir)
 # print(templates_dir)
 
-
-
-@app.get("/") # defined in main to allow: # http://localhost:8080 to render index.html, else requires /path_name.
+# StudyPal webpage routes
+@app.get("/") # defined in main to allow: # http://localhost:8080 to render studypal.html, else requires /path_name.
 async def root():
     homepage = os.path.join(html_dir,'studypal.html')
     return FileResponse(homepage)
@@ -40,7 +38,5 @@ app.include_router(settings_page, prefix='/settings')
 app.mount("/static", StaticFiles(directory=static_dir), name="static") # serves css & js in html[href] && html[src]
 
 
-
-
-
+# CouchDB routes
 app.include_router(couchdb_router, prefix='/couchdb')

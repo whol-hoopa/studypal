@@ -23,7 +23,7 @@ async def flashcard_review():
 
 
 
-
+# Alterative ways of doing things: for personal reference
 
 # serve static files: html, css, js
 # pwd = os.path.dirname(__file__) # .../controllers
@@ -33,49 +33,13 @@ async def flashcard_review():
 # print(pwd)
 # print(root_dir)
 
-# functional routes:
-# http://localhost:8080/studypal.html # was index.html; http://localhost:8080/ didn't work, http://localhost:8080/index.html is not desireable. 
-# http://localhost:8080/flashcard-builder.html
-# http://localhost:8080/flashcard-review.html
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # METHOD 1: probably need a redirect from http://localhost:8080/   ===>   http://localhost:8080/studypal.html
 # @studypal_backend.get('/')
 # async def root():
-#     print('hello world')
 #     # http://localhost:8080/ is not serving file as expected
 #     # http://localhost:8080/index.html this works, but not desireable; compromised by changing name of file.
 #     homepage = os.path.join(root_dir, 'studypal.html')
 #     return FileResponse(homepage)
-
-# @studypal_backend.post('/')
-# def login():
-#     return "foo"
-
-# @studypal_backend.get('/studypal.html')
-# async def root(request: Request):
-#     print(request)
-#     # homepage = os.path.join(root_dir, 'studypal.html')
-#     data = {"message": "Hello, world!"}
-
-#     return HTMLResponse(content=f"<h1>{data['message']}</h1>", status_code=200)
 
 
 # METHOD 2: leads to issues with relative hrefs in files
@@ -86,12 +50,3 @@ async def flashcard_review():
 #     with open('./../index.html', 'r') as file:
 #         homepage = file.read()
 #     return HTMLResponse(content=homepage, status_code=200)
-
-    
-
-    
-# @studypal_backend.get('/tags.html')
-# async def tags(request: Request):
-#     with open('./../tags.html', 'r') as file:
-#         tags_page = file.read()
-#         return HTMLResponse(content=tags_page, status_code=200)
