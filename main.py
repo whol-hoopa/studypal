@@ -9,6 +9,7 @@ from controllers.couchdb_routes import router as couchdb_router
 
 from models.auth import User
 from pydantic import ValidationError
+from models.hash import hashPwd
 
 import os
 from fastapi.staticfiles import StaticFiles
@@ -37,7 +38,8 @@ async def login(request:Request):
     user = User(**credentials)
     print(user)
     print(user.email)
-    print(user.password)
+    print(hashPwd(user.password))
+
     # except ValidationError as e:
     #     raise HTTPException(status_code=400, detail='Invalid email address.')
 

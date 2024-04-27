@@ -6,22 +6,20 @@ btnLogin?.addEventListener('click',(e)=>{
     authenticate(credentials)
         .then(resp=>{
 
-            if(resp.status!==200){
+            if( ![200,201].includes(resp.status) ){
                 document.getElementById('response').innerHTML=`<h1 class='text-danger'>Authentication Error</h1>`;
                 throw `Error code ${resp.status}: ${resp.statusText}`
             }          
             
             return resp.text();
         }).then(html => {
-            console.log(html)
             document.getElementById('response').innerHTML=html;
             setTimeout(() => {
                 window.location.href = '/review/';
-            }, 1000);
+            }, 1000); // pause for greeting message
         }).catch(error=>{
             console.error(error)
         });
-    
 })
 
 /**
