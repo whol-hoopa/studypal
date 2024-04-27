@@ -40,5 +40,9 @@ starlette==0.36.3
 typing_extensions==4.10.0
 urllib3==2.2.1
 uvicorn==0.28.0
+
+bcrypt==4.1.2
+email_validator==2.1.1
+dnspython==2.6.1
 ```
 ### Docker is needed
