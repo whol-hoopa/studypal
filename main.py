@@ -11,7 +11,8 @@ from controllers.couchdb_routes import router as couchdb_router
 
 import os
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 # > uvicorn main:app --reload --port 8080
 app = FastAPI()
@@ -19,13 +20,21 @@ app = FastAPI()
 pwd = os.path.dirname(__file__) # .../studypal
 static_dir = os.path.join(pwd, "static") # C:\Users\User\Desktop\studypal\static
 html_dir = os.path.join(static_dir, "html")
-# templates_dir = os.path.join(pwd, "templates")
+templates_dir = os.path.join(pwd, "templates")
+
+templates = Jinja2Templates(directory=templates_dir)
 
 # StudyPal webpage routes
-@app.get("/") # defined in main to allow: # http://localhost:8080 to render studypal.html, else requires /path_name.
-async def root():
-    homepage = os.path.join(html_dir,'studypal.html')
-    return FileResponse(homepage)
+# @app.get("/") # defined in main to allow: # http://localhost:8080 to render studypal.html, else requires /path_name.
+# async def root(request: Request):
+#     homepage = os.path.join(html_dir,'studypal.html')
+    # return FileResponse(homepage)
+
+@app.get("/", response_class=HTMLResponse) # defined in main to allow: # http://localhost:8080 to render studypal.html, else requires /path_name.
+async def root(request: Request):
+
+    message = None
+    return templates.TemplateResponse('studypal.html', { "request": request, "message": message })
 
 
 app.include_router(login_api, prefix='/login')
@@ -49,6 +58,6 @@ app.include_router(couchdb_router, prefix='/couchdb')
 if __name__ == '__main__':
     import uvicorn
 
-    uvicorn.run('main:app', host='127.0.0.1', port=8000, reload=True)
+    uvicorn.run('main:app', host='127.0.0.1', port=8002, reload=True)
 
     # (studypal) PS:\Users\User\Desktop\studypal> python main.py

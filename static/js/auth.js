@@ -40,7 +40,7 @@ btnLogin?.addEventListener('click',(e)=>{
 
                         break;
                     case 400:
-                        // failed syntax validation
+                        // failed user input validation
                         msg= `
                             <h1 class='text-danger'>Authentication Error</h1>
                             <p class='fs-6'>${JSON.parse(obj.text).detail}</p>
