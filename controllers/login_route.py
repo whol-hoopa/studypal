@@ -22,6 +22,12 @@ async def login(request:Request):
         user = User(**credentials)
         print("Pydantic validation successful.")
 
+        # check if user is in db
+
+        # if in db, get pwd_hash
+
+        # if not in db, create new user
+
 
         if matchesHash(user.password,hashPwd(user.password)):
             return "<h1>Welcome to Study<span class='outlined-text'>Pal</span></h1><p class='fs-4'>Have a great session!</p>"

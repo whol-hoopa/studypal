@@ -1,0 +1,31 @@
+# what docker version are you using? '3'?
+version: 'version'
+
+services:
+  web:
+    build: .
+    # command to execute when container starts.
+    # what is sh -c? what if using windows not WSL?
+    command: sh -c "uvicorn main:app --reload --port 8000 --host=0.0.0.0"
+    # command: python main.py?
+    env_file:
+      # from os import environ as env
+      - .env
+    ports:
+      # host:container
+      - 8000:8000
+    volumes:
+      # hot reloading; sync host w/ docker container; allows uvicorn to listen to changes in files
+      - .:/app
+
+  couchdb:
+    image: "couchdb:3.3.3"
+    volumes:
+      # - ./foo:/bar
+
+      # docker compose up
+      # docker compose up -d
+      # docker ps
+      # docker-compose ps
+      # docker-compose down
+      # docker-compose stop

@@ -15,6 +15,7 @@ btnLogin?.addEventListener('click',(e)=>{
 
     authenticate(credentials)
         .then(resp=>{
+            credentials=null;
             return Promise.all([resp.status, resp.text()])
                 .then( ([ status_code, text ]) => {
                     return {
@@ -24,7 +25,7 @@ btnLogin?.addEventListener('click',(e)=>{
             });
             // }          
         }).then(obj => {
-            console.log(obj)
+            log(obj)
             if(messageElement){
                 let msg;
                 switch(obj?.status_code){
@@ -64,9 +65,10 @@ btnLogin?.addEventListener('click',(e)=>{
             }
 
         }).catch(error=>{
-            console.error(error)
+            credentials=null;
+            console.error(error);
         });
-})
+});
 
 /**
  * Extracts email and password form a form element.
