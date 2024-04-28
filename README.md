@@ -20,8 +20,8 @@ http://127.0.0.1:5984/_utils for couchdb
 
 # Requirements
 ### Python Requirements
+`python==3.12.2`
 ```
-python==3.12.2
 annotated-types==0.6.0
 anyio==4.3.0
 certifi==2024.2.2
@@ -42,7 +42,15 @@ urllib3==2.2.1
 uvicorn==0.28.0
 
 bcrypt==4.1.2
+
 email_validator==2.1.1
 dnspython==2.6.1
 ```
+Note:  
+`pydantic[email]` is the actual pip installation command, but  
+`email_validator==2.1.1` and `dnspython==2.6.1` were the only  
+packages that was not already installed. It provides EmailStr
+type for email validation.
+
+
 ### Docker is needed

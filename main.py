@@ -4,16 +4,14 @@ from controllers.flashcard_builder_route import router_builder as build_page
 from controllers.statistics_route import router_stats as statistics_page
 from controllers.category_route import router_category as category_page
 from controllers.settings_route import router_settings as settings_page
+from controllers.login_route import router_login as login_api
 
 from controllers.couchdb_routes import router as couchdb_router
 
-from models.auth import User
-from pydantic import ValidationError
-from models.hash import hashPwd
 
 import os
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse
 
 # > uvicorn main:app --reload --port 8080
 app = FastAPI()
@@ -29,22 +27,8 @@ async def root():
     homepage = os.path.join(html_dir,'studypal.html')
     return FileResponse(homepage)
 
-@app.post("/login", response_class=HTMLResponse)
-async def login(request:Request):
-    print('AUTHENTICATION REQUEST')
-    # print(request.headers)
-    credentials = await request.json()
-    # try:
-    user = User(**credentials)
-    print(user)
-    print(user.email)
-    print(hashPwd(user.password))
 
-    # except ValidationError as e:
-    #     raise HTTPException(status_code=400, detail='Invalid email address.')
-
-
-    return "<h1 class='text-success'>Welcome to Study<span class='outlined-text'>Pal</span></h1><p>You are official! Have a great session!!</p>"
+app.include_router(login_api, prefix='/login')
 
 
 # app.include_router(review_page, prefix='/flashcard/review') # http://localhost:8080/flashcard/review/
@@ -65,6 +49,6 @@ app.include_router(couchdb_router, prefix='/couchdb')
 if __name__ == '__main__':
     import uvicorn
 
-    uvicorn.run('main:app', host='127.0.0.1', port=8080, reload=True)
+    uvicorn.run('main:app', host='127.0.0.1', port=8000, reload=True)
 
     # (studypal) PS:\Users\User\Desktop\studypal> python main.py

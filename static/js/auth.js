@@ -1,22 +1,68 @@
 const btnLogin = document.getElementById('btn-login');
 btnLogin?.addEventListener('click',(e)=>{
     e.preventDefault();
-    const credentials = extractCredentials(e.target?.form);
+
+    const messageElement= document.getElementById('response');
+
+    try {
+        var credentials = extractCredentials(e.target?.form);
+    }catch(error){
+        if(messageElement){
+            messageElement.innerHTML=`<h1 class='text-danger'>Please enter credentials.</h1>`;
+            throw error.message;
+        }
+    }
 
     authenticate(credentials)
         .then(resp=>{
+            return Promise.all([resp.status, resp.text()])
+                .then( ([ status_code, text ]) => {
+                    return {
+                        status_code,
+                        text
+                    };
+            });
+            // }          
+        }).then(obj => {
+            console.log(obj)
+            if(messageElement){
+                let msg;
+                switch(obj?.status_code){
+                    case 200:
+                        // ok
+                    case 201:
+                        messageElement.innerHTML=obj?.text;
+                        // redirect to review page
+                        setTimeout(() => {
+                            window.location.href = '/review/';
+                        }, 1000); // pause for greeting message
 
-            if( ![200,201].includes(resp.status) ){
-                document.getElementById('response').innerHTML=`<h1 class='text-danger'>Authentication Error</h1>`;
-                throw `Error code ${resp.status}: ${resp.statusText}`
-            }          
-            
-            return resp.text();
-        }).then(html => {
-            document.getElementById('response').innerHTML=html;
-            setTimeout(() => {
-                window.location.href = '/review/';
-            }, 1000); // pause for greeting message
+                        break;
+                    case 400:
+                        // failed syntax validation
+                        msg= `
+                            <h1 class='text-danger'>Authentication Error</h1>
+                            <p class='fs-6'>${JSON.parse(obj.text).detail}</p>
+                        `;
+                        messageElement.innerHTML=msg;                        
+                        break;
+                    case 401:
+                        // invalid password
+                        msg= `
+                            <h1 class='text-danger'>Authentication Error</h1>
+                            <p class='fs-4'>${JSON.parse(obj.text).detail}</p>
+                        `;
+                        messageElement.innerHTML=msg;
+                        break;
+                    case 500:
+                        msg= `
+                            <h1 class='text-danger'>Authentication Error</h1>
+                        `; // <p class='fs-4'>${obj.text}</p>
+                        messageElement.innerHTML=msg;
+                        break;
+                }
+            }
+
         }).catch(error=>{
             console.error(error)
         });
@@ -30,14 +76,17 @@ btnLogin?.addEventListener('click',(e)=>{
 function extractCredentials (form){
     if(form instanceof HTMLFormElement && form.password.value && form.email.value){
         const credentials = {
-            [form.email.name]:form.email.value,
-            [form.password.name]:form.password.value
+            email: form.email.value,
+            password: form.password.value
         };
         return credentials;
     }
+
+    throw new Error('Form must contain valid email and password.');
 }
 
 async function authenticate (credentials){
+    
     const resp = await fetch('/login', {
         method: 'POST',
         headers: {

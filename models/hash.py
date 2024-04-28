@@ -5,6 +5,9 @@ def hashPwd(password:str):
     hashed_pwd = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_pwd
 
+def putHashedPwd():
+    pass
+
 
 def getHashedPwd():
     pass
