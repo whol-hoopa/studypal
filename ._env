@@ -1,0 +1,5 @@
+COUCHDB_USER='__admin_name__'
+
+COUCHDB_PASSWORD='__password__'
+
+PRIVATE_JWT_KEY='__private_key__'

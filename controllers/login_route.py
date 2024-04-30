@@ -1,6 +1,6 @@
 from fastapi import Request, APIRouter, HTTPException, status
 from fastapi.responses import HTMLResponse
-from models.auth import User
+from models.validate import User
 from models.hash import hashPwd, matchesHash
 
 from pydantic import ValidationError

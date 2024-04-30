@@ -1,4 +1,4 @@
-# what docker version are you using? '3'?
+# what docker version are you using? '3'? '25'?
 version: 'version'
 
 services:
@@ -10,6 +10,7 @@ services:
     # command: python main.py?
     env_file:
       # from os import environ as env
+      # vs.  from dotenv import dotenv_values;env_vars = dotenv_values();db_password = env_vars.get('DB_PASSWORD')?
       - .env
     ports:
       # host:container

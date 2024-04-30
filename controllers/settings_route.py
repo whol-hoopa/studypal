@@ -20,7 +20,7 @@ def get_token_from_request():
 def is_valid_token(token):
     return False
 
-@router_settings.get('/', tags=['settings']) # http://localhost:8080/stats/
+@router_settings.get('/', tags=['settings']) # http://localhost:8080/settings/
 async def settings(request: Request):
     print('settings queried.')
     token=get_token_from_request()
