@@ -1,10 +1,13 @@
 from fastapi import Request, APIRouter, HTTPException, status
-from fastapi.responses import HTMLResponse
+
 from models.validate import User
+from pydantic import ValidationError
 from models.hash import hashPwd, matchesHash
 
-from pydantic import ValidationError
-
+from fastapi.responses import HTMLResponse
+from models.jwt import get_jwt_token
+import os
+from models.key_gen import base64url_encoded_pem
 
 
 router_login = APIRouter()
@@ -30,7 +33,32 @@ async def login(request:Request):
 
 
         if matchesHash(user.password,hashPwd(user.password)):
-            return "<h1>Welcome to Study<span class='outlined-text'>Pal</span></h1><p class='fs-4'>Have a great session!</p>"
+            
+            # generate jwt token
+            claim={
+                "iss": "studypal",
+                "sub": "retail-user"
+            }
+            pwd=os.path.dirname(__file__)
+            cd_to_models='../models'
+            rel_pem_file=os.path.join(pwd, cd_to_models,"jwt_private_key.pem")
+            pk_pem_file=os.path.abspath(rel_pem_file)
+            token=get_jwt_token(claim,pk_pem_file)
+
+            headers={
+                "Authorization": f"Bearer {token}"
+            }
+
+            # send public pem key if not in storage
+            if request.headers['x-send-pub-pem'] == 'true':
+                rel_pub_pem_path = os.path.join(pwd, cd_to_models,"jwt_public_key.pem")
+                pub_pem_path = os.path.abspath(rel_pub_pem_path)
+                pub_pem_str = base64url_encoded_pem(pub_pem_path)
+
+                headers["x-pub-pem"]=f"{pub_pem_str}"
+
+            content="<h1>Welcome to Study<span class='outlined-text'>Pal</span></h1><p class='fs-4'>Have a great session!</p>"
+            return HTMLResponse(content, headers=headers)
             
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, 

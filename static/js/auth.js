@@ -13,16 +13,42 @@ btnLogin?.addEventListener('click',(e)=>{
         }
     }
 
-    authenticate(credentials)
+
+    // check localStorage for public.pem
+    /** @type {string | null | undefined} */
+    let b64UrlPem=localStorage.getItem('studypal_public_key');
+
+    authenticate(credentials, b64UrlPem)
         .then(resp=>{
             credentials=null;
-            return Promise.all([resp.status, resp.text()])
+
+            if(!b64UrlPem){
+                b64UrlPem = resp.headers.get('x-pub-pem');
+                if(b64UrlPem){ localStorage.setItem('studypal_public_key', b64UrlPem); }
+            }
+            const public_pem = base64UrlToOriginalData(b64UrlPem);
+
+            // verify jwt
+            const jwt_token=resp.headers.get('authorization')?.split(' ')[1];
+            const pubKey = KEYUTIL.getKey(public_pem); // not necessary, verifyJWT calls it under the hood.
+            const isValid = KJUR.jws.JWS.verifyJWT(jwt_token, pubKey, {alg: ['RS256']});
+
+
+            console.log('JWT is valid:', isValid);
+
+            if(isValid){
+                return Promise.all([resp.status, resp.text()])
                 .then( ([ status_code, text ]) => {
                     return {
                         status_code,
                         text
                     };
-            });
+                });
+            }
+
+
+
+
             // }          
         }).then(obj => {
             log(obj)
@@ -87,15 +113,41 @@ function extractCredentials (form){
     throw new Error('Form must contain valid email and password.');
 }
 
-async function authenticate (credentials){
+async function authenticate (credentials, b64UrlPem){
+
+    let sendPem='true';
+    if(b64UrlPem){ sendPem='false'; }
     
     const resp = await fetch('/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'x-send-pub-pem': sendPem
         },
         body: JSON.stringify(credentials)
     });
 
     return resp;
+}
+
+
+/**
+ * Convert URL safe base64Url string back to PEM format string.
+ * @param {string | null} base64Url - Base64URL string from x-pub-pem header property if applicable. 
+ * @returns {string | undefined} PEM formatted public key if applicable
+ */
+function base64UrlToOriginalData(base64Url) {
+    if(base64Url){
+        // Add back the removed '=' padding
+        const padding = '='.repeat((4 - base64Url.length % 4) % 4);
+        const base64UrlWithPadding = base64Url + padding;
+    
+        // Convert base64url to base64
+        const base64 = base64UrlWithPadding.replace(/-/g, '+').replace(/_/g, '/');
+    
+        // Decode base64
+        const data = atob(base64);
+    
+        return data;
+    }
 }

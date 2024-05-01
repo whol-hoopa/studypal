@@ -29,15 +29,18 @@ if __name__=='__main__':
 
     payload={
     "sub": "user",
-    "kid": "abc-123"
+    "kid": "abc-12345"
     }
     pwd = os.path.dirname(__file__)
-    pem_file = os.path.join(pwd, 'jwt_private_key.pem')
+    # pem_file = os.path.join(pwd, 'jwt_private_key.pem')
+    pem_file = os.path.join(pwd, 'private.pem')
     jwt_token = get_jwt_token(payload, pem_file)
+    print(jwt_token)
 
 
     
-    public_pem_file = os.path.join(pwd, 'jwt_public_key.pem')
+    # public_pem_file = os.path.join(pwd, 'jwt_public_key.pem')
+    public_pem_file = os.path.join(pwd, 'public.pem')
     decoded_payload=get_jwt_payload(jwt_token, public_pem_file)
     print('payload:',decoded_payload)
 

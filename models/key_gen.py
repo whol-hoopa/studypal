@@ -3,33 +3,85 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend
 
-# Generate a new private key
-private_key = rsa.generate_private_key(
-    public_exponent=65537,
-    key_size=2048,  # ie 256 bytes
-    backend=default_backend()
-)
+from collections import namedtuple
+import os
+from base64 import urlsafe_b64encode
 
-# Serialize the private key to PEM format
-pem_private_key = private_key.private_bytes(
-    encoding=serialization.Encoding.PEM,
-    format=serialization.PrivateFormat.PKCS8,
-    encryption_algorithm=serialization.NoEncryption()
-)
+def generate_private_public_keys():
 
-# Generate the public key from the private key
-public_key = private_key.public_key()
+    # Generate a new private key
+    private_key = rsa.generate_private_key(
+        public_exponent=65537,
+        key_size=2048,  # ie 256 bytes
+        backend=default_backend()
+    )
 
-# Serialize the public key to PEM format
-pem_public_key = public_key.public_bytes(
-    encoding=serialization.Encoding.PEM,
-    format=serialization.PublicFormat.SubjectPublicKeyInfo
-)
+    # Serialize the private key to PEM format
+    private = private_key.private_bytes(
+    # pem_private_key = private_key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.NoEncryption()
+    )
 
-# print("PEM Private key:", pem_private_key)
-# print("PEM Public key:", pem_public_key)
-print("Private key decoded:\n", pem_private_key.decode())
-print("Public key decoded:\n", pem_public_key.decode())
+    # Generate the public key from the private key
+    public_key = private_key.public_key()
+
+    # Serialize the public key to PEM format
+    public = public_key.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+
+    Pem = namedtuple('Pem', ['private',  'public'])
+    return Pem(private, public)
+
+# Pem = generate_private_public_keys()
+# print(Pem)
+# print("PEM Private key:", Pem.private)
+# print("PEM Public key:", Pem.public)
+# print("Private key decoded:\n", Pem.private.decode())
+# print("Public key decoded:\n", Pem.public.decode())
+
+
+def create_pem_file(key, file_name, cd_to_target_dir='.'):
+
+    pwd=os.path.dirname(__file__)
+    target_dir=os.path.join(pwd, cd_to_target_dir)
+    target_path=os.path.join(target_dir,file_name)
+    absolute_path=os.path.abspath(target_path)
+    print(absolute_path)
+    with open(absolute_path, 'wb') as pem_file:
+        pem_file.write(key)
+
+
+
+def read_pem(file):
+    with open(file, 'rb') as pem_file:
+        pem_data = pem_file.read()
+    return pem_data
+
+def base64urlencode(data):
+    return urlsafe_b64encode(data).rstrip(b'=')
+
+def base64url_encoded_pem(file):
+    """ URL safe PEM. Safe for transmission in URLs, 
+        HTTP headers, and other similar mediums.
+
+        Safe for transmission does not mean secure or encrypted.
+    """
+    pem_byte_str = read_pem(file)
+    pem_b64url_byte_str = base64urlencode(pem_byte_str)
+    pub_pem_str = pem_b64url_byte_str.decode('utf-8')
+    return pub_pem_str
+
+if __name__=='__main__':
+    Pem = generate_private_public_keys()
+    # print(Pem.private.decode())
+    # print(Pem.public)
+    create_pem_file(Pem.private, 'private.pem')
+    create_pem_file(Pem.public, 'public.pem')
+
 
 """ private_key:
 
