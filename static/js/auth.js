@@ -22,32 +22,29 @@ btnLogin?.addEventListener('click',(event)=>{
     }
 
 
-    // check localStorage for public.pem
+    // localStorage has public.pem? doNothing : getIt from server
     /** @type {string | null | undefined} */
     let b64UrlPem=localStorage.getItem('studypal_public_key');
     let getPem='false';
-    if( !b64UrlPem ){ 
-        // get pem from server
-        getPem='true';
-    }
+    if( !b64UrlPem ){ getPem='true'; }
 
-    // check localStorage for jwt
+    // localStorage has jwt? doNothing : getIt from server
     /** @type {string | null | undefined} */
     let jwt_token = localStorage.getItem('studypal_jwt');
     let getJwt='false';
-    if( !jwt_token ){ 
-        // get jwt from server
-        getJwt='true';
-    }
+    if( !jwt_token ){ getJwt='true'; }
     else{
         // check expiration
     }
 
     authenticate(credentials, getPem, getJwt)
         .then(resp=>{
+            // cache jwt|pem if authenticated
+
             credentials=null;
-            console.log(resp.headers)
+
             if( [200,201].includes(resp.status) ){
+                // successfully authenticated
 
                 // cache public pem
                 if( getPem==='true' ){
@@ -62,21 +59,6 @@ btnLogin?.addEventListener('click',(event)=>{
                     if(jwt_token){ localStorage.setItem("studypal_jwt", jwt_token); }
                 }
                 jwt_token=null;
-
-                // // Authorization:
-
-                // // decode public pem for verification of jwt
-                // const public_pem = base64UrlToOriginalData(b64UrlPem);
-                // b64UrlPem=null;
-    
-                // // verify jwt
-                // const pubKey = KEYUTIL.getKey(public_pem); // not necessary, verifyJWT calls it under the hood.
-                // const isValid = KJUR.jws.JWS.verifyJWT(jwt_token, pubKey, {alg: ['RS256']});
-                // jwt_token=null;
-    
-                // if( !isValid ){ throw new Error('Invalid JWT.'); }
-
-
             }
 
             return Promise.all([resp.status, resp.text()])
@@ -88,6 +70,8 @@ btnLogin?.addEventListener('click',(event)=>{
                 });
 
         }).then(obj => {
+            // authentication response message status
+
             // log(obj)
             if(messageElement){
                 let msg;
@@ -97,10 +81,10 @@ btnLogin?.addEventListener('click',(event)=>{
                     case 201:
                         messageElement.innerHTML=obj?.text;
                         // redirect to review page
-                        // const authorized = setTimeout(() => {
-                        //     window.location.href = '/review/';
-                        //     clearTimeout(authorized);
-                        // }, 1000); // pause for greeting message
+                        const authorized = setTimeout(() => {
+                            window.location.href = '/review/';
+                            clearTimeout(authorized);
+                        }, 0); // pause for greeting message
                         
                         break;
                     case 400:
@@ -152,6 +136,15 @@ function extractCredentials (form){
     throw new Error('Form must contain valid email and password.');
 }
 
+/**
+ * Authenticates user credentials with the server and returns response object.
+ * @param {Object} credentials - Object containing credentials.
+ * @param {string} credentials - credentials.email
+ * @param {string} credentials - credentials.password
+ * @param {string} getPem - String representing boolean to embed in header as flag to signal whether to return public pem.
+ * @param {string} getJwt - String representing boolean to embed in header as flag to signal whether to return JWT.
+ * @returns {Promise<Response>} Returns response object with status code and status text.
+ */
 async function authenticate (credentials, getPem, getJwt){
     
     const resp = await fetch('/login', {

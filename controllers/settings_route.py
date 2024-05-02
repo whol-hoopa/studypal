@@ -5,6 +5,12 @@ from fastapi.responses import FileResponse, RedirectResponse
 from fastapi import Request, Response
 from fastapi.templating import Jinja2Templates
 
+from jose import jwt
+from models.jwt import is_valid_token
+from models.jwt import get_token_from_request
+
+import os
+
 
 router_settings = APIRouter()
 pwd = os.path.dirname(__file__) # \settings
@@ -15,16 +21,11 @@ templates_dir = os.path.abspath(cd_to_templates)
 templates = Jinja2Templates(directory=templates_dir)
 
 
-def get_token_from_request():
-    return None
-def is_valid_token(token):
-    return True
-
 @router_settings.get('/', tags=['settings']) # http://localhost:8080/settings/
 async def settings(request: Request):
     print('settings queried.')
 
-    token=get_token_from_request()
+    token=get_token_from_request(request)
 
 
     if not is_valid_token(token):

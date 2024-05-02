@@ -5,7 +5,7 @@ from pydantic import ValidationError
 from models.hash import hashPwd, matchesHash
 
 from fastapi.responses import HTMLResponse
-from models.jwt import get_jwt_token
+from models.jwt import create_jwt_token
 import os
 from models.key_gen import base64url_encoded_pem
 
@@ -15,11 +15,11 @@ router_login = APIRouter()
 @router_login.post("/", response_class=HTMLResponse, tags=['authentication'])
 async def login(request:Request):
     print('AUTHENTICATION REQUEST')
-    # print(request.headers)
+    print(request.headers)
     try:
-        print('credentials')
+        # print('credentials')
         credentials = await request.json()
-        print(credentials)
+        # print(credentials)
         # print(credentials.get('password'))
         # print(hashPwd(credentials.get('password')))
         
@@ -47,7 +47,7 @@ async def login(request:Request):
                 
                 rel_pem_file=os.path.join(pwd, cd_to_models, "jwt_private_key.pem")
                 pk_pem_file=os.path.abspath(rel_pem_file)
-                token=get_jwt_token(claim,pk_pem_file)
+                token=create_jwt_token(claim,pk_pem_file)
 
                 if updated_headers == None:
                     updated_headers={}
