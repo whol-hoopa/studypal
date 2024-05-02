@@ -1,11 +1,10 @@
 import os
-from fastapi import APIRouter, HTTPException, status
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi import APIRouter#, HTTPException, status
+from fastapi.responses import FileResponse#, RedirectResponse
 # from fastapi.responses import HTMLResponse
-from fastapi import Request, Response
+from fastapi import Request#, Response
 from fastapi.templating import Jinja2Templates
 
-from jose import jwt
 from models.jwt import is_valid_token
 from models.jwt import get_token_from_request
 
@@ -27,15 +26,15 @@ async def settings(request: Request):
 
     token=get_token_from_request(request)
 
+    if is_valid_token(token):
+        settings_page = os.path.join(html_dir, "settings.html")
+        return FileResponse(settings_page)
 
-    if not is_valid_token(token):
-        message={
-            "h1":"Authorization Error",
-            "p": "Please login to access page."
-        }
-        print(request.headers)
-        return  templates.TemplateResponse('studypal.html', { "request": request, "message": message})
+    message={
+        "h1":"Authorization Error",
+        "p": "Please login to access page."
+    }
+    print(request.headers)
+    return  templates.TemplateResponse('studypal.html', { "request": request, "message": message})
 
 
-    settings_page = os.path.join(html_dir, "settings.html")
-    return FileResponse(settings_page)

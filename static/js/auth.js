@@ -41,10 +41,12 @@ btnLogin?.addEventListener('click',(event)=>{
         .then(resp=>{
             // cache jwt|pem if authenticated
 
-            credentials=null;
-
             if( [200,201].includes(resp.status) ){
                 // successfully authenticated
+
+                obfuscateEmail(credentials.email).then(obfuscatedEmail => {
+                    localStorage.setItem('studypal_uid', obfuscatedEmail)
+                });
 
                 // cache public pem
                 if( getPem==='true' ){
@@ -60,7 +62,8 @@ btnLogin?.addEventListener('click',(event)=>{
                 }
                 jwt_token=null;
             }
-
+            
+            credentials=null;
             return Promise.all([resp.status, resp.text()])
                 .then( ([ status_code, text ]) => {
                     return {
@@ -81,10 +84,10 @@ btnLogin?.addEventListener('click',(event)=>{
                     case 201:
                         messageElement.innerHTML=obj?.text;
                         // redirect to review page
-                        const authorized = setTimeout(() => {
-                            window.location.href = '/review/';
-                            clearTimeout(authorized);
-                        }, 0); // pause for greeting message
+                        // const authorized = setTimeout(() => {
+                        //     window.location.href = '/review/';
+                        //     clearTimeout(authorized);
+                        // }, 0); // pause for greeting message
                         
                         break;
                     case 400:
@@ -206,4 +209,27 @@ function base64UrlToOriginalData(base64Url) {
         // data=data.replace('1','2') //  "Error: Invalid JWT.""
         return data;
     }
+}
+
+/**
+ * const email = "example@example.com";
+ * 
+ *     obfuscateEmail(email).then(obfuscatedEmail => {
+ *       console.log("Obfuscated email (SHA-256):", obfuscatedEmail);
+ *     });
+ * @param {string} email 
+ * @returns {Promise<string>} HexString: 31c5543c1734d25c7206f5fd591525d0295bec6fe84ff82f946a34fe970a1e66
+ */
+async function obfuscateEmail(email) {
+    // Convert the email string to a Uint8Array
+    const emailBytes = new TextEncoder().encode(email);
+
+    // Create a hash using SHA-256
+    const sha1Buffer = await crypto.subtle.digest('SHA-256', emailBytes);
+
+    // Convert the hash buffer to a hexadecimal string
+    const hashedEmail = Array.from(new Uint8Array(sha1Buffer))
+        .map(b => b.toString(16).padStart(2, '0')).join('');
+
+    return hashedEmail;
 }

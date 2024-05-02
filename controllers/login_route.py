@@ -8,6 +8,9 @@ from fastapi.responses import HTMLResponse
 from models.jwt import create_jwt_token
 import os
 from models.key_gen import base64url_encoded_pem
+from models.email import obfuscate_email
+
+import time
 
 
 router_login = APIRouter()
@@ -41,8 +44,12 @@ async def login(request:Request):
             if request.headers['x-send-jwt'] == 'true':
                 # generate jwt token
                 claim={
+                    "algo": "ES256",
+                    "type": "JWT",
                     "iss": "studypal",
-                    "sub": "retail-user"
+                    "sub": obfuscate_email(user.email),
+                    "role": "user"
+
                 }
                 
                 rel_pem_file=os.path.join(pwd, cd_to_models, "jwt_private_key.pem")

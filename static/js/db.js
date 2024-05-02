@@ -9,7 +9,15 @@ let DESTROY_DB=false;
  * The order of the conditional browser check matters.
  * @type {String|null}
  */
-const defaultNameDB='studyPal';
+const uid = localStorage.getItem('studypal_uid');
+let temp_defaultNameDB;
+if(uid){
+    temp_defaultNameDB=`${uid}`;
+}else{
+    temp_defaultNameDB='studyPal';
+}
+const defaultNameDB=temp_defaultNameDB;
+temp_defaultNameDB=null;
 if (userAgent.indexOf("Firefox") > -1) {
     log("You're using Firefox");
     ACTIVE_BROWSER= defaultNameDB ? defaultNameDB : 'testDB'; // defaultName else ".*"

@@ -1,24 +1,32 @@
 
 from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.asymmetric import rsa, ec
 from cryptography.hazmat.backends import default_backend
 
 from collections import namedtuple
 import os
 from base64 import urlsafe_b64encode
 
-def generate_private_public_keys():
+def generate_private_public_keys(algo='es256'):
+    """algo = es256 | rs256; returns namedtuple of Pem(private, public) """
 
     # Generate a new private key
-    private_key = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=2048,  # ie 256 bytes
-        backend=default_backend()
-    )
+    algo = algo.lower()
+    if algo=='rs256':
+        private_key = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048,  # ie 256 bytes
+            backend=default_backend()
+        )
+    if algo=='es256':
+        private_key = ec.generate_private_key(
+            curve=ec.SECP256R1(),
+            backend=default_backend()
+        )
+    print(private_key)
 
     # Serialize the private key to PEM format
     private = private_key.private_bytes(
-    # pem_private_key = private_key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.PKCS8,
         encryption_algorithm=serialization.NoEncryption()
