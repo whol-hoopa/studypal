@@ -17,8 +17,9 @@ async def login(request:Request):
     print('AUTHENTICATION REQUEST')
     # print(request.headers)
     try:
+        print('credentials')
         credentials = await request.json()
-        # print(credentials)
+        print(credentials)
         # print(credentials.get('password'))
         # print(hashPwd(credentials.get('password')))
         
@@ -33,45 +34,58 @@ async def login(request:Request):
 
 
         if matchesHash(user.password,hashPwd(user.password)):
-            
-            # generate jwt token
-            claim={
-                "iss": "studypal",
-                "sub": "retail-user"
-            }
+            print(request.headers)
+            updated_headers = None
             pwd=os.path.dirname(__file__)
             cd_to_models='../models'
-            rel_pem_file=os.path.join(pwd, cd_to_models,"jwt_private_key.pem")
-            pk_pem_file=os.path.abspath(rel_pem_file)
-            token=get_jwt_token(claim,pk_pem_file)
+            if request.headers['x-send-jwt'] == 'true':
+                # generate jwt token
+                claim={
+                    "iss": "studypal",
+                    "sub": "retail-user"
+                }
+                
+                rel_pem_file=os.path.join(pwd, cd_to_models, "jwt_private_key.pem")
+                pk_pem_file=os.path.abspath(rel_pem_file)
+                token=get_jwt_token(claim,pk_pem_file)
 
-            headers={
-                "Authorization": f"Bearer {token}"
-            }
+                if updated_headers == None:
+                    updated_headers={}
+
+                updated_headers["Authorization"] = f"Bearer {token}"
 
             # send public pem key if not in storage
             if request.headers['x-send-pub-pem'] == 'true':
-                rel_pub_pem_path = os.path.join(pwd, cd_to_models,"jwt_public_key.pem")
+                rel_pub_pem_path = os.path.join(pwd, cd_to_models, "jwt_public_key.pem")
                 pub_pem_path = os.path.abspath(rel_pub_pem_path)
                 pub_pem_str = base64url_encoded_pem(pub_pem_path)
 
-                headers["x-pub-pem"]=f"{pub_pem_str}"
+                if updated_headers == None:
+                    updated_headers={}
+                updated_headers["x-pub-pem"] = f"{pub_pem_str}"
+
+
 
             content="<h1>Welcome to Study<span class='outlined-text'>Pal</span></h1><p class='fs-4'>Have a great session!</p>"
-            return HTMLResponse(content, headers=headers)
+            print(updated_headers)
+            if updated_headers:
+                return HTMLResponse(content, headers=updated_headers)
+            else:
+                return HTMLResponse(content)
+        
             
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, 
             detail="Invalid: Password didn't match."
         ) 
 
-    except ValidationError as e:
-        # error_messages = "\n".join([f"{error['loc'][0]} - {error['msg']}" for error in e.errors()])
+    except ValidationError as err:
+        # error_messages = "\n".join([f"{error['loc'][0]} - {error['msg']}" for error in err.errors()])
         # detail=f"Validation error(s):\n{error_messages}"
-
+        print('pydantic validation raised')
         # failed Pydantic User validation
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, 
-            detail=e.errors()[0]['msg']
+            detail=err.errors()[0]['msg']
         )
 

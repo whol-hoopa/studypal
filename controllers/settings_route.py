@@ -18,18 +18,18 @@ templates = Jinja2Templates(directory=templates_dir)
 def get_token_from_request():
     return None
 def is_valid_token(token):
-    return False
+    return True
 
 @router_settings.get('/', tags=['settings']) # http://localhost:8080/settings/
 async def settings(request: Request):
     print('settings queried.')
-    
+
     token=get_token_from_request()
 
 
     if not is_valid_token(token):
         message={
-            "h1":"Authentication Error",
+            "h1":"Authorization Error",
             "p": "Please login to access page."
         }
         print(request.headers)
