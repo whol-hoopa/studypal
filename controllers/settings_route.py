@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse#, RedirectResponse
 from fastapi import Request#, Response
 from fastapi.templating import Jinja2Templates
 
-from models.jwt import is_valid_token
+from models.jwt import is_valid_token, is_expired
 from models.jwt import get_token_from_request
 
 import os
@@ -26,7 +26,7 @@ async def settings(request: Request):
 
     token=get_token_from_request(request)
 
-    if is_valid_token(token):
+    if token and is_valid_token(token) and not is_expired(token):
         settings_page = os.path.join(html_dir, "settings.html")
         return FileResponse(settings_page)
 

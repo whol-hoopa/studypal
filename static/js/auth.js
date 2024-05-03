@@ -1,126 +1,4 @@
-const btnLogin = document.getElementById('btn-login');
-btnLogin?.addEventListener('click',(event)=>{
-    event.preventDefault();
 
-    const messageElement= document.getElementById('response');
-    
-    try {
-        const target = event.target;
-        if (target && 'form' in target) {
-            // console.error(target?.hasOwnProperty('form')); // 'form' property is not directly on the target object.
-            // console.error(Object.keys(target).includes('form')); // 'form' is not an enumerable property directly on the target object or its prototype chain.
-            // console.log('form' in target) // 'form' is somewhere in the prototype chain, even though it's not directly on the target object itself.
-            // console.log(target?.form)
-
-            var credentials = extractCredentials(target.form);
-        }
-    }catch(error){
-        if(messageElement){
-            messageElement.innerHTML=`<h1 class='text-danger'>Please enter credentials.</h1>`;
-            throw error.message;
-        }
-    }
-
-
-    // localStorage has public.pem? doNothing : getIt from server
-    /** @type {string | null | undefined} */
-    let b64UrlPem=localStorage.getItem('studypal_public_key');
-    let getPem='false';
-    if( !b64UrlPem ){ getPem='true'; }
-
-    // localStorage has jwt? doNothing : getIt from server
-    /** @type {string | null | undefined} */
-    let jwt_token = localStorage.getItem('studypal_jwt');
-    let getJwt='false';
-    if( !jwt_token ){ getJwt='true'; }
-    else{
-        // check expiration
-    }
-
-    authenticate(credentials, getPem, getJwt)
-        .then(resp=>{
-            // cache jwt|pem if authenticated
-
-            if( [200,201].includes(resp.status) ){
-                // successfully authenticated
-
-                obfuscateEmail(credentials.email).then(obfuscatedEmail => {
-                    localStorage.setItem('studypal_uid', obfuscatedEmail)
-                });
-
-                // cache public pem
-                if( getPem==='true' ){
-                    b64UrlPem = resp.headers.get('x-pub-pem');
-                    if(b64UrlPem){ localStorage.setItem('studypal_public_key', b64UrlPem); }
-                }
-                b64UrlPem=null;
-
-                // cache jwt
-                if( getJwt==='true' ){
-                    jwt_token=resp.headers.get('authorization')?.split(' ')[1];
-                    if(jwt_token){ localStorage.setItem("studypal_jwt", jwt_token); }
-                }
-                jwt_token=null;
-            }
-            
-            credentials=null;
-            return Promise.all([resp.status, resp.text()])
-                .then( ([ status_code, text ]) => {
-                    return {
-                        status_code,
-                        text
-                    };
-                });
-
-        }).then(obj => {
-            // authentication response message status
-
-            // log(obj)
-            if(messageElement){
-                let msg;
-                switch(obj?.status_code){
-                    case 200:
-                        // ok
-                    case 201:
-                        messageElement.innerHTML=obj?.text;
-                        // redirect to review page
-                        // const authorized = setTimeout(() => {
-                        //     window.location.href = '/review/';
-                        //     clearTimeout(authorized);
-                        // }, 0); // pause for greeting message
-                        
-                        break;
-                    case 400:
-                        // failed user input validation
-                        msg= `
-                            <h1 class='text-danger'>Authentication Error</h1>
-                            <p class='fs-6'>${JSON.parse(obj.text).detail}</p>
-                        `;
-                        messageElement.innerHTML=msg;                        
-                        break;
-                    case 401:
-                        // invalid password
-                        msg= `
-                            <h1 class='text-danger'>Authentication Error</h1>
-                            <p class='fs-4'>${JSON.parse(obj.text).detail}</p>
-                        `;
-                        messageElement.innerHTML=msg;
-                        break;
-                    case 500:
-                        msg= `
-                            <h1 class='text-danger'>Authentication Error</h1>
-                        `; // <p class='fs-4'>${obj.text}</p>
-                        messageElement.innerHTML=msg;
-                        break;
-                }
-            }
-
-        }).catch(error=>{
-            credentials=null;
-            if(messageElement){ messageElement.innerHTML=`<h1 class='text-danger'>Autorization Error</h1><p>Please reauthenticate.</p>`; }
-            console.error(error);
-        });
-});
 
 /**
  * Extracts email and password form a form element.
@@ -189,6 +67,15 @@ function isAuthorized(jwt_token, b64UrlPem){
     }
 }
 
+function isExpired(){
+    const pemUrl = localStorage.getItem('studypal_public_key');
+    const jwt = localStorage.getItem('studypal_jwt');
+    if(jwt && pemUrl){
+        const isVerified = isAuthorized(jwt, pemUrl);
+        console.log(isVerified)
+        console.log(settingsHref)
+    }
+}
 
 /**
  * Convert URL safe base64Url string back to PEM format string.
@@ -216,7 +103,13 @@ function base64UrlToOriginalData(base64Url) {
  * 
  *     obfuscateEmail(email).then(obfuscatedEmail => {
  *       console.log("Obfuscated email (SHA-256):", obfuscatedEmail);
+ *       return obfuscatedEmail;
  *     });
+ * Return result is designed to used with hexToBase64UrlSafe().
+ * 
+ * Initially designed to be used with obfuscateEmail() so that the email name
+ * can be used as a unique ID for PouchDB and CouchDB. Communication with
+ * CouchDB is through HTTP and thus the name needs to be URL safe. 
  * @param {string} email 
  * @returns {Promise<string>} HexString: 31c5543c1734d25c7206f5fd591525d0295bec6fe84ff82f946a34fe970a1e66
  */
@@ -225,11 +118,59 @@ async function obfuscateEmail(email) {
     const emailBytes = new TextEncoder().encode(email);
 
     // Create a hash using SHA-256
-    const sha1Buffer = await crypto.subtle.digest('SHA-256', emailBytes);
+    const sha256Buffer = await crypto.subtle.digest('SHA-256', emailBytes);
 
     // Convert the hash buffer to a hexadecimal string
-    const hashedEmail = Array.from(new Uint8Array(sha1Buffer))
+    const hashedEmail = Array.from(new Uint8Array(sha256Buffer))
         .map(b => b.toString(16).padStart(2, '0')).join('');
 
     return hashedEmail;
 }
+
+function create_user_id(hashedEmail){
+    const firstChar = /['a-f']/;
+    const padding = hashedEmail.match(firstChar)[0];
+    return `${padding}${hashedEmail}`;
+}
+
+// /**
+//  * Converts a hexString to a Base64 URL safe string.
+//  * Initially designed to be used with obfuscateEmail() so that the email name
+//  * can be used as a unique ID for PouchDB and CouchDB. Communication with
+//  * CouchDB is through HTTP and thus the name needs to be URL safe. 
+//  * @param {string} hexString 
+//  * @returns Base64UrlSafe string
+//  */
+// function hexToBase64UrlSafe(hexString) {
+//     // Convert the hexadecimal string to a buffer
+
+//     // const buffer = Buffer.from(hexString, 'hex'); // node.js
+//     const buffer = Uint8Array.from(hexString, char => parseInt(char, 16));
+
+//     // Encode the buffer to Base64
+//     // const base64 = buffer.toString('base64'); // node.js
+    
+//     // Make the Base64 string URL-safe
+//     const base64UrlSafe = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    
+//     return base64UrlSafe;
+// }
+
+// function base64Str(hexString){
+//     const buffer = Uint8Array.from(hexString, char => parseInt(char, 16));
+
+//     // Convert the Uint8Array to a Blob
+//     const blob = new Blob([buffer]);
+    
+//     // Use FileReader to read the Blob as a Base64-encoded string
+//     const reader = new FileReader();
+
+//     return new Promise((resolve, reject) => {
+//         reader.onload = function(event) {
+//             const base64 = event.target.result.split(',')[1];
+//             resolve(base64);
+//         };
+//         reader.onerror = reject;
+//         reader.readAsDataURL(blob);
+//     });
+// }

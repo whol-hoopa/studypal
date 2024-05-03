@@ -8,7 +8,7 @@ from fastapi.responses import HTMLResponse
 from models.jwt import create_jwt_token
 import os
 from models.key_gen import base64url_encoded_pem
-from models.email import obfuscate_email
+from models.email import create_user_id
 
 import time
 
@@ -43,13 +43,18 @@ async def login(request:Request):
             cd_to_models='../models'
             if request.headers['x-send-jwt'] == 'true':
                 # generate jwt token
+                userID=create_user_id(user.email)
+                issued_at_time=int(time.time())
+                # expiration_time = issued_at_time + 86400 # 24hrs
+                expiration_time = issued_at_time + 180 # 3min
                 claim={
                     "algo": "ES256",
                     "type": "JWT",
                     "iss": "studypal",
-                    "sub": obfuscate_email(user.email),
-                    "role": "user"
-
+                    "sub": userID,
+                    "role": "user",
+                    "iat": issued_at_time,
+                    "exp": expiration_time
                 }
                 
                 rel_pem_file=os.path.join(pwd, cd_to_models, "jwt_private_key.pem")

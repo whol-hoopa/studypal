@@ -1,4 +1,5 @@
 import hashlib
+import re
 
 def obfuscate_email(email, algo='sha256'):
     algo = algo.lower()
@@ -17,9 +18,25 @@ def obfuscate_email(email, algo='sha256'):
 
     return hashed_email
 
+def create_user_id(email):
+    """Designed to create a userId from the hexString
+    derived from obfuscate_email(). In addition, the 
+    id must start with a letter so the first letter
+    in found in the hex string will serve to prepend
+    the hexString derived from obfuscate_email{}. 
+    This userId will be used for the user's database 
+    name. CouchDB requires that the name start 
+    with an alphabet.
+    """
+    hex_string = obfuscate_email(email)
+    padding = re.search('[a-f]',hex_string).group()
+    return f'{padding}{hex_string}'
+
 
 if __name__=='__main__':
     email = "example@example.com"
+    user_id = create_user_id(email)
+    print('user_id: ',user_id)
     obfuscated_email = obfuscate_email(email,'sha256')
     print("Obfuscated email sha256:", obfuscated_email)
     obfuscated_email = obfuscate_email(email,'sha1')

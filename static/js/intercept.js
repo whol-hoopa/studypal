@@ -19,11 +19,31 @@ settingsHref?.addEventListener('click', async (event)=>{
                 'authorization': `Bearer ${jwt}`
             }
         });
+
+        let route=null;
         if(resp.ok){
-            const html = await resp.text();
-            window.history.pushState({}, '', '/settings');
-            document.body.innerHTML=html;
+            // the server is going to check authorization and expiration time.
+            //  if both checks out, return settings
+            route='/settings';            
         }
+        else{
+            route='/'; // login
+        }
+        const html = await resp.text();
+        window.history.pushState({}, '', route);
+        document.body.innerHTML=html;
     }
 
+    
+    
+    // TODO: offline scenario:
+
+
+
+
+
+
+
+
 });
+

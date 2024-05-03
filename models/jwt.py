@@ -1,5 +1,17 @@
 from jose import jwt, JWTError
 import os
+import time
+
+def get_pem_file(cd_to_pem_file='jwt_public_key.pem'):
+    """Get public|private key pem file. 
+    Parameter takes string that gets evaluated as a relative path
+    from the current directory to the public|private pem file, include
+    file name.
+    """
+    pwd = os.path.dirname(__file__)
+    rel_path = os.path.join(pwd,cd_to_pem_file)
+    pem_file = os.path.abspath(rel_path)
+    return pem_file
 
 
 def create_jwt_token(claim_payload, pem_pk_file, algo="ES256"):
@@ -33,10 +45,8 @@ def verify_jwt_payload(token, public_pem_file, algos='ES256'):
 
 def is_valid_token(token):
     """Returns a boolean for JWT verification status"""
-    pwd = os.path.dirname(__file__)
-    cd_to_public_key_file = 'jwt_public_key.pem'
-    rel_path = os.path.join(pwd,cd_to_public_key_file)
-    pub_pem_file = os.path.abspath(rel_path)
+
+    pub_pem_file = get_pem_file('jwt_public_key.pem')
     # print(pub_pem_file)
 
     claim_payload = verify_jwt_payload(token,pub_pem_file)
@@ -46,13 +56,27 @@ def is_valid_token(token):
         return True
     return False
 
+def is_expired(token):
+    """Returns a boolean for JWT verification of expiration time"""
+    pub_pem_file = get_pem_file('jwt_public_key.pem')
+    claim_payload = verify_jwt_payload(token,pub_pem_file)
+    if claim_payload:
+        expiration_time = claim_payload.get( 'exp', float('-inf') )
+        now = int(time.time())
+        print(now, ":", expiration_time)
+        return now > expiration_time
+    else:
+        return True
+
 
 def get_token_from_request(request):
     """Extracts JWT from Bearer's Authorization header property"""
     auth_value = request.headers.get('authorization', None)
 
-    jwt = auth_value.split(' ')[1]
-    return jwt
+    if auth_value:
+        jwt = auth_value.split(' ')[1]
+        return jwt
+    return None
 
 
 
@@ -64,14 +88,14 @@ if __name__=='__main__':
     }
     pwd = os.path.dirname(__file__)
     # pem_file = os.path.join(pwd, 'jwt_private_key.pem')
-    pem_file = os.path.join(pwd, 'jwt_private_key.pem')
+    pem_file = get_pem_file('jwt_private_key.pem')
     jwt_token = create_jwt_token(payload, pem_file, 'ES256')
     print(jwt_token)
 
 
     
     # pem_file = os.path.join(pwd, 'jwt_public_key.pem')
-    pem_file = os.path.join(pwd, 'jwt_public_key.pem')
+    pem_file = get_pem_file('jwt_public_key.pem')
     decoded_payload=verify_jwt_payload(jwt_token, pem_file, 'ES256')
     print('payload:',decoded_payload)
 

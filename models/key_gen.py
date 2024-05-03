@@ -70,6 +70,7 @@ def read_pem(file):
     return pem_data
 
 def base64urlencode(data):
+    """Returns base64urlencode byte string"""
     return urlsafe_b64encode(data).rstrip(b'=')
 
 def base64url_encoded_pem(file):
