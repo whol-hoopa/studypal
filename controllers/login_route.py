@@ -62,7 +62,7 @@ async def login(request:Request):
 
         url = f"{scheme}://{host}:{port}/couchdb/{nameDB}/search"
         print('url: ', url)
-        response = requests.post(url, json=payload, timeout=5000) 
+        response = requests.post(url, json=payload, timeout=10) # 10 seconds
         """ Using POST will allow you to send the JSON payload in the request body.
             Dict => JSON serialization and Content-Type header will be automatically handled.
 
