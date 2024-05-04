@@ -169,6 +169,11 @@ async def searchDB(nameDB: str,
     """
         https://dev.to/yenyih/query-in-apache-couchdb-mango-query-lfd
     """
+    print("def searchDB args:")
+    print("nameDB:", nameDB)
+    print("selectorOps:", selectorOps)
+
+
     def IfValids(opsList, condition):
         def getInvalidOps(selector_list):
             ifValidOp = lambda s: s.operator not in Valid_Operators

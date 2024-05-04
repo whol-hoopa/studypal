@@ -14,6 +14,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 
+
+
 # > uvicorn main:app --reload --port 8080
 app = FastAPI()
 
@@ -57,9 +59,11 @@ app.include_router(couchdb_router) # , prefix='/couchdb'
 # Development server
 if __name__ == '__main__':
     import uvicorn
-    from dotenv import load_dotenv
-    load_dotenv()
-    port = int(os.environ.get('PORT', 8000))
+
+    # An attempt was made to access a socket in a way forbidden by its access permissions; must hard code port
+    # from dotenv import load_dotenv
+    # load_dotenv()
+    # port = int(os.environ.get('PORT', 8000))
 
     uvicorn.run('main:app', host='127.0.0.1', port=8000, reload=True)
 

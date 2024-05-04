@@ -64,7 +64,8 @@ async def login(request:Request):
         print('url: ', url)
         print('payload: ')
         print(payload)
-        response = requests.post(url, json=payload, timeout=10) # 10 seconds
+        # response = requests.post(url, json=payload, headers={"Content-Type": "application/json"}, timeout=10) # 10 seconds
+        response = requests.request("POST", url, json=payload, headers={"Content-Type": "application/json"}, timeout=10) 
         """ Using POST will allow you to send the JSON payload in the request body.
             Dict => JSON serialization and Content-Type header will be automatically handled.
 

@@ -22,8 +22,8 @@ def create_user_id(email):
     """Designed to create a userId from the hexString
     derived from obfuscate_email(). In addition, the 
     id must start with a letter so the first letter
-    in found in the hex string will serve to prepend
-    the hexString derived from obfuscate_email{}. 
+    found in the hex string will serve to prepend
+    the hexString derived from obfuscate_email(). 
     This userId will be used for the user's database 
     name. CouchDB requires that the name start 
     with an alphabet.
