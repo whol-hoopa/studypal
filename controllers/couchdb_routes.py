@@ -6,7 +6,7 @@ from fastapi import Request , APIRouter
 
 from models.couchdb_requests import post_find, putDB, putDoc, deleteDB, deleteDoc, _getDocInfo, _getUUID, _toStringJSON
 
-router = APIRouter()
+router = APIRouter(prefix='/couchdb')
 
 # > uvicorn backend:studypal_backend --reload --port 8080
 # studypal_backend = FastAPI()
@@ -166,6 +166,9 @@ async def editDoc(nameDB: str, request: Request):
 @router.post('/{nameDB}/search', tags=['documents'])
 async def searchDB(nameDB: str,
                    selectorOps: GroupSelector):
+    """
+        https://dev.to/yenyih/query-in-apache-couchdb-mango-query-lfd
+    """
     def IfValids(opsList, condition):
         def getInvalidOps(selector_list):
             ifValidOp = lambda s: s.operator not in Valid_Operators
@@ -184,7 +187,7 @@ async def searchDB(nameDB: str,
         
         return validBool(True, [])
         
-    def formatSelector( opsList, condition):
+    def formatSelector( opsList, condition ):
         def NoQuote(arg):
             if arg[0] == '[' and arg[-1] == ']':
                 return True

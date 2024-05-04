@@ -1,3 +1,6 @@
+import os
+from dotenv import load_dotenv
+
 from fastapi import Request, APIRouter, HTTPException, status
 
 from models.validate import User
@@ -6,11 +9,15 @@ from models.hash import hashPwd, matchesHash
 
 from fastapi.responses import HTMLResponse
 from models.jwt import create_jwt_token
-import os
 from models.key_gen import base64url_encoded_pem
 from models.email import create_user_id
 
 import time
+
+import requests # httpx is async version of requests
+# from typing import Dict, Any
+
+load_dotenv()
 
 
 router_login = APIRouter()
@@ -28,15 +35,91 @@ async def login(request:Request):
         
         user = User(**credentials)
         print("Pydantic validation successful.")
+        userID=create_user_id(user.email)
+
 
         # check if user is in db
+        payload = {
+            "condition" : "$and",
+            "selectorOps": [
+                {
+                    "operator": "$eq",
+                    "field": "_id",
+                    "arg": userID
+                },
+                {
+                    "operator": "$eq",
+                    "field": "_id",
+                    "arg": userID
+                }
+            ]
+        }
+        print(payload)
+        nameDB = 'users'
+        port = os.environ.get('PORT', 8000) # note: value from .env will always be str.
+        host = os.environ.get('HOST', '127.0.0.1')
+        scheme = os.environ.get('SCHEME', 'http')
+
+        url = f"{scheme}://{host}:{port}/couchdb/{nameDB}/search"
+        print('url: ', url)
+        response = requests.post(url, json=payload, timeout=5000) 
+        """ Using POST will allow you to send the JSON payload in the request body.
+            Dict => JSON serialization and Content-Type header will be automatically handled.
+
+            class GroupSelector(BaseModel):
+                # valid conditions $and, $or, $not, $nor, $all
+                condition: str
+                selectorOps: List[BaseSelector]
+
+            def searchDB(nameDB: str, selectorOps: GroupSelector):
+                ...
+
+            Valid_Operators = ['$lt', '$lte', '$eq', '$ne', '$gte', '$gt',
+                               '$exists', '$type', '$in', '$nin', '$regex']
+            payload = {
+                "condition": "$and",
+                "selectorOps": [
+                    {
+                        "operator": "$exists",
+                        "field": "_id",
+                        "arg": "true"
+                    },
+                    {
+                        "operator": "$exists",
+                        "field": "_id",
+                        "arg": "true"
+                    }
+                ]
+            }
+
+            you can think of it like:  GroupSelector(**payload).
+
+            you can then access the class instance as:
+            def searchDB(nameDB: str, selectorOps: GroupSelector):
+                selectorOps.condition
+                selectorOps.selectorOps
+
+            FastAPI automatically maps the keys in the JSON data to the attributes of the 
+                Pydantic model (in this case, GroupSelector) based on their names. If the 
+                keys in the JSON data match the attribute names of the model, FastAPI will 
+                assign the corresponding values to those attributes.
+
+            The two items in the list are NOT functionally redundant, given the restriction
+                of the valid conditions. It checks for the existence of the specified field.
+        """
+
+        print(response.json())
+
+
+
 
         # if in db, get pwd_hash
-
+        hashed_db_password = None # hashPwd(user.password)
+        print('hashed_db_password: ', hashed_db_password)
         # if not in db, create new user
 
 
-        if matchesHash(user.password,hashPwd(user.password)):
+        if matchesHash(user.password, hashed_db_password):
             print(request.headers)
             updated_headers = None
             pwd=os.path.dirname(__file__)

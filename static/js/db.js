@@ -4,8 +4,9 @@ let DESTROY_DB=false;
 
 /** 
  * All Browsers will have the default name if name string is set.
- * If set to null or empty string, it will default to the mapped else value, say testDB for example.
+ * If set to null or empty string, it will default to the mapped value in the ternary, say testDB for example.
  * By setting defaultNameDB to null, you can specify the name of each pouchDB instance name for given browser in the else clause. 
+ * It should be noted that the pouchDB name needs to be the same as the couchDB name to work seamlessly.
  * The order of the conditional browser check matters.
  * @type {String|null}
  */
@@ -57,7 +58,7 @@ configDB.destroyPouchDB=DESTROY_DB;
     // Is this a bad idea... This means you'll have duplicate data on each browser, killing system resources.
     // maybe if window.location.hostname=='127.0.0.1', ignore local pouchDB and sync with couchDB instead?
 
-// where is CORS enabled? in the backend w/python? in couchdb _utils interface?
+// where is CORS enabled? in the backend w/python? in couchdb _utils interface? YES, I saw it in couchDB settings cog.
 // https://github.com/pouchdb/add-cors-to-couchdb
 
 const db=new PouchDB(configDB.namePouchDB);

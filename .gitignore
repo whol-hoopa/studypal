@@ -4,6 +4,6 @@ python_setup.md
 git_commands.md
 myNotes
 __pycache__/
-.env
-jwt_private_key.pem
-jwt_public_key.pem
+# .env
+# jwt_private_key.pem
+# jwt_public_key.pem

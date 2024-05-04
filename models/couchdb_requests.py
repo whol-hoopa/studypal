@@ -108,6 +108,9 @@ def putDoc(nameDB, uuid, headers = {}, data = '{}'):
 
 # Find documents in Database with selectors/operators
 def post_find(nameDB, data):
+    """
+        https://docs.couchdb.org/en/stable/api/database/find.html
+    """
     url = httpString + '/{nameDB}/_find'.format(nameDB = nameDB)
 
     headers = {
