@@ -54,14 +54,16 @@ async def login(request:Request):
                 }
             ]
         }
-        print(payload)
         nameDB = 'users'
         port = os.environ.get('PORT', 8000) # note: value from .env will always be str.
         host = os.environ.get('HOST', '127.0.0.1')
         scheme = os.environ.get('SCHEME', 'http')
 
         url = f"{scheme}://{host}:{port}/couchdb/{nameDB}/search"
+        print('COUCHDB REQUEST: ')
         print('url: ', url)
+        print('payload: ')
+        print(payload)
         response = requests.post(url, json=payload, timeout=10) # 10 seconds
         """ Using POST will allow you to send the JSON payload in the request body.
             Dict => JSON serialization and Content-Type header will be automatically handled.
@@ -107,7 +109,7 @@ async def login(request:Request):
             The two items in the list are NOT functionally redundant, given the restriction
                 of the valid conditions. It checks for the existence of the specified field.
         """
-
+        print('RESPONSE FORM COUCHDB: ')
         print(response.json())
 
 

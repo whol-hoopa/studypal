@@ -27,7 +27,7 @@ function extractCredentials (form){
  * @returns {Promise<Response>} Returns response object with status code and status text.
  */
 async function authenticate (credentials, getPem, getJwt){
-    
+    console.log('FETCH from /login via POST request.')
     const resp = await fetch('/login', {
         method: 'POST',
         headers: {
@@ -37,8 +37,8 @@ async function authenticate (credentials, getPem, getJwt){
         },
         body: JSON.stringify(credentials)
     });
-    // log(resp.clone().text())
-
+    console.log('RETURNED response from /login:')
+    log(resp.clone().text())
     return resp;
 }
 

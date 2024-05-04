@@ -51,7 +51,7 @@ app.mount("/static", StaticFiles(directory=static_dir, html=False), name="static
 
 
 # CouchDB routes
-app.include_router(couchdb_router, prefix='/couchdb')
+app.include_router(couchdb_router) # , prefix='/couchdb'
 
 
 # Development server

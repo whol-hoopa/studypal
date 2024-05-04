@@ -40,7 +40,7 @@ btnLogin?.addEventListener('click',(event)=>{
     authenticate(credentials, getPem, getJwt)
         .then(resp=>{
             // cache jwt|pem if authenticated
-
+            console.log('CHECK response.status and display message to UI')
             if( [200,201].includes(resp.status) ){
                 // successfully authenticated
 
@@ -114,6 +114,7 @@ btnLogin?.addEventListener('click',(event)=>{
                     case 500:
                         msg= `
                             <h1 class='text-danger'>Authentication Error</h1>
+                            <p class='fs-4'>500 ${obj.text}</p>
                         `; // <p class='fs-4'>${obj.text}</p>
                         messageElement.innerHTML=msg;
                         break;
