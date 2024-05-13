@@ -54,6 +54,14 @@ def _getDBs():
     
     return {'status': response.status_code, 'response': response.json()}
 
+# Checks matched database name
+def IsMatchDB(name):
+    try:
+        res = _getDBs()
+    except:
+        raise
+    return name in res['response']
+
 # Delete database
 def deleteDB(nameDB):
     url = httpString + '/{}'.format(nameDB)
@@ -77,8 +85,9 @@ def putDB(nameDB):
 
     return {'status': response.status_code, 'response': response.json()}
 
-# delete document
+# delete document in database
 # "If-Match" header needed to delete
+# "If-Match" header needs current "_rev"
 def deleteDoc(nameDB, uuid, headers):
     url = httpString + '/{nameDB}/{uuid}'.format(nameDB = nameDB, uuid = uuid)
     response = requests.delete(url = url,
@@ -91,7 +100,10 @@ def deleteDoc(nameDB, uuid, headers):
     return {'status': response.status_code, 'response': response.json()}
 
 # New/edit document
+# Ignore "If-Match" header if creating a new document
 # If "If-Match" header is added when changing document
+# "If-Match" header needs current "_rev"
+# uuid needs current "_id"
 def putDoc(nameDB, uuid, headers = {}, data = '{}'):    
     url = httpString + '/{nameDB}/{uuid}'.format(nameDB = nameDB, uuid = uuid)
     response = requests.put(
@@ -125,3 +137,23 @@ def post_find(nameDB, data):
         raise ConnectionError(ConnectionErrorMessage("post_find"))
     
     return {'status': response.status_code, 'response': response.json()}
+
+# Returns all documents in a database
+def getAllDocs(nameDB):
+    url = httpString + '/{nameDB}/_all_docs'.format(nameDB = nameDB)
+
+    headers = {
+        'Content-Type': 'application/json',
+    }
+
+    response = requests.get(
+        url=url,
+        headers=headers,
+        auth=auth_login
+    )
+
+    if response.status_code != 200:
+        raise ConnectionError(ConnectionErrorMessage("getAllDocs"))
+    
+    return {'status': response.status_code, 'response': response.json()}
+
